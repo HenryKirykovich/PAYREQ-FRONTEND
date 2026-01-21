@@ -1,0 +1,39 @@
+<div class="row" id="invite">
+	<div class="col-md-8 col-md-offset-2">
+		<div class="panel panel-default ">
+			<div class="panel-heading">
+				<h2 class="panel-title">{{strings.accountEmailUpdate.heading}}</h2>
+			</div>
+			{{#if model.invite.error}}
+				<div class="panel-body">
+					<div class="alert alert-danger">
+						<p>{{inviteError}}</p>
+					</div>
+
+					<form class="form-login form-horizontal" role="form">
+						<div class="col-sm-12">
+							<div class="btn-toolbar pull-right margin-top-sm">
+								{{#link-to "login" class="btn btn-default"}}<span>{{strings.accountEmailUpdate.backButton}}</span>{{/link-to}}
+							</div>
+						</div>
+					</form>
+				</div>
+			{{else}}
+				<div class="panel-body">
+					<div class="alert alert-info">
+						<p>{{text}}</p>
+					</div>
+
+					<form class="form-login form-horizontal" role="form">
+						<div class="col-sm-12">
+							<div class="btn-toolbar pull-right margin-top-sm">
+								<button class="btn btn-default" {{action 'cancelEmailUpdate' model.invite}}>{{strings.accountEmailUpdate.cancel}}</button>
+								<button class="btn btn-primary" {{action 'confirmEmailUpdate' model.invite}}>{{strings.accountEmailUpdate.confirm}}</button>
+							</div>
+						</div>
+					</form>
+				</div>
+			{{/if}}
+		</div>
+	</div>
+</div>

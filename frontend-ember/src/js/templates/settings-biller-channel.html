@@ -1,0 +1,342 @@
+<div class="panel panel-default">
+    <div class="tab-content" id="user-tab-content">
+        <div class="tab-pane active" id="userDetails">
+            <div class="panel panel-default" id="user-details-div">
+                <div class="page-header page-header-tab-title">
+                    <h2 class="panel-title">
+                        {{model.channel.channelPartnerSystemId}}
+
+                        {{#if isEmail}}
+                        {{#unless model.channel.showInMybills}}
+                            - Manual email only
+                        {{/unless}}
+                        {{/if}}
+                    </h2>
+
+                </div>
+            </div>
+            <div class="panel-body">
+                <form class="form-horizontal" role="form" id="update-user-form">
+
+                    {{#if isEmail}}
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">
+                                Maximum Emails per Registration
+                            </label>
+                            <div class="col-sm-9">
+                                <label class="control-label"> {{model.channel.maxNoDetails}} </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">Fail delivery when first email bounces</label>
+                            <div class="col-sm-9">
+                                {{input type="checkbox" classNames="form-control" checked=model.channel.emailMarkEachAsFailed}}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">
+                                Template Type
+                            </label>
+                            <div class="col-sm-9">
+                                {{item-select class-name="form-control"
+                                content=emailTemplateTypes
+                                optionLabelPath="name"
+                                optionValuePath="id"
+                                selection=model.channel.emailTemplateType}}
+                            </div>
+                        </div>
+                        {{#if isCustomEmailTemplate}}
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">Email as Text</label>
+                            <div class="col-sm-9">
+                                {{input type="text" classNames="form-control" value=model.channel.emailTemplateText}}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">Email Template</label>
+                            <div class="col-sm-6">
+                                {{#if model.channel.emailTemplate}}
+                                <a href="" {{action "downloadEmailTemplate" biller.id}}>
+                                <label class="control-label">{{model.channel.emailTemplate}}</label>
+                                </a>
+                                {{else}}
+                                <label class="control-label">No Template</label>
+                                {{/if}}
+                            </div>
+                            <div class="actions btn-group col-sm-2">
+                                <button class="btn btn-default" {{action "uploadBillTemplate"}}>
+                                <span class="glyphicon glyphicon-upload"></span> Upload
+                                </button>
+
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">Default Email Template Brand Colour</label>
+                            <div class="col-sm-9">
+                                {{input type="text" classNames="form-control" value=model.channel.defaultEmailTemplateBrandColour}}
+                            </div>
+                        </div>
+                        {{/if}}
+                        {{#if isTemplateNotProvidedByMailhouse}}
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">
+                                    Email Type
+                                </label>
+                                <div class="col-sm-9">
+                                    {{item-select class-name="form-control"
+                                    content=emailTypes
+                                    optionLabelPath="name"
+                                    optionValuePath="id"
+                                    selection=model.channel.emailBillDeliveryType
+                                    disabled=true}}
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">Email From Text</label>
+                                <div class="col-sm-9">
+                                    {{input type="text" classNames="form-control" value=model.channel.emailBillFrom}}
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">Email To Text</label>
+                                <div class="col-sm-9">
+                                    {{input type="text" classNames="form-control" value=model.channel.emailBillTo}}
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">Email Notice Type Text</label>
+                                <div class="col-sm-9">
+                                    {{input type="text" classNames="form-control" value=model.channel.emailBillNoticeType}}
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">Email Contact Text</label>
+                                <div class="col-sm-9">
+                                    {{input type="text" classNames="form-control" value=model.channel.emailBillContact}}
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="col-xs-12">
+                                    <button class="btn btn-default col-xs-12" {{action "sendTestEmail" biller.id}}>
+                                    <span class="glyphicon glyphicon-envelope"></span> Send Test Email
+                                    </button>
+                                </div>
+                            </div>
+                        {{/if}}
+                        {{#if isNotAdminAndNotSub}}
+                        <div class="form-group">
+                            <div class='btn-toolbar pull-right'>
+
+                                <button type="button" class="btn btn-primary" {{action "saveChannelAction" model.channel biller.id}}>{{strings.billerSettings.update}}</button>
+
+                            </div>
+                        </div>
+                        {{/if}}
+                        <hr>
+                    {{/if}}
+
+                    {{#if isAdminAndNotSub}}
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">Channel Id</label>
+                        <div class="col-sm-9">
+                            {{item-select class-name="form-control"
+                            content=contactFieldsSelect
+                            optionLabelPath="value"
+                            optionValuePath="id"
+                            selection=model.channel.registrationContactIdField}}
+                        </div>
+                    </div>
+                    {{#if model.channel.requiresSelfservice}}
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">Channel Id Help Message</label>
+                            <div class="col-sm-9">
+                                {{input type="text" classNames="form-control" value=model.channel.registrationContactIdHelp}}
+                            </div>
+                        </div>
+                        <hr>
+                    {{/if}}
+                    {{#if isAgent}}
+                    {{#if model.channel.allowAgentRegistrationsFromContacts}}
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">Notice Id Contact Field</label>
+                        <div class="col-sm-9">
+                            {{item-select class-name="form-control"
+                            content=contactFieldsSelect
+                            optionLabelPath="value"
+                            optionValuePath="id"
+                            selection=model.channel.agentNoticeIdContactIdField}}
+                        </div>
+                    </div>
+                    <hr>
+                    {{/if}}
+                    {{/if}}
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">{{strings.capitalised.billerSettings.field1}}</label>
+                        <div class="col-sm-6">
+                            {{#if model.channel.useAuthItem1}}
+                                {{item-select class-name="form-control"
+                                content=contactFieldsSelect
+                                optionLabelPath="value"
+                                optionValuePath="id"
+                                selection=model.channel.authItem1Value}}
+                            {{else}}
+                            {{input type="text" classNames="form-control" value=model.channel.authItem1Value}}
+                            {{/if}}
+                        </div>
+                        <label class="col-sm-2 control-label">{{strings.capitalised.billerSettings.useAuthField1}}</label>
+                        <div class="col-sm-1">
+                            {{input type="checkbox" classNames="form-control" checked=model.channel.useAuthItem1}}
+                        </div>
+                    </div>
+                    {{#if model.channel.requiresSelfservice}}
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">{{strings.capitalised.billerSettings.field1}} Help Message</label>
+                            <div class="col-sm-9">
+                                {{input type="text" classNames="form-control" value=model.channel.authItem1Help}}
+                            </div>
+                        </div>
+                        <hr>
+                    {{/if}}
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">{{strings.capitalised.billerSettings.field2}}</label>
+                        <div class="col-sm-6">
+                            {{#if model.channel.useAuthItem2}}
+                                {{item-select class-name="form-control"
+                                content=contactFieldsSelect
+                                optionLabelPath="value"
+                                optionValuePath="id"
+                                selection=model.channel.authItem2Value}}
+                            {{else}}
+                                {{input type="text" classNames="form-control" value=model.channel.authItem2Value}}
+                            {{/if}}
+                        </div>
+                        <label class="col-sm-2 control-label">{{strings.capitalised.billerSettings.useAuthField2}}</label>
+                        <div class="col-sm-1">
+                            {{input type="checkbox" classNames="form-control" checked=model.channel.useAuthItem2}}
+                        </div>
+                    </div>
+                    {{#if model.channel.requiresSelfservice}}
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">{{strings.capitalised.billerSettings.field2}} Help Message</label>
+                            <div class="col-sm-9">
+                                {{input type="text" classNames="form-control" value=model.channel.authItem2Help}}
+                            </div>
+                        </div>
+                        <hr>
+                    {{/if}}
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">{{strings.capitalised.billerSettings.field3}}</label>
+                        <div class="col-sm-6">
+                            {{#if model.channel.useAuthItem3}}
+                            {{item-select class-name="form-control"
+                            content=contactFieldsSelect
+                            optionLabelPath="value"
+                            optionValuePath="id"
+                            selection=model.channel.authItem3Value}}
+                            {{else}}
+                                {{input type="text" classNames="form-control" value=model.channel.authItem3Value}}
+                            {{/if}}
+                        </div>
+                        <label class="col-sm-2 control-label">{{strings.capitalised.billerSettings.useAuthField3}}</label>
+                        <div class="col-sm-1">
+                            {{input type="checkbox" classNames="form-control" checked=model.channel.useAuthItem3}}
+                        </div>
+                    </div>
+                    {{#if model.channel.requiresSelfservice}}
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">{{strings.capitalised.billerSettings.field3}} Help Message</label>
+                            <div class="col-sm-9">
+                                {{input type="text" classNames="form-control" value=model.channel.authItem3Help}}
+                            </div>
+                        </div>
+                        <hr>
+                    {{/if}}
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">{{strings.capitalised.billerSettings.field4}}</label>
+                        <div class="col-sm-6">
+                            {{#if model.channel.useAuthItem4}}
+                            {{item-select class-name="form-control"
+                            content=contactFieldsSelect
+                            optionLabelPath="value"
+                            optionValuePath="id"
+                            selection=model.channel.authItem4Value}}
+                            {{else}}
+                                {{input type="text" classNames="form-control" value=model.channel.authItem4Value}}
+                            {{/if}}
+                        </div>
+                        <label class="col-sm-2 control-label">{{strings.capitalised.billerSettings.useAuthField4}}</label>
+                        <div class="col-sm-1">
+                            {{input type="checkbox" classNames="form-control" checked=model.channel.useAuthItem4}}
+                        </div>
+                    </div>
+                    {{#if model.channel.requiresSelfservice}}
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">{{strings.capitalised.billerSettings.field4}} Help Message</label>
+                            <div class="col-sm-9">
+                                {{input type="text" classNames="form-control" value=model.channel.authItem4Help}}
+                            </div>
+                        </div>
+                        <hr>
+                    {{/if}}
+                    <div class="form-group">
+                        <div class='btn-toolbar pull-right'>
+
+                            <button type="button" class="btn btn-primary" {{action "saveChannelAction" model.channel biller.id}}>{{strings.billerSettings.update}}</button>
+
+                        </div>
+                    </div>
+                    {{else}}
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">Channel Id</label>
+                        <div class="col-sm-10">
+                            {{input type="text" classNames="form-control" value=model.channel.registrationContactIdField disabled=true}}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">{{strings.capitalised.billerSettings.field1}}</label>
+                        <div class="col-sm-7">
+                            {{input type="text" classNames="form-control" value=model.channel.authItem1Field disabled=true}}
+                        </div>
+                        <label class="col-sm-2 control-label">{{strings.capitalised.billerSettings.useAuthField1}}</label>
+                        <div class="col-sm-1">
+                            {{input type="checkbox" classNames="form-control" checked=model.channel.useAuthItem1 disabled=true}}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">{{strings.capitalised.billerSettings.field2}}</label>
+                        <div class="col-sm-7">
+                            {{input type="text" classNames="form-control" value=model.channel.authItem2Field disabled=true}}
+                        </div>
+                        <label class="col-sm-2 control-label">{{strings.capitalised.billerSettings.useAuthField2}}</label>
+                        <div class="col-sm-1">
+                            {{input type="checkbox" classNames="form-control" checked=model.channel.useAuthItem2 disabled=true}}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">{{strings.capitalised.billerSettings.field3}}</label>
+                        <div class="col-sm-7">
+                            {{input type="text" classNames="form-control" value=model.channel.authItem3Field disabled=true}}
+                        </div>
+                        <label class="col-sm-2 control-label">{{strings.capitalised.billerSettings.useAuthField3}}</label>
+                        <div class="col-sm-1">
+                            {{input type="checkbox" classNames="form-control" checked=model.channel.useAuthItem3 disabled=true}}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">{{strings.capitalised.billerSettings.field4}}</label>
+                        <div class="col-sm-7">
+                            {{input type="text" classNames="form-control" value=model.channel.authItem4Field disabled=true}}
+                        </div>
+                        <label class="col-sm-2 control-label">{{strings.capitalised.billerSettings.useAuthField4}}</label>
+                        <div class="col-sm-1">
+                            {{input type="checkbox" classNames="form-control" checked=model.channel.useAuthItem4 disabled=true}}
+                        </div>
+                    </div>
+                    {{/if}}
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

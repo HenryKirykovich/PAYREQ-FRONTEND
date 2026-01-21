@@ -1,0 +1,619 @@
+<div class="row">
+    <div class="col-md-12">
+        <h2 class="page-heading">
+           Subscription
+        </h2>
+    </div>
+</div>
+
+<div class="row actions-row">
+    <div class="actions btn-group col-sm-4">
+        <a class="btn btn-default" role="button" {{action "backToRegistrations"}}><span class="glyphicon glyphicon-arrow-left"></span> Back</a>
+        <button type="button" class="btn btn-default" {{action "refresh" model.id}}>
+        <span class="glyphicon glyphicon-refresh"></span> {{biller.strings.capitalised.refresh}}</button>
+    </div>
+
+    <div class="actions col-sm-6">
+        {{#if showDeregisterButton}}
+        <div style="display: flex; justify-content: flex-end; align-items: center;">
+            <span style="margin-right: 1rem;">Don't want to receive this bill digitally?</span>
+            <button type="button" class="btn btn-danger" {{action "promptDeregister"}}>
+            Unsubscribe
+            </button>
+        </div>
+        {{/if}}
+    </div>
+</div>
+
+{{#if model.isXeroconnect}}
+{{#if hasXeroAccounts}}
+{{else}}
+<div class="col-md-10 alert alert-danger">
+    Unable to connect to xero. Please try again later.
+</div>
+{{/if}}
+{{/if}}
+
+{{#if model.isMyob}}
+{{#if hasMyobBusinesses}}
+{{else}}
+<div class="col-md-10 alert alert-danger">
+    Unable to connect to MYOB. Please try again later.
+</div>
+{{/if}}
+{{/if}}
+
+{{#if model.isReckon}}
+{{#if hasReckonVendors}}
+{{else}}
+<div class="col-md-10 alert alert-danger">
+    Unable to connect to Reckon. Please try again later.
+</div>
+{{/if}}
+{{/if}}
+
+<form class="form-horizontal" role="form">
+    <div class="row">
+        <div class="col-md-10">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">Payer Details</h4>
+                </div>
+                <div class="panel-body">
+                    <div class="form-group col-md-10">
+                        <label class="col-md-4 control-label">
+                            Channel
+                        </label>
+                        <div class="col-md-8">
+                            <p class="form-control-static">
+                                {{channelPartnerSystemDisplay}}
+                            </p>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-10">
+                        <label class="col-md-4 control-label">
+                            Biller
+                        </label>
+                        <div class="col-md-8">
+                            <p class="form-control-static">
+                                {{model.tagName}}
+                            </p>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-10">
+                        <label class="col-md-4 control-label">
+                            Biller Code
+                        </label>
+                        <div class="col-md-8">
+                            <p class="form-control-static">
+                                {{model.billerId}}
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="form-group col-md-10">
+                        <label class="col-md-4 control-label">
+                            {{model.registrationContactIdField}}
+                        </label>
+                        <div class="col-md-8">
+                            <p class="form-control-static">
+                                <strong>{{model.accountNumber}}</strong>
+                            </p>
+                        </div>
+                    </div>
+
+                    {{#if showAuthItem1}}
+                        <div class="form-group col-md-10">
+                            <label class="col-md-4 control-label">
+                                {{model.authItem1Field}}
+                            </label>
+                            <div class="col-md-8">
+                                <p class="form-control-static">
+                                    {{model.authItem1}}
+                                </p>
+                            </div>
+                        </div>
+                    {{/if}}
+
+                    {{#if showAuthItem2}}
+                        <div class="form-group col-md-10">
+                            <label class="col-md-4 control-label">
+                                {{model.authItem2Field}}
+                            </label>
+                            <div class="col-md-8">
+                                <p class="form-control-static">
+                                    {{model.authItem2}}
+                                </p>
+                            </div>
+                        </div>
+                    {{/if}}
+
+                    {{#if showAuthItem3}}
+                        <div class="form-group col-md-10">
+                            <label class="col-md-4 control-label">
+                                {{model.authItem3Field}}
+                            </label>
+                            <div class="col-md-8">
+                                <p class="form-control-static">
+                                    {{model.authItem3}}
+                                </p>
+                            </div>
+                        </div>
+                    {{/if}}
+
+                    {{#if showAuthItem4}}
+                        <div class="form-group col-md-10">
+                            <label class="col-md-4 control-label">
+                                {{model.authItem4Field}}
+                            </label>
+                            <div class="col-md-8">
+                                <p class="form-control-static">
+                                    {{model.authItem4}}
+                                </p>
+                            </div>
+                        </div>
+                    {{/if}}
+
+                    <div class="form-group col-md-10">
+                        <label class="col-md-4 control-label">
+                            Created Date
+                        </label>
+                        <div class="col-md-8">
+                            <p class="form-control-static">
+                                {{createdDateFormatted}}
+                            </p>
+                        </div>
+                    </div>
+
+
+                    {{#if showDeregistedAndFailed}}
+                    <div class="alert alert-danger col-md-10">
+                        <div class="form-group col-md-12">
+                            <label class="col-md-4 control-label">
+                                Deregistered Date
+                            </label>
+                            <div class="col-md-8">
+                                <p class="form-control-static">
+                                    {{deactivatedDateFormatted}}
+                                </p>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-12">
+                            <label class="col-md-4 control-label">
+                                Deregistered Reason
+                            </label>
+                            <div class="col-md-8">
+                                <p class="form-control-static">
+                                    {{statusDescription}}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    {{/if}}
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+{{#if model.isXeroconnect}}
+<form class="form-horizontal" role="form">
+    <div class="row">
+        <div class="col-md-10">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">Xero Invoice Fields</h4>
+                </div>
+                <div class="panel-body">
+                    <div class="form-group col-md-10">
+                        <label class="col-md-4 control-label">
+                            GST Inclusive or Exclusive
+                        </label>
+                        <div class="col-md-8">
+
+                                {{item-select class-name="form-control"
+                                content=gstInclusiveExclusive
+                                optionLabelPath="name"
+                                optionValuePath="id"
+                                selection=model.channelRef1}}
+                        </div>
+                    </div>
+                    <div class="form-group col-md-10">
+                        <label class="col-md-4 control-label">
+                            Default Invoice Account Code
+                        </label>
+                        <div class="col-md-8">
+                            <p class="form-control-static">
+
+                                {{#if hasXeroAccounts}}
+                                    {{item-select class-name="form-control"
+                                    content=model.xeroaccounts
+                                    optionLabelPath="name"
+                                    optionValuePath="id"
+                                    selection=model.channelRef2}}
+                                {{else}}
+                                    <p>Unable to access xero accounts</p>
+                                {{/if}}
+
+                            </p>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-10">
+                        <label class="col-md-4 control-label">
+                            Default Invoice Status
+                        </label>
+                        <div class="col-md-8">
+                            <p class="form-control-static">
+                                {{item-select class-name="form-control"
+                                content=invoiceStatus
+                                optionLabelPath="name"
+                                optionValuePath="id"
+                                selection=model.channelRef3}}
+                            </p>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-10">
+                        <label class="col-md-4 control-label">
+                            Amount Payable Total or Minimum/Installment
+                        </label>
+                        <div class="col-md-8">
+                            {{item-select class-name="form-control"
+                            content=amountTotalOrMinimum
+                            optionLabelPath="name"
+                            optionValuePath="id"
+                            selection=model.channelRef4}}
+                        </div>
+                    </div>
+                    <div class="col-sm-12">
+                        {{#if enableUpdateButton}}
+                            <div class="btn-toolbar pull-right margin-top-sm">
+                                <button class="btn btn-primary" {{action 'update' model.id model.channelRef1 model.channelRef2 model.channelRef3 model.channelRef4 model.details}}>Update</button>
+                            </div>
+                        {{else}}
+                            <div class="btn-toolbar pull-right margin-top-sm">
+                                <button class="btn btn-primary" {{action 'update' model.id model.channelRef1 model.channelRef2 model.channelRef3 model.channelRef4 model.details}} disabled>Update</button>
+                            </div>
+                        {{/if}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+{{/if}}
+
+{{#if model.isMyob}}
+<form class="form-horizontal" role="form">
+    <div class="row">
+        <div class="col-md-10">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">MYOB Invoice Fields</h4>
+                </div>
+                <div class="panel-body">
+                    <div class="form-group col-md-10">
+                        <label class="col-md-4 control-label">
+                            MYOB business
+                        </label>
+                        <div class="col-md-8">
+                            <p class="form-control-static">
+
+                                {{#if hasMyobBusinesses}}
+                                {{item-select class-name="form-control"
+                                content=model.myobaccounts
+                                optionLabelPath="name"
+                                optionValuePath="id"
+                                selection=model.channelRef2}}
+                                {{else}}
+                            <p>Unable to access MYOB Businesses</p>
+                            {{/if}}
+
+                            </p>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-10">
+                        <label class="col-md-4 control-label">
+                            GST Inclusive or Exclusive
+                        </label>
+                        <div class="col-md-8">
+
+                            {{item-select class-name="form-control"
+                            content=gstInclusiveExclusiveMyob
+                            optionLabelPath="name"
+                            optionValuePath="id"
+                            selection=model.channelRef1}}
+                        </div>
+                    </div>
+                    <div class="form-group col-md-10">
+                        <label class="col-md-4 control-label">
+                            Amount Payable Total or Minimum/Installment
+                        </label>
+                        <div class="col-md-8">
+                            {{item-select class-name="form-control"
+                            content=amountTotalOrMinimum
+                            optionLabelPath="name"
+                            optionValuePath="id"
+                            selection=model.channelRef3}}
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12">
+                        {{#if enableUpdateButton}}
+                        <div class="btn-toolbar pull-right margin-top-sm">
+                            <button class="btn btn-primary" {{action 'update' model.id model.channelRef1 model.channelRef2 model.channelRef3 model.channelRef4 model.details}}>Update</button>
+                        </div>
+                        {{else}}
+                        <div class="btn-toolbar pull-right margin-top-sm">
+                            <button class="btn btn-primary" {{action 'update' model.id model.channelRef1 model.channelRef2 model.channelRef3 model.channelRef4 model.details}} disabled>Update</button>
+                        </div>
+                        {{/if}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+{{/if}}
+
+{{#if model.isEmail}}
+<form class="form-horizontal" role="form">
+    <div class="row">
+        <div class="col-md-10">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">Registered Emails</h4>
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="div-margin">
+                            <div class="alert alert-info">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <h5>Only active emails that have been verified following the step in the verification email will receive bills.</h5>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-1">
+                                        <button type="button" class="btn btn-success" title="Email active">
+                                            <span class="glyphicon glyphicon-ok-circle"></span>
+                                        </button>
+                                    </div>
+                                    <div class="col-md-11">
+                                        <h5>An active email registration</h5>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-1">
+                                        <button type="button" class="btn btn-warning" title="Email pending confirmation">
+                                            <span class="glyphicon glyphicon-ban-circle"></span>
+                                        </button>
+                                    </div>
+                                    <div class="col-md-11">
+                                        <h5>An email address pending confirmation.</h5>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-1">
+                                        <button type="button" class="btn btn-default" title="Resend confirmation email">
+                                            <span class="glyphicon glyphicon-repeat"></span>
+                                        </button>
+                                    </div>
+                                    <div class="col-md-11">
+                                        <h5>Resend confirmation email to listed email address. Button is only available if email address is pending confirmation.</h5>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {{#if model.updateerror}}
+                        <div class="row">
+                            <div class="div-margin">
+                                <div class="alert alert-danger">
+                                    {{model.updateerror}}
+                                    <ul>
+                                        {{#each this.errorsemail as |error|}}
+                                            <li>{{error.message}}</li>
+                                        {{/each}}
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    {{/if}}
+
+                    {{#each model.details as |detail|}}
+                        {{#if detail.id}}
+                        {{else}}
+                            <div class="form-group col-md-12">
+                                <hr>
+                            </div>
+                        {{/if}}
+                        <div class="form-group col-md-11">
+                            <label class="col-md-3 hidden-sm hidden-xs control-label">
+                                Email
+                            </label>
+                            <div class="col-md-6 col-sm-9 col-xs-9">
+                                {{#if detail.id}}
+                                <p class="form-control-static"><strong>{{detail.registrationValue}}</strong> {{#if detail.isValid}}<small> | Active from {{view-date date=detail.activatedTime withTime=true}}</small>{{/if}}</p>
+                                {{else}}
+                                    {{input classNames="form-control" placeholder="Email" value=detail.registrationValue id=detail.id}}
+                                {{/if}}
+                            </div>
+                            <div class="col-md-1 col-sm-1 col-xs-1">
+                                {{#if detail.isValid}}
+                                <button type="button" class="btn btn-success" title="Email active">
+                                    <span class="glyphicon glyphicon-ok-circle"></span>
+                                </button>
+                                {{else}}
+                                <button type="button" class="btn btn-warning" title="Email pending confirmation">
+                                    <span class="glyphicon glyphicon-time"></span>
+                                </button>
+                                {{/if}}
+                            </div>
+                            {{#if showDeregistedAndFailed}}
+                            <div class="col-md-1 col-sm-1 col-xs-1" style="line-height: 28px;">
+                                <button type="button" class="btn btn-danger" title="Delete email" {{action "removeEmail" detail}} disabled=true>
+                                <span class="glyphicon glyphicon-remove"></span>
+                                </button>
+                            </div>
+                            {{else}}
+                            <div class="col-md-1 col-sm-1 col-xs-1" style="line-height: 28px;">
+                                <button type="button" class="btn btn-danger" title="Delete email" {{action "removeEmail" detail}}>
+                                <span class="glyphicon glyphicon-remove"></span>
+                                </button>
+                            </div>
+                            {{/if}}
+                            <div class="col-md-1 col-sm-1 col-xs-1" style="line-height: 28px;">
+                                {{#if detail.isValid}}
+                                {{else}}
+                                    {{#if detail.id}}
+                                        {{#if showNotDeregistedAndFailed}}
+                                        <button type="button" class="btn btn-default" title="Resend email confirmation" {{action "resendEmailVerification" detail.id}}>
+                                        <span class="glyphicon glyphicon-repeat"></span>
+                                        </button>
+                                        {{/if}}
+                                    {{/if}}
+                                {{/if}}
+                            </div>
+                        </div>
+                        {{#if detail.id}}
+                        {{else}}
+                            <div class="form-group col-md-11">
+                                <label class="col-md-2 text-right hidden-sm hidden-xs">Confirm Address: </label>
+                                <label class="hidden-md hidden-lg text-left col-sm-5 col-xs-5">Confirm Address: </label>
+                                <div class="col-md-1 text-center col-sm-2 col-xs-2"> {{input  type="checkbox" id=detail.id checked=detail.accept}}</div>
+                                <div class="col-md-8 col-sm-12 col-xs-12"><label><small class="text-muted">By confirming the email address you are allowing the owner of the email address to receive bills or statements </small></label></div>
+                            </div>
+                        {{/if}}
+                    {{/each}}
+                    {{#if showNotDeregistedAndFailed}}
+                        <div class="form-group col-md-11">
+                            <div class="actions btn-group col-md-4 col-md-offset-4">
+                                <button type="button" class="btn btn-default" style="width: 100%;" {{action 'addEmail'}}><span class="glyphicon glyphicon-plus"></span> Add Email</button>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12">
+                            <div class="btn-toolbar pull-right margin-top-sm">
+                                <button class="btn btn-primary" {{action 'update' model.id model.channelRef1 model.channelRef2 model.channelRef3 model.channelRef4 model.details}}>Update</button>
+                            </div>
+                        </div>
+                    {{else}}
+                        <div class="col-sm-12">
+                            <div class="btn-toolbar pull-right margin-top-sm">
+                                <button class="btn btn-primary" {{action 'update' model.id model.channelRef1 model.channelRef2 model.channelRef3 model.channelRef4 model.details}} disabled=true>Update</button>
+                            </div>
+                        </div>
+                    {{/if}}
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+{{/if}}
+
+{{#if model.isReckon}}
+<form class="form-horizontal" role="form">
+    <div class="row">
+        <div class="col-md-10">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">Reckon Invoice Fields</h4>
+                </div>
+                <div class="panel-body">
+                    <div class="form-group col-md-10">
+                        <label class="col-md-4 control-label">
+                            Supplier
+                        </label>
+                        <div class="col-md-8">
+                            <p class="form-control-static">
+
+                            {{#if hasReckonVendors}}
+                                {{item-select class-name="form-control"
+                                content=model.reckonvendors
+                                optionLabelPath="name"
+                                optionValuePath="id"
+                                selection=model.channelRef1}}
+                            {{else}}
+                                <p>Unable to access Reckon suppliers</p>
+                            {{/if}}
+                            </p>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-10">
+                        <label class="col-md-4 control-label">
+                            Supplier Terms
+                        </label>
+                        <div class="col-md-8">
+                            <p class="form-control-static">
+                            {{model.supplier.terms}}
+                            </p>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-10">
+                        <label class="col-md-4 control-label">
+                            Supplier Tax Code
+                        </label>
+                        <div class="col-md-8">
+                            <p class="form-control-static">
+                            {{#if hasReckonTaxCodes}}
+                                {{item-select class-name="form-control"
+                                content=model.reckontaxcodes
+                                optionLabelPath="name"
+                                optionValuePath="id"
+                                selection=model.channelRef3}}
+                            {{else}}
+                                <p>Unable to access Reckon tax codes</p>
+                            {{/if}}
+                            </p>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-10">
+                        <label class="col-md-4 control-label">
+                            Default Reckon Account Code
+                        </label>
+                        <div class="col-md-8">
+                            <p class="form-control-static">
+                            {{#if hasReckonAccounts}}
+                                {{item-select class-name="form-control"
+                                content=model.reckonaccounts
+                                optionLabelPath="name"
+                                optionValuePath="id"
+                                selection=model.channelRef2}}
+                            {{else}}
+                                <p>Unable to access Reckon account codes</p>
+                            {{/if}}
+                            </p>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-10">
+                        <label class="col-md-4 control-label">
+                            Amount Payable Total or Minimum/Installment
+                        </label>
+                        <div class="col-md-8">
+                            {{item-select class-name="form-control"
+                            content=amountTotalOrMinimum
+                            optionLabelPath="name"
+                            optionValuePath="id"
+                            selection=model.channelRef4}}
+                        </div>
+                    </div>
+                    <div class="col-sm-12">
+                        {{#if enableUpdateButton}}
+                        <div class="btn-toolbar pull-right margin-top-sm">
+                            <button class="btn btn-primary" {{action 'update' model.id model.channelRef1 model.channelRef2 model.channelRef3 model.channelRef4 model.details}}>Update</button>
+                        </div>
+                        {{else}}
+                        <div class="btn-toolbar pull-right margin-top-sm">
+                            <button class="btn btn-primary" {{action 'update' model.id model.channelRef1 model.channelRef2 model.channelRef3 model.channelRef4 model.details}} disabled>Update</button>
+                        </div>
+                        {{/if}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+{{/if}}

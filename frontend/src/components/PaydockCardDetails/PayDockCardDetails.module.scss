@@ -1,0 +1,9 @@
+@import "../payments/PaymentForm/payment-wizard-layout";
+
+.cardEntry {
+  width: 100%;
+
+  iframe {
+    @include iframe-card-details();
+  }
+}

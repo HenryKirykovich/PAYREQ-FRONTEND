@@ -1,0 +1,38 @@
+.registrationRow {
+  display: flex;
+  align-items: flex-start;
+
+  :nth-child(1), :nth-child(2) {
+    margin-right: 1rem;
+  }
+
+  :nth-child(3) {
+    width: 300px;
+  }
+}
+
+.instructionContainer {
+  display: flex;
+  align-items: baseline;
+
+  @media (max-width: 1000px) {
+    flex-direction: column;
+
+    > button {
+      max-width: 100%;
+      overflow: hidden;
+    }
+  }
+}
+
+.buttonContainer {
+  display: flex;
+}
+
+.formErrors {
+  margin-top: 1rem;
+  div {
+    margin-right: 0px;
+    margin-left: 0px;
+  }
+}

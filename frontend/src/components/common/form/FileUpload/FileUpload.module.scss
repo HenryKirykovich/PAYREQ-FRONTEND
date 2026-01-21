@@ -1,0 +1,33 @@
+@import "../../variables";
+
+.upload {
+  margin-bottom: 1.5rem;
+}
+
+.progressBarWrapper {
+  display: flex;
+  margin-top: 0.2rem;
+}
+
+.progressBar {
+  accent-color: $primary-color;
+
+  width: 94%;
+  height: 20px;
+
+  position: relative;
+  display: block;
+}
+
+.progressPercent {
+  margin-left: 1rem;
+  margin-right: 0.5rem
+}
+
+.progressBarPercentText {
+  margin-bottom: 2px;
+}
+
+.helpBlock {
+  margin-top: -5px; //to counteract the margin bottom of the label
+}

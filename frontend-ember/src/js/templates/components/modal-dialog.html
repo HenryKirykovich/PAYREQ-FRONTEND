@@ -1,0 +1,31 @@
+<div class="modal fade" id="pr-modal" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        {{#if showClose}}
+          <button type="button" class="close" aria-hidden="true" {{action "close"}}>&times;</button>
+        {{/if}}
+        <h4 class="modal-title" id="modalLabel">{{modalTitle}}</h4>
+      </div>
+      <div class="modal-body">
+        {{yield}}
+      </div>
+      <div class="modal-footer">
+        {{#each secondaryButtons as |btn|}}
+          <button type="button" class="btn {{btn.bsType}}" {{action "actionButtonClicked" btn}}>
+              {{btn.label}}
+          </button>
+        {{/each}}
+
+        {{#if primaryButton}}
+          <button type="button"
+            disabled={{isPrimaryDisabled}}
+            class="btn btn-primary {{primaryButton.bsType}}"
+            {{action "actionButtonClicked" primaryButton}}>
+              {{primaryButton.label}}
+          </button>
+        {{/if}}
+      </div>
+    </div>
+  </div>
+</div>

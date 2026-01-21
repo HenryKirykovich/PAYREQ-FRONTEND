@@ -1,0 +1,699 @@
+<div id="view-bill">
+    <div class="row">
+        <div class="col-md-12">
+            <h2 class="page-heading">
+                {{strings.capitalised.outgoingBill}} "{{model.billerInvoiceNumber}}"
+                {{#if model.payerName}}
+                <small>{{strings.sentTo}} {{model.payerName}}</small>
+                {{/if}}
+            </h2>
+        </div>
+    </div>
+
+
+    <div class="row actions-row" role="toolbar">
+        <div class="actions btn-group col-sm-4">
+            <button type="button" class="btn btn-default" {{action "backToBills" model}}><span class="glyphicon glyphicon-arrow-left"></span> {{strings.capitalised.backToBills}}</button>
+            <button type="button" class="btn btn-default" {{action "refresh" model}}><span class="glyphicon glyphicon-refresh"></span> Refresh</button>
+        </div>
+
+        {{#if showApprovalActions}}
+        <div class="actions btn-group col-sm-3">
+            {{#if canApprove}}
+            <button type="button" class="btn btn-success" {{action "approve" model}}>
+                <span class="glyphicon glyphicon-ok"></span> Send
+            </button>
+            {{/if}}
+
+            {{#if canReject}}
+            <button type="button" class="btn btn-danger" {{action "reject" model}}>
+                <span class="glyphicon glyphicon-remove"></span> Delete
+            </button>
+            {{/if}}
+
+            {{#if canRemove}}
+            <button type="button" class="btn btn-danger" {{action "promptRemoveBill" model}}>
+                <span class="glyphicon glyphicon-remove"></span> Delete
+            </button>
+            {{/if}}
+        </div>
+        {{/if}}
+
+        {{#if showExternalActionButton}}
+            <button type="button" class="btn btn-primary" {{action "showActionModal"}}>
+                <span class="glyphicon glyphicon-new-window"></span> External action
+            </button>
+        {{/if}}
+    </div>
+    
+    <form class="form-horizontal" role="form">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">{{strings.capitalised.billDetails}}</h4>
+                    </div>
+                    <form id="update-bill-form">
+                        <div class="panel-body">
+
+                        {{#if showStatus}}
+                            <div class="form-group col-md-12">
+                                <label class="col-md-4 control-label">{{strings.capitalised.status}}</label>
+                                <div class="col-md-8">
+                                    <p class="form-control-static
+                                                  {{if model.isStatusOfNote 'alert'}}
+                                                  {{if model.hasBeenRejected 'alert-danger'}}
+                                                  {{if model.waitingReview 'alert-warning'}}
+                                                  {{if model.waitingCredit 'alert-warning'}}
+                                                  {{if model.contactChanged 'alert-warning'}}
+                                                  {{if model.inDraft 'alert-warning'}}
+                                                  {{if model.hasBeenSent 'alert-success'}}
+                                                  {{if model.isPendingRegistration 'alert-warning'}}">
+                                        <strong>{{model.statusText}}</strong>
+                                        <br/>
+                                        <em>
+                                            {{#if model.hasBeenRejected}}<span class="glyphicon glyphicon-remove"></span>{{/if}}
+                                            {{#if model.waitingCredit}}<span class="glyphicon glyphicon-warning-sign"></span>{{/if}}
+                                            {{#if model.contactChanged}}<span class="glyphicon glyphicon-warning-sign"></span>{{/if}}
+                                            {{#if model.waitingReview}}<span class="glyphicon glyphicon-flag"></span>{{/if}}
+                                            {{#if model.inDraft}}<span class="glyphicon glyphicon-exclamation-sign"></span>{{/if}}
+                                            {{#if model.isPendingRegistration}}<span class="glyphicon glyphicon-exclamation-sign"></span>{{/if}}
+                                            {{model.statusDescription}}
+                                        </em>
+                                    </p>
+                                </div>
+                            </div>
+                        {{/if}}
+
+                        {{#if model.hasBeenSent}}
+                            <div class="form-group col-md-12">
+                                <label class="col-md-4 control-label">{{strings.capitalised.sendToPrinter}}</label>
+                                <div class="col-md-8">
+                                {{#if model.sendToPrinter}}
+                                    <p class="form-control-static">{{strings.print}}</p>
+                                {{else}}
+                                    <p class="form-control-static">{{strings.digital}}</p>
+                                {{/if}}
+                                </div>
+                            </div>
+                        {{/if}}
+
+                        {{#if model.hasValidationFailures}}
+                            <div class="form-group col-md-12">
+                                <label class="col-md-4 control-label">{{strings.capitalised.validationErrors}}</label>
+                                <div class="col-md-8">
+                                    <ul class="validation-failures form-control-static list-group">
+                                        {{#each model.validationFailuresWithDescriptions as |validationFailuresWithDescription|}}
+                                        <li class="list-group-item list-group-item-warning"><span class="glyphicon glyphicon-exclamation-sign"></span> {{validationFailuresWithDescription.description}}</li>
+                                        {{/each}}
+                                    </ul>
+
+                                </div>
+                            </div>
+                        {{/if}}
+
+
+                        {{#if hasPaidInPayreq}}
+                            <div class="form-group col-md-12">
+                                <label class="col-md-4 control-label">{{strings.capitalised.invoiceStatus}}</label>
+                                <div class="col-md-8">
+                                    <p class="form-control-static">Paid {{model.paidAmountAsCurrency}} via MyBills on {{view-date date=model.invoice.paymentDate}} with {{model.schemeLabel}} {{model.invoice.cardNumberLastDigits}}</p>
+                                    <p class="form-control-static">Txn ID: {{model.invoice.gatewayTransactionId}}</p>
+                                </div>
+                            </div>
+                        {{/if}}
+
+                        {{#if showBillerInvoiceNumber}}
+                            <div class="form-group col-md-12">
+                                <label class="col-md-4 control-label">{{strings.capitalised.billerInvoiceNumber}}</label>
+                                <div class="col-md-8">
+                                {{#if canUpdate}}
+                                    {{input type="text" class="form-control" value=model.billerInvoiceNumber id="billerInvoiceNumber"}}
+                                {{else}}
+                                    <p class="form-control-static"><strong>{{#if model.billerInvoiceNumber}}{{model.billerInvoiceNumber}}{{else}}<span class="label label-warning">{{biller.strings.notFound}}</span>{{/if}}</strong></p>
+                                {{/if}}
+                                </div>
+                            </div>
+                        {{/if}}
+
+                        {{#if showPayerName}}
+                            <div class="form-group col-md-12">
+                                <label class="col-md-4 control-label">{{strings.capitalised.payerName}}</label>
+                                <div class="col-md-8">
+                                    <p class="form-control-static">{{#if model.billRef3}}{{model.billRef3}}{{else}}<span class="label label-warning">{{biller.strings.notFound}}</span>{{/if}}</p>
+                                </div>
+                            </div>
+                        {{/if}}
+
+                        {{#if showBillerAccountNumber}}
+                            <div class="form-group col-md-12">
+                                <label class="col-md-4 control-label"><abbr title="{{strings.abbr.billerAccountNumber}}">{{strings.capitalised.billerAccountNumber}}</abbr></label>
+                                <div class="col-md-8">
+                                    {{#if canUpdate}}
+                                        {{input type="text" class="form-control" value=model.billerAccountNumber id="billerAccountNumber"}}
+                                    {{else}}
+                                        <p class="form-control-static">{{#if model.billerAccountNumber}}{{model.billerAccountNumber}}{{else}}<span class="label label-warning">{{biller.strings.notFound}}</span>{{/if}}</p>
+                                    {{/if}}
+                                </div>
+                            </div>
+                        {{/if}}
+
+                        {{#if showBillRef1}}
+                            {{#if billRefField1Name}}
+                                <div class="form-group col-md-12">
+                                    <label class="col-md-4 control-label">{{billRefField1Name}}</label>
+                                    <div class="col-md-8">
+                                        {{#if canUpdate}}
+                                        {{input type="text" class="form-control" value=model.billRef1 id="billRef1"}}
+                                        {{else}}
+                                        <p class="form-control-static">{{#if model.billRef1}}{{model.billRef1}}{{else}}<span class="label label-warning">{{biller.strings.notFound}}</span>{{/if}}</p>
+                                        {{/if}}
+                                    </div>
+                                </div>
+                            {{/if}}
+                        {{/if}}
+
+                        {{#if showBillRef2}}
+                            {{#if billRefField2Name}}
+                            <div class="form-group col-md-12">
+                                <label class="col-md-4 control-label">{{billRefField2Name}}</label>
+                                <div class="col-md-8">
+                                    {{#if canUpdate}}
+                                    {{input type="text" class="form-control" value=model.billRef2 id="billRef2"}}
+                                    {{else}}
+                                    <p class="form-control-static">{{#if model.billRef2}}{{model.billRef2}}{{else}}<span class="label label-warning">{{biller.strings.notFound}}</span>{{/if}}</p>
+                                    {{/if}}
+                                </div>
+                            </div>
+                            {{/if}}
+                        {{/if}}
+
+                        {{#if showBillRef3}}
+                            {{#if billRefField3Name}}
+                            <div class="form-group col-md-12">
+                                <label class="col-md-4 control-label">{{billRefField3Name}}</label>
+                                <div class="col-md-8">
+                                    {{#if canUpdate}}
+                                    {{input type="text" class="form-control" value=model.billRef3 id="billRef3"}}
+                                    {{else}}
+                                    <p class="form-control-static">{{#if model.billRef3}}{{model.billRef3}}{{else}}<span class="label label-warning">{{biller.strings.notFound}}</span>{{/if}}</p>
+                                    {{/if}}
+                                </div>
+                            </div>
+                            {{/if}}
+                        {{/if}}
+
+                        {{#if showBillRef4}}
+                            {{#if billRefField4Name}}
+                            <div class="form-group col-md-12">
+                                <label class="col-md-4 control-label">{{billRefField4Name}}</label>
+                                <div class="col-md-8">
+                                    {{#if canUpdate}}
+                                    {{input type="text" class="form-control" value=model.billRef4 id="billRef4"}}
+                                    {{else}}
+                                    <p class="form-control-static">{{#if model.billRef4}}{{model.billRef4}}{{else}}<span class="label label-warning">{{biller.strings.notFound}}</span>{{/if}}</p>
+                                    {{/if}}
+                                </div>
+                            </div>
+                            {{/if}}
+                        {{/if}}
+
+                        {{#if showBillRef5}}
+                            {{#if billRefField5Name}}
+                            <div class="form-group col-md-12">
+                                <label class="col-md-4 control-label">{{billRefField5Name}}</label>
+                                <div class="col-md-8">
+                                    {{#if canUpdate}}
+                                    {{input type="text" class="form-control" value=model.billRef5 id="billRef5"}}
+                                    {{else}}
+                                    <p class="form-control-static">{{#if model.billRef5}}{{model.billRef5}}{{else}}<span class="label label-warning">{{biller.strings.notFound}}</span>{{/if}}</p>
+                                    {{/if}}
+                                </div>
+                            </div>
+                            {{/if}}
+                        {{/if}}
+
+                        {{#if showBillRef6}}
+                            {{#if billRefField6Name}}
+                            <div class="form-group col-md-12">
+                                <label class="col-md-4 control-label">{{billRefField6Name}}</label>
+                                <div class="col-md-8">
+                                    {{#if canUpdate}}
+                                    {{input type="text" class="form-control" value=model.billRef6 id="billRef6"}}
+                                    {{else}}
+                                    <p class="form-control-static">{{#if model.billRef6}}{{model.billRef6}}{{else}}<span class="label label-warning">{{biller.strings.notFound}}</span>{{/if}}</p>
+                                    {{/if}}
+                                </div>
+                            </div>
+                            {{/if}}
+                        {{/if}}
+
+                        {{#if showCreatedTime}}
+                            <div class="form-group col-md-12">
+                                <label class="col-md-4 control-label">{{strings.capitalised.createdTime}}</label>
+                                <div class="col-md-8">
+                                    <p class="form-control-static">{{#if model.createdTime}}{{view-date date=model.createdTime}}{{else}}<span class="label label-warning">{{biller.strings.notFound}}</span>{{/if}}</p>
+                                </div>
+                            </div>
+                        {{/if}}
+
+                        {{#if showReceivedTime}}
+                            <div class="form-group col-md-12">
+                                <label class="col-md-4 control-label">{{strings.capitalised.receivedTime}}</label>
+                                <div class="col-md-8">
+                                    <p class="form-control-static">{{#if model.receivedTime}}{{view-date date=model.receivedTime withFullTime=true}}{{else}}<span class="label label-warning">{{biller.strings.notFound}}</span>{{/if}}</p>
+                                </div>
+                            </div>
+                        {{/if}}
+
+                        {{#if model.dueDateTotal}}
+                        <div class="form-group col-md-12">
+                            <label class="col-md-4 control-label">{{strings.capitalised.dueDateTotal}}</label>
+                            <div class="col-md-8">
+                                {{#if canUpdate}}
+                                {{common-date-picker dateVal=model.formattedDueDateTotal id="dueDateTotal"}}
+                                {{else}}
+                                <p class="form-control-static">{{view-date date=model.dueDateTotalUtc}}</p>
+                                {{/if}}
+                            </div>
+                        </div>
+                        {{/if}}
+
+                        {{#if showAmountDue}}
+                            <div class="form-group col-md-12">
+                                <label class="col-md-4 control-label">{{strings.capitalised.amountDue}}</label>
+                                <div class="col-md-8 form-inline">
+                                    {{#if canUpdate}}
+                                        ${{input type="text" class="form-control" value=model.amountDue id="amountDue"}}
+                                    {{else}}
+                                        <p class="form-control-static">{{#if model.amountAsCurrency}}{{model.amountAsCurrency}}{{else}}<span class="label label-warning">{{biller.strings.notFound}}</span>{{/if}}</p>
+                                    {{/if}}
+                                </div>
+                            </div>
+                        {{/if}}
+
+                        {{#if showDueDate}}
+                            <div class="form-group col-md-12">
+                                <label class="col-md-4 control-label">{{strings.capitalised.dueDate}}</label>
+                                <div class="col-md-8">
+                                    {{#if canUpdate}}
+                                        {{common-date-picker dateVal=model.formattedDueDate id="dueDate"}}
+                                    {{else}}
+                                    <p class="form-control-static">{{#if model.dueDate}}{{view-date date=model.dueDateUtc}}{{else}}<span class="label label-warning">{{biller.strings.notFound}}</span>{{/if}}</p>
+                                    {{/if}}
+                                </div>
+                            </div>
+                        {{/if}}
+
+                        {{#if showMinAmountDue}}
+                            <div class="form-group col-md-12">
+                                <label class="col-md-4 control-label">{{strings.capitalised.minAmountDue}}</label>
+                                <div class="col-md-8">
+                                    <p class="form-control-static">{{#if model.minAmountDueSupplied}}{{model.minAmountAsCurrency}}{{else}}<span class="label label-warning">{{biller.strings.notFound}}</span>{{/if}}</p>
+                                </div>
+                            </div>
+                        {{/if}}
+
+                        {{#if showAccountBalance}}
+                            <div class="form-group col-md-12">
+                                <label class="col-md-4 control-label">{{strings.capitalised.accountBalance}}</label>
+                                <div class="col-md-8">
+                                    <p class="form-control-static">{{#if model.accountBalance}}{{model.accountBalanceAsCurrency}}{{else}}<span class="label label-warning">{{biller.strings.notFound}}</span>{{/if}}</p>
+                                </div>
+                            </div>
+                        {{/if}}
+
+                        {{#if showPrevAccountBalance}}
+                            <div class="form-group col-md-12">
+                                <label class="col-md-4 control-label">{{strings.capitalised.prevAccountBalance}}</label>
+                                <div class="col-md-8">
+                                    <p class="form-control-static">{{#if model.prevAccountBalance}}{{model.prevAccountBalanceAsCurrency}}{{else}}<span class="label label-warning">{{biller.strings.notFound}}</span>{{/if}}</p>
+                                </div>
+                            </div>
+                        {{/if}}
+
+                        {{#if model.customerReference}}
+                            <div class="form-group col-md-12">
+                                <label class="col-md-4 control-label">{{strings.capitalised.customerReference}}</label>
+                                <div class="col-md-8">
+                                    <p class="form-control-static">{{model.customerReference}}</p>
+                                </div>
+                            </div>
+                        {{/if}}
+
+                        {{#if showBillType}}
+                            {{#unless isEpostReplacement}}
+                            <div class="form-group col-md-12">
+                                <label class="col-md-4 control-label">{{strings.capitalised.billType}}</label>
+                                <div class="col-md-8">
+                                    <p class="form-control-static">{{#if model.billType}}{{model.billTypeDescription}}{{else}}<span class="label label-warning">{{biller.strings.notFound}}</span>{{/if}}</p>
+                                </div>
+                            </div>
+                            {{/unless}}
+                        {{/if}}
+
+                        {{#if showJobId}}
+                            <div class="form-group col-md-12">
+                                <label class="col-md-4 control-label">{{strings.capitalised.jobId}}</label>
+                                <div class="col-md-8">
+                                    <p class="form-control-static">{{#if model.jobId}}{{model.jobId}}{{else}}<span class="label label-warning">{{biller.strings.notFound}}</span>{{/if}}</p>
+                                </div>
+                            </div>
+                        {{/if}}
+
+                        {{#if showAutoPaymentStatus}}
+                            <div class="form-group col-md-12">
+                                <label class="col-md-4 control-label">{{strings.capitalised.autoPaymentStatus}}</label>
+                                <div class="col-md-8">
+                                    <p class="form-control-static">{{this.autoPaymentStatusText}}</p>
+                                </div>
+                            </div>
+                        {{/if}}
+
+                        {{#if model.reviewedBy}}
+                            <div class="form-group col-md-12">
+                                <label class="col-md-4 control-label">{{strings.capitalised.reviewedBy}}</label>
+                                <div class="col-md-8">
+                                    <p class="form-control-static">{{approvedByText}}</p>
+                                </div>
+                            </div>
+                        {{/if}}
+
+                        {{#if canUpdate}}
+                            <div class="actions btn-group col-md-12">
+                                <button type="button" class="btn btn-primary pull-right" {{action "validateBill" model}}>
+                                    Update mail
+                                </button>
+                            </div>
+                        {{/if}}
+                    </div>
+                    </form>
+                </div>
+
+            </div>
+
+            <div class="col-md-6">
+                {{#if model.documentId}}
+                {{document-viewer documentUrl=model.documentHref viewerClass="viewer-column" showDocumentName=false}}
+                {{else}}
+                    {{#if canViewBillPdf}}
+                    <div class="alert alert-warning">{{strings.noAttachmentFound}}</div>
+                    {{else}}
+                    <div class="alert alert-warning">{{strings.noViewPermission}}</div>
+                    {{/if}}
+                {{/if}}
+            </div>
+
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">{{strings.capitalised.billAccounting}}</h4>
+                    </div>
+                    <div class="panel-body">
+                        <div class="form-group col-md-12">
+                            <label class="col-md-4 control-label">{{strings.capitalised.billDocumentSize}}</label>
+                            <div class="col-md-8">
+                                <p class="form-control-static">{{#if model.billAccounting.documentSize}}{{model.billAccounting.documentSize}}{{else}}<span class="label label-warning">{{biller.strings.notFound}}</span>{{/if}}</p>
+                            </div>
+                        </div>
+
+                        {{#if model.documentPages}}
+                        <div class="form-group col-md-12">
+                            <label class="col-md-4 control-label">{{strings.capitalised.billPageNumbers}}</label>
+                            <div class="col-md-8">
+                                <p class="form-control-static">{{model.documentPages}}</p>
+                            </div>
+                        </div>
+                        {{/if}}
+
+                        {{#if model.billAccounting.accountingPlan}}
+                        <div class="form-group col-md-12">
+                            <label class="col-md-4 control-label">{{strings.capitalised.accountingPlan}}</label>
+                            <div class="col-md-8">
+                                <p class="form-control-static">{{model.billAccounting.accountingPlan}}</p>
+                            </div>
+                        </div>
+                        {{/if}}
+                        {{#if model.billAccounting.creditBalance}}
+                        <div class="form-group col-md-12">
+                            <label class="col-md-4 control-label">Credit Balance</label>
+                            <div class="col-md-8">
+                                <p class="form-control-static">{{model.billAccounting.creditBalance}}</p>
+                            </div>
+                        </div>
+                        {{/if}}
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                {{#if hasEmailDetails}}
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">{{strings.capitalised.emailDeliveryDetails}}</h4>
+                    </div>
+                    <div class="panel-body">
+                        <div class="form-group col-md-12">
+                            <label class="col-md-4 control-label">{{strings.capitalised.emailSubject}}</label>
+                            <div class="col-md-8">
+                                <p class="form-control-static">{{model.emailDeliveryDetails.en.subject}}</p>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-12">
+                            <label class="col-md-4 control-label">{{strings.capitalised.emailReplyTo}}</label>
+                            <div class="col-md-8">
+                                <p class="form-control-static">{{model.emailDeliveryDetails.en.replyTo}}</p>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-12">
+                            <label class="col-md-4 control-label">{{strings.capitalised.emailAttachment}}</label>
+                            <div class="col-md-8">
+                                <p class="form-control-static">{{#if model.emailDeliveryDetails.en.addAttachment}} {{strings.capitalised.yes}} {{else}} {{strings.capitalised.no}} {{/if}}</p>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-12">
+                            <label class="col-md-4 control-label">{{strings.capitalised.emailHtml}}</label>
+                            <div class="col-md-8 form-control-static">
+                                <a href="/data/bills/{{model.id}}/html-file/eu" target="_blank">{{model.emailDeliveryDetails.en.htmlFile}}</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {{/if}}
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                {{#if model.hasNotBeenRejected}}
+                {{#if model.hasChargingModel}}
+                {{#if showTransactionCredits}}
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            Credit Cost for Bill
+                        </h4>
+                    </div>
+                    <table class="table">
+                        <tHead>
+                        <tr>
+                            <th>Transaction Type</th>
+                            <th>Channel</th>
+                            <th>Document Type</th>
+                            <th>Credit</th>
+                        </tr>
+                        </tHead>
+                        <tBody>
+                        {{#each model.billTransaction as |tran|}}
+                        <tr>
+                            <td>{{tran.transactionType}}</td>
+                            <td>{{tran.channelPartnerSystemDisplay}}</td>
+                            <td>{{tran.actorSystemBillType}}</td>
+                            <td>{{tran.credit}}</td>
+                        </tr>
+                        {{/each}}
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td><strong>Total:</strong></td>
+                            <td><strong>{{totalCredits}}</strong></td>
+                        </tr>
+                        </tBody>
+                    </table>
+                </div>
+                {{/if}}
+                {{/if}}
+
+                {{#unless model.sendToPrinter}}
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            {{strings.capitalised.billRecipients}}
+                        </h4>
+                    </div>
+                    <table class="table">
+                        <tHead>
+                        <tr>
+                            <th>{{strings.capitalised.recipients.payerName}}</th>
+                            <th>{{strings.capitalised.recipients.receivedDate}}</th>
+                            {{#if model.hasBeenSent}}
+                            <th>Channel</th>
+                            <th>{{strings.capitalised.recipients.sentOn}}</th>
+                            {{/if}}
+                            {{#if model.hasUndeliverables}}
+                            <th>{{strings.capitalised.recipients.nonDeliveryDate}}</th>
+                            <th>{{strings.capitalised.recipients.nonDeliveryReason}}</th>
+                            {{/if}}
+                        </tr>
+                        </tHead>
+                        <tBody>
+                        {{#each model.billPayers as |payer|}}
+                        <tr class="{{if payer.wasNonDelivered 'warning'}}">
+                            <td>{{payer.tagName}}</td>
+                            <td>{{view-date date=payer.creationDate}}</td>
+                            {{#if model.hasBeenSent}}
+                            <td>{{payer.dispatchTypeDisplay}}</td>
+                            <td>{{view-date date=payer.actionedTime withTime=true}}</td>
+                            {{/if}}
+                            {{#if model.hasUndeliverables}}
+                            {{#if payer.wasNonDelivered}}
+                            <td>{{view-date date=payer.nonDeliveredTime withTime=true}}</td>
+                            <td>{{payer.nonDeliveredReason}}</td>
+                            {{else}}
+                                {{#if payer.wasDelivered}}
+                                <td colspan="2">{{strings.recipients.deliveredSuccessfully}}</td>
+                                {{/if}}
+                            {{/if}}
+                            {{/if}}
+                        </tr>
+                        {{else}}
+                        <tr>
+                            <td colspan="4">{{strings.recipients.noRecipients}}</td>
+                        </tr>
+                        {{/each}}
+                        </tBody>
+                    </table>
+                </div>
+                {{/unless}}
+
+                {{/if}}
+            </div>
+
+            {{#if model.actioned}}
+            <div class="col-md-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        {{#if canAddExternalAction}}
+                        <div class='btn-toolbar pull-right'>
+                            <button type="button" class="btn-xs btn-default" {{action "promptCancelExternalAction"}}>
+                            <span class="glyphicon glyphicon-remove"></span> {{strings.externalAction.cancelActionButton}}
+                            </button>
+                        </div>
+                        {{/if}}
+                        <h4 class="panel-title">{{strings.capitalised.externalAction.title}}</h4>
+                    </div>
+                    <div class="panel-body">
+                        <div class="form-group col-md-12">
+                            <label class="col-md-4 control-label">{{strings.capitalised.externalAction.actionDescriptionLabel}}</label>
+                            <div class="col-md-8">
+                                <p class="form-control-static">{{#if model.actionDescription}}{{model.actionDescription}}{{else}}<span class="label label-warning">{{biller.strings.notFound}}</span>{{/if}}</p>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-12">
+                            <label class="col-md-4 control-label">{{strings.capitalised.externalAction.actionedOnLabel}}</label>
+                            <div class="col-md-8">
+                                <p class="form-control-static">{{view-date date=model.actionedOn withTime=true}}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {{/if}}
+
+
+            {{#if showBIllViewLogs}}
+            <div class="col-md-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            {{strings.capitalised.billViewLog}}
+                        </h4>
+                    </div>
+                    <table class="table">
+                        <tHead>
+                        <tr>
+                            <th>{{strings.capitalised.log.payerName}}</th>
+                            <th>{{strings.capitalised.log.viewedOn}}</th>
+                        </tr>
+                        </tHead>
+                        <tBody>
+                        {{#each model.billViewLogs as |log|}}
+                        <tr>
+                            <td>{{log.payerName}}</td>
+                            <td>{{view-date date=log.viewedOn withTime=true}}</td>
+                        </tr>
+                        {{else}}
+                        <tr>
+                            <td colspan="4">{{strings.log.noLogs}}</td>
+                        </tr>
+                        {{/each}}
+                        </tBody>
+                    </table>
+                </div>
+            </div>
+            {{/if}}
+
+            {{#if showEmails}}
+                <div class="col-md-12">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                Emails Sent Log
+                            </h4>
+                        </div>
+                        <table class="table">
+                            <tHead>
+                            <tr>
+                                <th>Email</th>
+                                <th>Status</th>
+                                <th>Sent on</th>
+                                {{#if hasSentEmail}}
+                                    <th>Delivered on</th>
+                                    <th>Opened on</th>
+                                {{/if}}
+                                {{#if hasFailedEmail}}
+                                    <th>Undelivered on</th>
+                                    <th>Undelivered reason</th>
+                                {{/if}}
+                            </tr>
+                            </tHead>
+                            <tBody>
+                            {{#each model.emailLogs as |log|}}
+                            <tr class="{{if log.isFailed 'warning'}}">
+                                <td>{{log.email}}</td>
+                                <td>{{log.status}}</td>
+                                <td>{{view-date date=log.actionedTime withTime=true}}</td>
+                                {{#if hasSentEmail}}
+                                    <td>{{view-date date=log.deliveredTime withTime=true}}</td>
+                                    <td>{{view-date date=log.openedTime withTime=true}}</td>
+                                {{/if}}
+                                {{#if hasFailedEmail}}
+                                    <td>{{view-date date=log.nonDeliveredTime withTime=true}}</td>
+                                    <td>{{log.nonDeliveredReasonCode}}</td>
+                                {{/if}}
+                            </tr>
+                            {{else}}
+                            <tr>
+                                <td colspan="4">{{strings.log.noLogs}}</td>
+                            </tr>
+                            {{/each}}
+                            </tBody>
+                        </table>
+                    </div>
+                </div>
+            {{/if}}
+        </div>
+    </form>
+</div>

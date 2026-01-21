@@ -1,0 +1,42 @@
+<div class="row">
+	<div class="col-md-12">
+		<h2 class="page-heading">
+            {{strings.emailReport.heading}}
+		</h2>
+	</div>
+</div>
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h4 class="panel-title">{{strings.emailReport.searchLabel}} <span style="float: right;"><a data-toggle="collapse" href="#collapse1" style="color: #fbb704;" {{action "showAndHide"}}>{{strings.hideShow}} </a></span></h4>
+    </div>
+    <div id="collapse1" class="panel-body collapse {{if showSearch 'in'}}">
+        {{common-filter-bar action="changeCommonFilters"
+        showDownload=false
+        defaultDateRange=defaultDateRange
+        searchFilters=selectedFilters}}
+    </div>
+</div>
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h4 class="panel-title">{{strings.graph}} <span style="float: right;"><a data-toggle="collapse" href="#collapse2" style="color: #fbb704;" {{action "showAndHideGraph"}}>{{strings.hideShow}}</a></span></h4>
+    </div>
+    <div id="collapse2" class="panel-body collapse {{if showSearchGraph 'in'}}">
+        <div class="col-md-6">
+            {{zing-chart data=this.chartDataOne
+                         stacked=false}}
+        </div>
+        <div class="col-md-6">
+            {{zing-chart data=this.chartDataTwo
+            type="pie"
+            stacked=false
+            componentId=graphTwoID}}
+        </div>
+    </div>
+</div>
+
+
+
+
+

@@ -1,0 +1,366 @@
+<div class="row">
+    <div>
+        <h2>{{strings.connectionSettings.headingSme}}</h2>
+        <div class="panel panel-default">
+            <a data-toggle="collapse" href="#collapseAct1" {{action "showAndHide" 'collapseAct1'}}>
+            <div class="panel-heading search-panel-heading">
+                <h4 class="panel-title search-panel-title">
+                    <span style="margin-left: 15px;"> {{strings.connectionSettings.xero.product}}</span>
+
+                    {{#if hasXeroConnection}}
+                        {{#if xeroNeedsAttention}}
+                        <span style="float: right;">
+                            <span class="text-warning">{{strings.connectionSettings.reconnect}} <span class="glyphicon glyphicon-remove-circle" style="margin-right: 40px"/> </span>
+                            <span style="float: right;" class="glyphicon {{if collapse 'glyphicon-chevron-up' 'glyphicon-chevron-down'}}"/>
+                        </span>
+                        {{else}}
+                        <span style="float: right;">
+                            <span class="text-success">{{strings.connectionSettings.connected}} <span class="glyphicon glyphicon-ok-circle" style="margin-right: 40px"/> </span>
+                            <span style="float: right;" class="glyphicon {{if collapse 'glyphicon-chevron-up' 'glyphicon-chevron-down'}}"/>
+                        </span>
+                        {{/if}}
+                    {{else}}
+                        <span style="float: right;">
+                            <span class="text-danger">{{strings.connectionSettings.disconnected}} <span class="glyphicon glyphicon-remove-circle" style="margin-right: 40px"/> </span>
+                            <span style="float: right;" class="glyphicon {{if collapse 'glyphicon-chevron-up' 'glyphicon-chevron-down'}}"/>
+                        </span>
+                    {{/if}}
+                </h4>
+            </div>
+            </a>
+            <div id="collapseAct1" class="panel-body collapse {{if showSearchCollapseAct1 'in'}}">
+                <div class="panel-body">
+                    {{#each model.xeroConnection as |connection|}}
+                        {{#if connection.connectionError}}
+                            {{#if connection.needsAttention}}
+                            <div class="alert alert-danger">
+                                <p>{{strings.connectionSettings.xero.authorisationIssue}}</p>
+                            </div>
+                            {{else}}
+                            <div class="alert alert-danger">
+                                <p>{{strings.connectionSettings.xero.connectionIssue}}</p>
+                            </div>
+                            {{/if}}
+                        {{/if}}
+                        <p> <strong>{{strings.connectionSettings.connectionDate}} </strong> {{view-date date=connection.connectedDate withFullTime=true}}</p>
+                        <p> <strong>{{strings.connectionSettings.xero.partnerStatus}}</strong> {{connection.partnerStatus}}</p>
+                        <div class="connection-button-container">
+                            <button type="button" {{action 'disconnectFromXeroModal' connection.id }} class="btn {{if connection.needsAttention 'btn-link' 'btn-default'}}"> {{strings.connectionSettings.xero.disconnectMessage}}
+                            </button>
+                            {{#if connection.needsAttention}}
+                            <img style="cursor: pointer" src="./images/xero-connect-blue.svg" alt="xero-connect-blue" {{action 'connectToXero'}}>
+                            {{/if}}
+                        </div>
+                    {{else}}
+                        <div class="alert alert-info" role="alert">
+                            <h4>{{strings.connectionSettings.xero.usageHeader}}</h4>
+                            <p>{{strings.connectionSettings.xero.usageMessage1}}</p>
+                            <ol>
+                                <li> {{strings.connectionSettings.xero.usageMessage2}}</li>
+                                <li> {{strings.connectionSettings.xero.usageMessage3}}</li>
+                            </ol>
+                            <p>{{strings.connectionSettings.xero.usageMessage4}}</p>
+
+                            <p>{{strings.connectionSettings.xero.usageMessage5}}</p>
+
+                        </div>
+                        <img style="display: block; margin: 0 auto; cursor: pointer;" src="./images/xero-connect-blue.svg" alt="xero-connect-blue" {{action 'connectToXero'}}>
+                    {{/each}}
+                </div>
+            </div>
+        </div>
+        {{#if model.myobEnabled}}
+        <div class="panel panel-default">
+            <a data-toggle="collapse" href="#collapseAct2" {{action "showAndHide" 'collapseAct2'}}>
+            <div class="panel-heading search-panel-heading">
+                <h4 class="panel-title search-panel-title">
+                    <span style="margin-left: 15px;"> {{strings.connectionSettings.myob.product}}</span>
+
+                    {{#if hasMyobConnection}}
+                        {{#if myobNeedsAttention}}
+                        <span style="float: right;">
+                                <span class="text-warning">{{strings.connectionSettings.reconnect}} <span class="glyphicon glyphicon-remove-circle" style="margin-right: 40px"/> </span>
+                                <span style="float: right;" class="glyphicon {{if collapse 'glyphicon-chevron-up' 'glyphicon-chevron-down'}}"/>
+                            </span>
+                        {{else}}
+                        <span style="float: right;">
+                                <span class="text-success">{{strings.connectionSettings.connected}} <span class="glyphicon glyphicon-ok-circle" style="margin-right: 40px"/> </span>
+                                <span style="float: right;" class="glyphicon {{if collapse 'glyphicon-chevron-up' 'glyphicon-chevron-down'}}"/>
+                            </span>
+                        {{/if}}
+                    {{else}}
+                    <span style="float: right;">
+                            <span class="text-danger">{{strings.connectionSettings.disconnected}} <span class="glyphicon glyphicon-remove-circle" style="margin-right: 40px"/> </span>
+                            <span style="float: right;" class="glyphicon {{if collapse 'glyphicon-chevron-up' 'glyphicon-chevron-down'}}"/>
+                        </span>
+                    {{/if}}
+                </h4>
+            </div>
+            </a>
+            <div id="collapseAct2" class="panel-body collapse {{if showSearchCollapseAct2 'in'}}">
+                <div class="panel-body">
+                    {{#each model.myobConnection as |myobconnection|}}
+                        {{#if myobconnection.needsAttention}}
+                        <div class="alert alert-danger">
+                            <p>{{strings.connectionSettings.myob.authorisationIssue}}</p>
+                        </div>
+                        {{/if}}
+                        <p> <strong>{{strings.connectionSettings.myob.usernameDetailLabel}}</strong> {{myobconnection.name}}</p>
+                        <p> <strong>{{strings.connectionSettings.myob.productDetailLabel}}</strong> {{myobconnection.extraInfo1}}</p>
+                        <p> <strong>{{strings.connectionSettings.connectionDate}} </strong>{{view-date date=myobconnection.connectedDate withFullTime=true}}</p>
+                        <div class="connection-button-container">
+                            <button type="button" {{action 'disconnectFromMyobModal' myobconnection.id }} class="btn {{if myobconnection.needsAttention 'btn-link' 'btn-default'}}"> {{strings.connectionSettings.myob.disconnectMessage}}
+                            </button>
+                            {{#if myobconnection.needsAttention}}
+                            <button class="btn btn-primary" {{action 'connectToMyob' myobconnection.extraInfo2 }}>{{strings.connectionSettings.myob.reconnectButton}}</button>
+                            {{/if}}
+                        </div>
+                    {{else}}
+                        <div class="alert alert-info" role="alert">
+                            <h4>{{strings.connectionSettings.myob.usageHeading}}</h4>
+                            <p>{{strings.connectionSettings.myob.usageMessage1}}</p>
+                            <ol>
+                                <li> {{strings.connectionSettings.myob.usageMessage2}}</li>
+                                <li> {{strings.connectionSettings.myob.usageMessage3}} </li>
+                            </ol>
+                            <p>{{strings.connectionSettings.myob.usageMessage4}}</p>
+
+                            <p>{{strings.connectionSettings.myob.usageMessage5}}</p>
+                        </div>
+
+                        <form class="form-login form" id="myob-form">
+                        <div class="form-group">
+                            <label control-label>
+                                {{strings.connectionSettings.productLabel}}
+                            </label>
+
+                            {{item-select class-name="form-control"
+                            content=myobProducts
+                            optionLabelPath="name"
+                            optionValuePath="id"
+                            selection=this.myobProduct}}
+                        </div>
+
+                        <button style="display: block; margin: 0 auto;" class="btn btn-primary" {{action 'connectToMyob' this.myobProduct}}>{{strings.connectionSettings.myob.connectButton}}</button>
+                        </form>
+                    {{/each}}
+                </div>
+            </div>
+        </div>
+        {{/if}}
+        <div class="panel panel-default">
+            <a data-toggle="collapse" href="#collapseAct3" {{action "showAndHide" 'collapseAct3'}}>
+            <div class="panel-heading search-panel-heading">
+                <h4 class="panel-title search-panel-title">
+                    <span style="margin-left: 15px;">{{strings.connectionSettings.reckon.product}}</span>
+
+                    {{#if hasReckonConnection}}
+                        {{#if reckonNeedsAttention}}
+                        <span style="float: right;">
+                                <span class="text-warning">{{strings.connectionSettings.reconnect}} <span class="glyphicon glyphicon-remove-circle" style="margin-right: 40px"/> </span>
+                                <span style="float: right;" class="glyphicon {{if collapse 'glyphicon-chevron-up' 'glyphicon-chevron-down'}}"/>
+                            </span>
+                        {{else}}
+                        <span style="float: right;">
+                                <span class="text-success">{{strings.connectionSettings.connected}} <span class="glyphicon glyphicon-ok-circle" style="margin-right: 40px"/> </span>
+                                <span style="float: right;" class="glyphicon {{if collapse 'glyphicon-chevron-up' 'glyphicon-chevron-down'}}"/>
+                            </span>
+                        {{/if}}
+                    {{else}}
+                    <span style="float: right;">
+                            <span class="text-danger">{{strings.connectionSettings.disconnected}} <span class="glyphicon glyphicon-remove-circle" style="margin-right: 40px"/> </span>
+                            <span style="float: right;" class="glyphicon {{if collapse 'glyphicon-chevron-up' 'glyphicon-chevron-down'}}"/>
+                        </span>
+                    {{/if}}
+                </h4>
+            </div>
+            </a>
+            <div id="collapseAct3" class="panel-body collapse {{if showSearchCollapseAct3 'in'}}">
+                <div class="panel-body">
+                    {{#each model.reckonConnection as |connection|}}
+                    {{#if connection.connectionError}}
+                    {{#if connection.needsAttention}}
+                    <div class="alert alert-danger">
+                        <p>{{strings.connectionSettings.authorisationIssue}}</p>
+                    </div>
+                    {{else}}
+                    <div class="alert alert-danger">
+                        <p>{{strings.connectionSettings.unableToConnect}}</p>
+                    </div>
+                    {{/if}}
+                    {{/if}}
+                    <p> <strong>{{strings.connectionSettings.connectionDate}} </strong> {{view-date date=connection.connectedDate withFullTime=true}}</p>
+                    {{#if connection.needsAttention}}
+                    <img style="display: block; margin: 0 auto;" src="./images/reckon-connect-button.png" alt="reckon-connect-button" {{action 'connectToReckon' reckonconnection.extraInfo2 }}>
+                    <div class="hr-text-settings">
+                        <span>  {{strings.connectionSettings.reckon.or}}  </span>
+                    </div>
+                    {{/if}}
+                    <form class="form-login form" id="reckon-update-form">
+                        <div class="form-group">
+                            <label control-label>
+                                {{strings.connectionSettings.reckon.productCountry}}
+                            </label>
+
+                            {{item-select class-name="form-control"
+                            content=reckonCountries
+                            optionLabelPath="name"
+                            optionValuePath="id"
+                            selection=connection.country}}
+                        </div>
+                        <div class="alert alert-warning" role="alert">
+                            <p>{{{strings.connectionSettings.reckon.message1}}}</p>
+                            <p>{{{strings.connectionSettings.reckon.message2}}}</p>
+                            <p>{{{strings.connectionSettings.reckon.message3}}}</p>
+                        </div>
+                        <div class="form-group">
+                            <label control-label>
+                                {{strings.connectionSettings.reckon.companyFile}}
+                            </label>
+
+                            {{input type="text" class="form-control" value=connection.company id="reckonCountryFile"}}
+                        </div>
+                        <div class="form-group">
+                            <label control-label>
+                                {{strings.connectionSettings.reckon.companyFileUsername}}
+                            </label>
+
+                            {{input type="text" class="form-control" value=connection.name id="reckonAPIUsername"}}
+                        </div>
+                        <div class="form-group">
+                            <label control-label>
+                                {{strings.connectionSettings.reckon.companyFilePassword}}
+                            </label>
+
+                            {{input type="password" class="form-control" value=this.reckonAPIPassword id="reckonAPIPassword"}}
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12 col-md-3 col-md-push-3">
+                                <button type="button" style="display: block; margin: 0 auto;" {{action 'updateReckonConnetion' connection.id connection.country connection.company connection.name this.reckonAPIPassword}} class="btn btn-default"> {{strings.connectionSettings.reckon.updateMessage}}
+                                </button>
+                            </div>
+                            <div class="col-xs-12 col-md-3 col-md-push-3">
+                                <button type="button" style="display: block; margin: 0 auto;" {{action 'disconnectFromReckonModal' connection.id }} class="btn btn-danger"> {{strings.connectionSettings.reckon.disconnectMessage}}
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                    {{else}}
+                    <div class="alert alert-info" role="alert">
+                        <h4>{{strings.connectionSettings.reckon.usageHeading}}</h4>
+                        <p>{{strings.connectionSettings.reckon.usageMessage1}}</p>
+                        <ol>
+                            <li> {{strings.connectionSettings.reckon.usageMessage2}}</li>
+                            <li> {{strings.connectionSettings.reckon.usageMessage3}}</li>
+                            <li> {{strings.connectionSettings.reckon.usageMessage4}}</li>
+                        </ol>
+                        <p>{{strings.connectionSettings.reckon.usageMessage5}}</p>
+
+                        <p>{{strings.connectionSettings.reckon.usageMessage6}}</p>
+
+                    </div>
+                    <form class="form-login form" id="reckon-form">
+                        <div class="form-group">
+                            <label control-label>
+                                {{strings.connectionSettings.reckon.productCountry}}
+                            </label>
+
+                            {{item-select class-name="form-control"
+                            content=reckonCountries
+                            optionLabelPath="name"
+                            optionValuePath="id"
+                            selection=this.reckonCountry}}
+                        </div>
+                        <div class="alert alert-warning" role="alert">
+                            <p>{{{strings.connectionSettings.reckon.message1}}}</p>
+                            <p>{{{strings.connectionSettings.reckon.message2}}}</p>
+                            <p>{{{strings.connectionSettings.reckon.message3}}}</p>
+                        </div>
+                        <div class="form-group">
+                            <label control-label>
+                                {{strings.connectionSettings.reckon.companyFile}}
+                            </label>
+
+                            {{input type="text" class="form-control" value=this.reckonCountryFile id="reckonCountryFile"}}
+                        </div>
+                        <div class="form-group">
+                            <label control-label>
+                                {{strings.connectionSettings.reckon.companyFileUsername}}
+                            </label>
+
+                            {{input type="text" class="form-control" value=this.reckonAPIUsername id="reckonAPIUsername"}}
+                        </div>
+                        <div class="form-group">
+                            <label control-label>
+                                {{strings.connectionSettings.reckon.companyFilePassword}}
+                            </label>
+
+                            {{input type="password" class="form-control" value=this.reckonAPIPassword id="reckonAPIPassword"}}
+                        </div>
+                        <img style="display: block; margin: 0 auto;" src="./images/reckon-connect-button.png" alt="reckon-connect-button" disabled={{this.disableCreateConnection}} {{action 'connectToReckon' this.reckonCountry this.reckonCountryFile this.reckonAPIUsername this.reckonAPIPassword}}>
+                    </form>
+                    {{/each}}
+                </div>
+            </div>
+        </div>
+
+        <h2 style="margin-top: 3rem;">{{strings.connectionSettings.headingAgents}}</h2>
+
+        <div class="panel panel-default">
+            <a data-toggle="collapse" href="#collapse1" {{action "showAndHide" 'collapse1'}}>
+                <div class="panel-heading search-panel-heading">
+                    <h4 class="panel-title search-panel-title">
+                        <span style="margin-left: 15px;"> {{strings.connectionSettings.propertyMe.product}}</span>
+
+                        {{#if hasPropertyMeConnection}}
+                        <span style="float: right;">
+                            <span class="text-success">{{strings.connectionSettings.connected}} <span class="glyphicon glyphicon-ok-circle" style="margin-right: 40px"/> </span>
+                            <span style="float: right;" class="glyphicon {{if collapse 'glyphicon-chevron-up' 'glyphicon-chevron-down'}}"/>
+                        </span>
+                        {{else}}
+                        <span style="float: right;">
+                            <span class="text-danger">{{strings.connectionSettings.disconnected}} <span class="glyphicon glyphicon-remove-circle" style="margin-right: 40px"/> </span>
+                            <span style="float: right;" class="glyphicon {{if collapse 'glyphicon-chevron-up' 'glyphicon-chevron-down'}}"/>
+                        </span>
+                        {{/if}}
+                    </h4>
+                </div>
+            </a>
+            <div id="collapse1" class="panel-body collapse {{if showSearchCollapse1 'in'}}">
+                <div class="panel-body">
+                    {{#each model.propertymeConnection as |connection|}}
+                    {{#if connection.needsAttention}}
+                    <div class="alert alert-danger">
+                        <p>{{strings.connectionSettings.propertyMe.needsAttention}}</p>
+                    </div>
+                    {{/if}}
+                    <p> <strong>{{strings.connectionSettings.connectionDate}}</strong> {{view-date date=connection.connectedDate withFullTime=true}}</p>
+                    <div class="connection-button-container">
+                        <button type="button"  {{action 'disconnectFromPropertyMeModal' connection.id }} class="btn {{if connection.needsAttention 'btn-link' 'btn-default'}}"> {{strings.connectionSettings.propertyMe.buttonDisconnect}}</button>
+                        {{#if connection.needsAttention}}
+                        <button class="btn btn-primary" {{action 'connectToPropertyMe' }}>{{strings.connectionSettings.propertyMe.reconnect}}</button>
+                        {{/if}}
+                    </div>
+                    {{else}}
+                    <div class="alert alert-info" role="alert">
+                        <h4>{{strings.connectionSettings.propertyMe.usageHeading}}</h4>
+                        <p>{{strings.connectionSettings.propertyMe.usageLine1}}</p>
+                        <ol>
+                            <li> {{strings.connectionSettings.propertyMe.usageLine2}}</li>
+                            <li> {{strings.connectionSettings.propertyMe.usageLine3}}</li>
+                        </ol>
+                        <p>{{strings.connectionSettings.propertyMe.usageLine4}}</p>
+
+                        <p>{{strings.connectionSettings.propertyMe.usageLine5}}</p>
+                    </div>
+
+                    <form class="form-login form" id="propertyme-form">
+
+                        <button style="display: block; margin: 0 auto;" class="btn btn-primary" {{action 'connectToPropertyMe'}}>{{strings.connectionSettings.propertyMe.button}}</button>
+                    </form>
+                    {{/each}}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

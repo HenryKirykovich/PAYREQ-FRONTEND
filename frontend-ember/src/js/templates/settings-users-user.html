@@ -1,0 +1,350 @@
+<div class="panel panel-default">
+    <ul  class="nav nav-pills">
+        <li class="active"><a href="#userDetails" data-toggle="tab">{{strings.userDetails}}</a></li>
+        <li><a href="#userPermissions" data-toggle="tab">{{strings.permissions}}</a></li>
+        {{#if showNotificationTab}}<li><a href="#userNotifications" data-toggle="tab">{{strings.notifications}}</a></li>{{/if}}
+        <li><a href="#userPasswordEvents" data-toggle="tab">{{strings.passwordEvents}}</a></li>
+    </ul>
+
+    <div class="tab-content" id="user-tab-content">
+        <div class="tab-pane active" id="userDetails">
+            <div class="panel panel-default" id="user-details-div">
+                <div class="page-header page-header-tab-title">
+                    <h2 class="panel-title">{{model.user.name}}</h2>
+                </div>
+                <div class="panel-body">
+                    <form class="form-horizontal" role="form" id="update-user-form">
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">{{strings.userSettings.user.email}}</label>
+                            <div class="col-sm-9 input-append">
+                                <label class="form-control-static">{{model.user.email}}</label>
+                                {{#if isPending}}
+                                <button type="button" class="btn btn-info" title={{strings.userSettings.resendInvitation}} {{action "resend" model.user}}>
+                                <span class="glyphicon glyphicon-repeat"></span>
+                                </button>
+                                {{/if}}
+                            </div>
+                        </div>
+
+                        {{#if model.user.hasPasswordResetRequest}}
+                            <div class="alert alert-info form-group">
+                                <label class="col-sm-3 control-label">{{strings.userSettings.user.passwordResetRequest}}</label>
+                                <div class="col-sm-9 input-append">
+                                    {{#if model.user.passwordResetRequestedOn}}
+                                        <label class="form-control-static">
+                                            {{strings.userSettings.user.passwordResetRequestDescWithDate}}
+                                            {{view-date date=model.user.passwordResetRequestedOn withFullTime=true}}
+                                        </label>
+                                    {{else}}
+                                        <label class="form-control-static">{{strings.userSettings.user.passwordResetRequestDesc}}</label>
+                                    {{/if}}
+
+                                    {{#if canUpdateUser}}
+                                        <button type="button" class="btn btn-info" title={{strings.userSettings.user.copyPasswordResetLinkDesc}}
+                                                {{action "copyPasswordResetLink" model.user}}>
+                                        {{strings.userSettings.user.copyPasswordResetLink}}
+                                        </button>
+                                    {{/if}}
+                                </div>
+                            </div>
+                        {{/if}}
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">{{strings.userSettings.user.status}}</label>
+                            <div class="col-sm-9">
+                                <p class="form-control-static">{{statusDisplay}}</p>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">{{strings.userSettings.user.lastAccessOn}}</label>
+                            <div class="col-sm-9">
+                                <p class="form-control-static">
+                                    {{#if model.user.lastAccessOn}}
+                                    {{view-date date=model.user.lastAccessOn withFullTime=true}}
+                                    {{else}}
+                                    <span class="label label-warning">{{biller.strings.never}}</span>
+                                    {{/if}}
+                                </p>
+                            </div>
+                        </div>
+
+                        {{#if model.user.mfaRequired}}
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">{{strings.userSettings.user.mfaActivated}}</label>
+                            <div class="col-sm-9">
+                                {{#if canUpdateUser}}
+                                <p class="form-control-static">{{#if model.user.mfaActivated}}
+                                    {{strings.userSettings.user.yes}}
+                                    {{#if canEditPermission}}
+                                        &nbsp;&nbsp;<button type="button" class="btn btn-default" {{action "resetMfa" model.user.id model.user.uid}}>Reset MFA</button>
+                                    {{/if}}
+
+                                    {{else}} {{strings.userSettings.user.no}} {{/if}}</p>
+                                {{else}}
+                                <p class="form-control-static">{{#if model.user.mfaActivated}} {{strings.userSettings.user.yes}} {{else}} {{strings.userSettings.user.no}} {{/if}}</p>
+                                {{/if}}
+                            </div>
+                        </div>
+                        {{/if}}
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">{{strings.userSettings.user.name}}</label>
+                            <div class="col-sm-9">
+                                {{#if canUpdateUser}}
+                                {{input type="text" class="form-control" value=model.user.name id="userName" placeholder=strings.userSettings.user.name}}
+                                {{else}}
+                                <p class="form-control-static">{{model.user.name}}</p>
+                                {{/if}}
+                            </div>
+                        </div>
+                        {{#unless isPayreqInbox}}
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">{{strings.userSettings.user.workPhoneNumber}}</label>
+                                <div class="col-sm-9">
+                                    {{#if canUpdateUser}}
+                                    {{input type="text" class="form-control" value=model.user.workPhoneNumber id="workPhoneNumber"
+                                    placeholder=strings.userSettings.phoneNumberFormat}}
+                                    {{else}}
+                                    <p class="form-control-static">{{model.user.workPhoneNumber}}</p>
+                                    {{/if}}
+                                </div>
+                            </div>
+                        {{/unless}}
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">{{strings.userSettings.user.mobileNumber}}</label>
+                            <div class="col-sm-9">
+                                {{#if canUpdateUser}}
+                                {{input type="text" class="form-control" value=model.user.mobileNumber id="mobileNumber"
+                                placeholder=strings.userSettings.phoneNumberFormat}}
+                                {{else}}
+                                <p class="form-control-static">{{model.user.mobileNumber}}</p>
+                                {{/if}}
+                            </div>
+                        </div>
+
+                        {{#if billerSettingsUsers.isPayreqUser}}
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">{{strings.userSettings.user.notes}}</label>
+                            <div class="col-sm-9">
+                                {{#if canUpdateUser}}
+                                {{textarea class="form-control" rows="3" value=model.user.notes id="notes"
+                                placeholder=strings.userSettings.user.notes}}
+                                {{else}}
+                                <p class="form-control-static">{{model.user.notes}}</p>
+                                {{/if}}
+                            </div>
+                        </div>
+                        {{/if}}
+
+                        <div class="form-group">
+                            <div class='btn-toolbar pull-right'>
+                                {{#if canUpdateUser}}
+                                <button type="button" class="btn btn-primary" {{action "saveUserAction" model.user biller.id}}>{{strings.userSettings.update}}</button>
+                                {{/if}}
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-pane" id="userPermissions">
+            <div class="panel panel-default" id="user-permissions-div">
+                <div class="page-header page-header-tab-title">
+                    <div class='btn-toolbar pull-right'>
+                        {{#if isNotLoginUser}}
+                        {{#if billerDoesNotHaveSsoSamlEnabled}}
+                        <button type="button" class="btn-xs btn-danger" {{action "promptRevokeAllAccess" model.user biller.customerId}}>
+                        <span class="glyphicon glyphicon-remove"></span> {{strings.userSettings.revokeAllAccess}}
+                        </button>
+                        {{/if}}
+                        {{/if}}
+                    </div>
+                    <h2 class="panel-title">{{strings.userSettings.permissions.title}} {{model.user.name}}</h2>
+                </div>
+
+                <div class="panel-body">
+                    <div>
+                        <div class="panel-body">
+                            <form class="form-horizontal">
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">{{strings.userSettings.permissions.payreq}}</label>
+                                    <div class="col-sm-9">
+                                        {{#if canEditPermission}}
+                                        {{item-select class-name="form-control"
+                                        content=billerSettingsUsers.allPayreqRoles
+                                        optionLabelPath="displayName"
+                                        selection=payreqRole}}
+                                        {{else}}
+                                            <p class="form-control-static">{{payreqRole.displayName}}</p>
+                                        {{/if}}
+                                    </div>
+                                </div>
+                                {{#if billerSettingsUsers.hasContactsFeature}}
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">{{strings.userSettings.permissions.contacts}}</label>
+                                    <div class="col-sm-9">
+                                        {{#if canEditPermission}}
+                                        {{item-select class-name="form-control"
+                                        content=billerSettingsUsers.allContactRoles
+                                        optionLabelPath="displayName"
+                                        prompt=strings.userSettings.permissions.emptyPrompt
+                                        promptDisabled=false
+                                        selection=contactRole}}
+                                        {{else}}
+                                        {{#if contactRole}}
+                                        <p class="form-control-static">{{contactRole.displayName}}</p>
+                                        {{else}}
+                                        <p class="form-control-static">{{strings.userSettings.permissions.emptyPrompt}}</p>
+                                        {{/if}}
+                                        {{/if}}
+                                    </div>
+                                </div>
+                                {{/if}}
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">{{strings.userSettings.permissions.registrations}}</label>
+                                    <div class="col-sm-9">
+                                        {{#if canEditPermission}}
+                                        {{item-select class-name="form-control"
+                                        content=billerSettingsUsers.allRegistrationRoles
+                                        optionLabelPath="displayName"
+                                        prompt=strings.userSettings.permissions.emptyPrompt
+                                        promptDisabled=false
+                                        selection=registrationRole}}
+                                        {{else}}
+                                        {{#if registrationRole}}
+                                        <p class="form-control-static">{{registrationRole.displayName}}</p>
+                                        {{else}}
+                                        <p class="form-control-static">{{strings.userSettings.permissions.emptyPrompt}}</p>
+                                        {{/if}}
+                                        {{/if}}
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">{{strings.userSettings.permissions.bills}}</label>
+                                    <div class="col-sm-9">
+                                        {{#if canEditPermission}}
+                                        {{item-select class-name="form-control"
+                                        content=billerSettingsUsers.allBillRoles
+                                        optionLabelPath="displayName"
+                                        prompt=strings.userSettings.permissions.emptyPrompt
+                                        promptDisabled=false
+                                        selection=billRole}}
+                                        {{else}}
+                                        {{#if billRole}}
+                                        <p class="form-control-static">{{billRole.displayName}}</p>
+                                        {{else}}
+                                        <p class="form-control-static">{{strings.userSettings.permissions.emptyPrompt}}</p>
+                                        {{/if}}
+                                        {{/if}}
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">{{strings.userSettings.permissions.billerSettings}}</label>
+                                    <div class="col-sm-9">
+                                        {{#if canEditPermission}}
+                                        {{item-select class-name="form-control"
+                                        content=billerSettingsUsers.allBillerSettingRoles
+                                        optionLabelPath="displayName"
+                                        prompt=strings.userSettings.permissions.emptyPrompt
+                                        promptDisabled=false
+                                        selection=billerSettingRole}}
+                                        {{else}}
+                                        {{#if billerSettingRole}}
+                                        <p class="form-control-static">{{billerSettingRole.displayName}}</p>
+                                        {{else}}
+                                        <p class="form-control-static">{{strings.userSettings.permissions.emptyPrompt}}</p>
+                                        {{/if}}
+                                        {{/if}}
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-pane" id="userNotifications">
+            <div class="panel panel-default" id="user-notification-div">
+                <div class="page-header page-header-tab-title">
+                    <h2 class="panel-title">{{strings.userSettings.notificationsTitle}} {{model.user.name}}</h2>
+                </div>
+                <div class="panel-body">
+                    <p class="well">{{{strings.capitalised.userSettings.notificationInstructions}}}</p>
+                    <form class="form-horizontal" role="form">
+                        <div class="well well-sm">
+                            {{strings.userSettings.notificationsIntro}}
+                            <ul>
+                                <li><strong>{{strings.userSettings.notificationPreferenceValues.immediate}}: </strong>{{strings.userSettings.notificationPreferenceValues.immediateDescription}}</li>
+                                <li><strong>{{strings.userSettings.notificationPreferenceValues.frequent}}: </strong>{{strings.userSettings.notificationPreferenceValues.frequentDescription}}</li>
+                                <li><strong>{{strings.userSettings.notificationPreferenceValues.infrequent}}: </strong>{{strings.userSettings.notificationPreferenceValues.infrequentDescription}}</li>
+                            </ul>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 col-sm-offset-6 text-center">Method</label>
+                            <label class="col-sm-2 text-center">Frequency</label>
+                        </div>
+                        {{#each model.settings as |setting|}}
+                        <div class="form-group">
+                            <label class="col-sm-6 control-label">{{setting.displayDescription}}</label>
+                            <div class="col-sm-2">
+                                {{item-select class-name="form-control"
+                                content=this.alertTypes
+                                optionLabelPath="name"
+                                optionValuePath="id"
+                                selection=setting.alertType}}
+                            </div>
+                            <div class="col-sm-2">
+                                {{item-select class-name="form-control"
+                                content=this.frequencies
+                                optionLabelPath="name"
+                                optionValuePath="id"
+                                selection=setting.alertFreq}}
+                            </div>
+                        </div>
+                        {{/each}}
+                        <div class="col-sm-12">
+                            <div class="btn-toolbar pull-right margin-top-sm">
+                                <button class="btn btn-primary" {{action 'updateNotifications' model.settings model.user}}>{{strings.update}}</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-pane" id="userPasswordEvents">
+            <div class="panel panel-default" id="user-password-events-div">
+                <div class="page-header page-header-tab-title">
+                    <h2 class="panel-title">{{model.user.name}}</h2>
+                </div>
+                <div class="panel-body">
+                    <table class="table">
+                        <tHead>
+                            <tr>
+                                <th>Event type</th>
+                                <th>Event time</th>
+                            </tr>
+                        </tHead>
+                        <tBody>
+                            {{#each passwordEvents as |event|}}
+                                <tr>
+                                    <td>{{event.eventTypeDescription}}</td>
+                                    <td>{{view-date date=event.eventTime withTime=true}}</td>
+                                </tr>
+                                {{else}}
+                                <tr>
+                                    <td colspan="2">{{strings.userSettings.passwordEvents.noEventsFound}}</td>
+                                </tr>
+                            {{/each}}
+                        </tBody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

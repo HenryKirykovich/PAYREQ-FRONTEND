@@ -1,0 +1,48 @@
+<div class="row">
+    <div class="col-md-12">
+        <form class="form-horizontal" role="form">
+            {{#if displayPaymentGateway }}
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="payment-gateway-config-landing">
+                            <h2>{{settingsStrings.all.accountingPlan.gatewaySetupHeading}}</h2>
+                            <p>{{settingsStrings.all.accountingPlan.gatewaySetupAction1}} <a {{action "goToPaymentGatewaySetup"}}>{{settingsStrings.all.accountingPlan.gatewaySetupAction2}}</a> {{settingsStrings.all.accountingPlan.gatewaySetupAction3}}</p>
+                        </div>
+                    </div>
+                </div>
+            {{/if}}
+            <div class="row">
+                <div class="col-md-12">
+                    <h2>{{settingsStrings.all.accountingPlan.transationHistoryTitle}}</h2>
+                    <p>{{settingsStrings.all.accountingPlan.transationHistorySubTitle}}</p>
+                    <table class="table table-striped">
+                        <tHead>
+                        <tr>
+                            <th>{{settingsStrings.all.accountingPlan.paymentDate}}</th>
+                            <th>{{settingsStrings.all.accountingPlan.subTotal}} ({{currencyCode}})</th>
+                            <th>{{settingsStrings.all.accountingPlan.tax}} ({{currencyCode}})</th>
+                            <th>{{settingsStrings.all.accountingPlan.total}} ({{currencyCode}})</th>
+                            <th class="text-center">Invoice</th>
+                        </tr>
+                        </tHead>
+                        <tBody>
+                        {{#each model as |payment|}}
+                        <tr>
+                            <td>{{view-date date=payment.updatedAt withFullTime=true}}</td>
+                            <td>{{currencySymbol}}{{payment.subTotalDisplay}}</td>
+                            <td>{{currencySymbol}}{{payment.taxDisplay}}</td>
+                            <td>{{currencySymbol}}{{payment.totalDisplay}}</td>
+                            <td class="text-center"><a href="{{payment.documentHref}}" target="_blank"><span class="glyphicon glyphicon-eye-open"></span></a></td>
+                        </tr>
+                        {{else}}
+                        <tr>
+                            <td colspan="5">{{settingsStrings.all.noPaymentsMade}}</td>
+                        </tr>
+                        {{/each}}
+                        </tBody>
+                    </table>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

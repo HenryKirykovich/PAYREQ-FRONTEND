@@ -1,0 +1,22 @@
+@import "../../common/variables";
+
+.group {
+  font-size: 1.8rem;
+
+  .fieldRow {
+    padding-bottom: 1rem;
+    display: flex;
+    align-items: baseline;
+    @media (max-width: 420px) {
+      display: block;
+    }
+  }
+
+  .label {
+    width: 11rem;
+    padding-right: 1rem;
+    justify-self: end;
+    color: $light-grey;
+    font-size: 1.6rem;
+  }
+}

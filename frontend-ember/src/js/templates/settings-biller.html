@@ -1,0 +1,667 @@
+<div id="biller-settings" class="row">
+    <div class="col-md-12">
+        <form class="form-horizontal" role="form">
+
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">{{strings.capitalised.billerSettings.options}}</h4>
+                </div>
+                <div class="panel-body">
+                    {{#if model.sendNonDigitalToPrinter}}
+                        <div class="form-group">
+                            <label class="col-sm-12">{{strings.capitalised.billerSettings.sendInactiveToPrinter}} - {{strings.capitalised.billerSettings.mailhouseId}} {{model.sendingMailhouseSystemId}} - {{strings.capitalised.billerSettings.printKey}} {{model.printKey}}</label>
+                            {{#if model.checkMaxPageSize}}
+                                <label class="col-sm-12">  {{strings.capitalised.billerSettings.checkMaxPrintingDocumentPages}} {{model.checkMaxPageSize}}</label>
+                            {{/if}}
+                        </div>
+                    {{/if}}
+                    {{#if model.validatePageSize}}
+                    <div class="form-group">
+                        {{#if model.checkMaxPageSize}}
+                        <label class="col-sm-12">  {{checkPageSizeMessage}}</label>
+                        {{/if}}
+                    </div>
+                    {{/if}}
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label settings-checkboxes">{{strings.capitalised.billerSettings.reviewBillBeforeSending}}</label>
+                        <div class="col-sm-1">
+                            {{input type="checkbox" classNames="form-control" checked=model.reviewBillBeforeSending}}
+                        </div>
+                        {{#if allowChangeCheckCredentials}}
+                        <label class="col-sm-3 control-label settings-checkboxes">{{strings.capitalised.billerSettings.checkCredentials}}</label>
+                        <div class="col-sm-1">
+                            {{input type="checkbox" classNames="form-control" checked=model.checkPayerCred}}
+                        </div>
+                        {{/if}}
+                        <label class="col-sm-3 control-label settings-checkboxes">{{strings.capitalised.billerSettings.reviewFailedReg}}</label>
+                        <div class="col-sm-1">
+                            {{input type="checkbox" classNames="form-control" checked=model.reviewFailedReg}}
+                        </div>
+                        {{#if model.hasSizePricing}}
+                        <label class="col-sm-3 control-label settings-checkboxes">{{strings.capitalised.billerSettings.mandatoryDocumentSizeValidation}}</label>
+                        <div class="col-sm-1">
+                            {{input type="checkbox" classNames="form-control"
+                            checked=model.mandatoryCheckOnDocumentSize}}
+                        </div>
+                        {{/if}}
+                        {{#if showSaveBillWithoutRegistration}}
+                        <label class="col-sm-3 control-label settings-checkboxes">{{strings.capitalised.billerSettings.saveBillWithoutRegistration}}</label>
+                        <div class="col-sm-1">
+                            {{input type="checkbox" classNames="form-control"
+                            checked=model.saveBillWithoutRegistration}}
+                        </div>
+                        {{/if}}
+                        {{#if model.hasMybillsAgent}}
+                        <label class="col-sm-3 control-label settings-checkboxes">{{strings.capitalised.billerSettings.allowAgentRegistrationsFromContacts}}</label>
+                        <div class="col-sm-1">
+                            {{input type="checkbox" classNames="form-control" checked=model.allowAgentRegistrationsFromContacts}}
+                        </div>
+                        {{/if}}
+
+                        <label class="col-sm-3 control-label settings-checkboxes">{{strings.capitalised.billerSettings.checkPotentialDeregistration}}</label>
+                        <div class="col-sm-1">
+                            {{#if disableCheckPotentialDeregistration}}
+                            <abbr title={{strings.capitalised.billerSettings.cannotUncheckPotentialDeregistration}}>
+                                {{input type="checkbox" classNames="form-control"
+                                checked=model.checkPotentialDeregistration disabled=true}}
+                            </abbr>
+                            {{else}}
+                            {{input type="checkbox" classNames="form-control"
+                            checked=model.checkPotentialDeregistration}}
+                            {{/if}}
+                        </div>
+
+                        {{#if model.checkPotentialDeregistration}}
+                        <label class="col-sm-3 control-label settings-checkboxes">{{strings.capitalised.billerSettings.holdContactChangedBill}}</label>
+                        <div class="col-sm-1">
+                            {{input type="checkbox" classNames="form-control" checked=model.holdContactChangedBill}}
+                        </div>
+                        {{/if}}
+
+                        {{#if model.checkPotentialDeregistration}}
+                        <label class="col-sm-3 control-label settings-checkboxes">{{strings.capitalised.billerSettings.noUploadPotentialDeregistration}}</label>
+                        <div class="col-sm-1">
+                            {{input type="checkbox" classNames="form-control" checked=model.noUploadPotentialDeregistration}}
+                        </div>
+                        {{/if}}
+
+                        {{#if showCheckCustomerName}}
+                        <label class="col-sm-3 control-label settings-checkboxes">{{strings.capitalised.billerSettings.checkEmployeeName}}</label>
+                        <div class="col-sm-1">
+                            {{input type="checkbox" classNames="form-control"
+                            checked=model.validateCustomerName}}
+                        </div>
+                        {{/if}}
+
+                        <label class="col-sm-3 control-label settings-checkboxes">{{strings.capitalised.billerSettings.contactRequiredForRegistationApproval}}</label>
+                        <div class="col-sm-1">
+                            {{input type="checkbox" classNames="form-control" checked=model.contactRequiredForRegistationApproval}}
+                        </div>
+
+                        <label class="col-sm-3 control-label settings-checkboxes">{{strings.capitalised.billerSettings.checkMaxDocumentPages}}</label>
+                        <div class="col-sm-1">
+                            {{input type="checkbox" classNames="form-control"
+                            checked=model.validatePageSize}}
+                        </div>
+                    </div>
+
+                    <div class="form-group ">
+                        <label class="col-sm-2 control-label settings-checkboxes">{{strings.capitalised.billerSettings.dueDateReplacementWords}}</label>
+                        <div class="col-sm-10">
+                            {{input id="dueDateReplacement" type="text" classNames="form-control" value=model.dueDateReplacementWords}}
+                        </div>
+                    </div>
+
+                    <div class="form-group ">
+                        <label class="col-sm-2 control-label settings-checkboxes">{{strings.capitalised.billerSettings.noPaymentRequiredReplacementWord}}</label>
+                        <div class="col-sm-10">
+                            {{input id="noPaymentRequired" type="text" classNames="form-control" value=model.noPaymentRequiredReplacementWord}}
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-xs-12 settings-mailer-button">
+                            {{#if hasUpdateAccess}}
+                            <button class="btn btn-primary" {{action 'update' model biller.id}}>{{strings.capitalised.billerSettings.updateOptions}}</button>
+                            {{/if}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">{{strings.capitalised.billerSettings.billRefFields}}</h4>
+                </div>
+                <div class="panel-body">
+                    {{#if model.isSub}}
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">{{strings.capitalised.billerSettings.billRefField1}}</label>
+                            <div class="col-sm-8">
+                                {{input type="text" classNames="form-control" value=model.billRef1Field disabled=true}}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">{{strings.capitalised.billerSettings.billRefField2}}</label>
+                            <div class="col-sm-8">
+                                {{input type="text" classNames="form-control" value=model.billRef2Field disabled=true}}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">{{strings.capitalised.billerSettings.billRefField3}}</label>
+                            <div class="col-sm-8">
+                                {{input type="text" classNames="form-control" value=model.billRef3Field disabled=true}}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">{{strings.capitalised.billerSettings.billRefField4}}</label>
+                            <div class="col-sm-8">
+                                {{input type="text" classNames="form-control" value=model.billRef4Field disabled=true}}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">{{strings.capitalised.billerSettings.billRefField5}}</label>
+                            <div class="col-sm-8">
+                                {{input type="text" classNames="form-control" value=model.billRef5Field disabled=true}}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">{{strings.capitalised.billerSettings.billRefField6}}</label>
+                            <div class="col-sm-8">
+                                {{input type="text" classNames="form-control" value=model.billRef6Field disabled=true}}
+                            </div>
+                        </div>
+                    {{else}}
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">{{strings.capitalised.billerSettings.billRefField1}}</label>
+                            <div class="col-sm-8">
+                                {{#if isAdmin}}
+                                    {{input type="text" classNames="form-control" value=model.billRef1Field}}
+                                {{else}}
+                                    {{input type="text" classNames="form-control" value=model.billRef1Field disabled=true}}
+                                {{/if}}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">{{strings.capitalised.billerSettings.billRefField2}}</label>
+                            <div class="col-sm-8">
+                                {{#if isAdmin}}
+                                    {{input type="text" classNames="form-control" value=model.billRef2Field}}
+                                {{else}}
+                                    {{input type="text" classNames="form-control" value=model.billRef2Field disabled=true}}
+                                {{/if}}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">{{strings.capitalised.billerSettings.billRefField3}}</label>
+                            <div class="col-sm-8">
+                                {{#if isAdmin}}
+                                    {{input type="text" classNames="form-control" value=model.billRef3Field}}
+                                {{else}}
+                                    {{input type="text" classNames="form-control" value=model.billRef3Field disabled=true}}
+                                {{/if}}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">{{strings.capitalised.billerSettings.billRefField4}}</label>
+                            <div class="col-sm-8">
+                                {{#if isAdmin}}
+                                    {{input type="text" classNames="form-control" value=model.billRef4Field}}
+                                {{else}}
+                                    {{input type="text" classNames="form-control" value=model.billRef4Field disabled=true}}
+                                {{/if}}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">{{strings.capitalised.billerSettings.billRefField5}}</label>
+                            <div class="col-sm-8">
+                                {{#if isAdmin}}
+                                    {{input type="text" classNames="form-control" value=model.billRef5Field}}
+                                {{else}}
+                                    {{input type="text" classNames="form-control" value=model.billRef5Field disabled=true}}
+                                {{/if}}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">{{strings.capitalised.billerSettings.billRefField6}}</label>
+                            <div class="col-sm-8">
+                                {{#if isAdmin}}
+                                    {{input type="text" classNames="form-control" value=model.billRef6Field}}
+                                {{else}}
+                                    {{input type="text" classNames="form-control" value=model.billRef6Field disabled=true}}
+                                {{/if}}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label"></label>
+                            <div class="col-sm-8 settings-mailer-button">
+                                {{#if hasUpdateAccess}}
+                                <button class="btn btn-primary" {{action 'updateBillFields' model biller.id}}>{{strings.capitalised.billerSettings.updateBillRefFields}}</button>
+                                {{/if}}
+                            </div>
+                        </div>
+                    {{/if}}
+                </div>
+            </div>
+
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">{{strings.capitalised.billerSettings.contactIdFields}}</h4>
+                </div>
+                <div>
+                    <div class="col-sm-2"><h4><strong></strong></h4></div>
+                    <div class="col-sm-8"><h4><strong></strong></h4></div>
+                    <div class="col-sm-1"><h4><strong>{{strings.capitalised.billerSettings.IdHeader}}</strong></h4></div>
+                    <div class="col-sm-1"><h4><strong>{{strings.capitalised.billerSettings.AuthHeader}}</strong></h4></div>
+                </div>
+                <div class="panel-body">
+                    {{#if model.isSub}}
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">{{strings.capitalised.billerSettings.contactIdField1}}</label>
+                        <div class="col-sm-8">
+                            {{input type="text" classNames="form-control" value=model.contactId1Field disabled=true}}
+                        </div>
+                        <div class="col-sm-1">
+                            {{#if isContactField1Id}}
+                            <span class="glyphicon glyphicon glyphicon-ok form-control-static" aria-hidden="true" style="color:green"></span>
+                            {{else}}
+                            <span class="glyphicon glyphicon glyphicon glyphicon-remove form-control-static" aria-hidden="true" style="color:red"></span>
+                            {{/if}}
+                        </div>
+                        <div class="col-sm-1">
+                            {{#if isContactField1Auth}}
+                            <span class="glyphicon glyphicon glyphicon-ok form-control-static" aria-hidden="true" style="color:green"></span>
+                            {{else}}
+                            <span class="glyphicon glyphicon glyphicon glyphicon-remove form-control-static" aria-hidden="true" style="color:red"></span>
+                            {{/if}}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">{{strings.capitalised.billerSettings.contactIdField2}}</label>
+                        <div class="col-sm-8">
+                            {{input type="text" classNames="form-control" value=model.contactId2Field disabled=true}}
+                        </div>
+                        <div class="col-sm-1">
+                            {{#if isContactField2Id}}
+                            <span class="glyphicon glyphicon glyphicon-ok form-control-static" aria-hidden="true" style="color:green"></span>
+                            {{else}}
+                            <span class="glyphicon glyphicon glyphicon glyphicon-remove form-control-static" aria-hidden="true" style="color:red"></span>
+                            {{/if}}
+                        </div>
+                        <div class="col-sm-1">
+                            {{#if isContactField2Auth}}
+                            <span class="glyphicon glyphicon glyphicon-ok form-control-static" aria-hidden="true" style="color:green"></span>
+                            {{else}}
+                            <span class="glyphicon glyphicon glyphicon glyphicon-remove form-control-static" aria-hidden="true" style="color:red"></span>
+                            {{/if}}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">{{strings.capitalised.billerSettings.contactIdField3}}</label>
+                        <div class="col-sm-8">
+                            {{input type="text" classNames="form-control" value=model.contactId3Field disabled=true}}
+                        </div>
+                        <div class="col-sm-1">
+                            {{#if isContactField3Id}}
+                            <span class="glyphicon glyphicon glyphicon-ok form-control-static" aria-hidden="true" style="color:green"></span>
+                            {{else}}
+                            <span class="glyphicon glyphicon glyphicon glyphicon-remove form-control-static" aria-hidden="true" style="color:red"></span>
+                            {{/if}}
+                        </div>
+                        <div class="col-sm-1">
+                            {{#if isContactField3Auth}}
+                            <span class="glyphicon glyphicon glyphicon-ok form-control-static" aria-hidden="true" style="color:green"></span>
+                            {{else}}
+                            <span class="glyphicon glyphicon glyphicon glyphicon-remove form-control-static" aria-hidden="true" style="color:red"></span>
+                            {{/if}}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">{{strings.capitalised.billerSettings.contactIdField4}}</label>
+                        <div class="col-sm-8">
+                            {{input type="text" classNames="form-control" value=model.contactId4Field disabled=true}}
+                        </div>
+                        <div class="col-sm-1">
+                            {{#if isContactField4Id}}
+                            <span class="glyphicon glyphicon glyphicon-ok form-control-static" aria-hidden="true" style="color:green"></span>
+                            {{else}}
+                            <span class="glyphicon glyphicon glyphicon glyphicon-remove form-control-static" aria-hidden="true" style="color:red"></span>
+                            {{/if}}
+                        </div>
+                        <div class="col-sm-1">
+                            {{#if isContactField4Auth}}
+                            <span class="glyphicon glyphicon glyphicon-ok form-control-static" aria-hidden="true" style="color:green"></span>
+                            {{else}}
+                            <span class="glyphicon glyphicon glyphicon glyphicon-remove form-control-static" aria-hidden="true" style="color:red"></span>
+                            {{/if}}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">{{strings.capitalised.billerSettings.contactIdField5}}</label>
+                        <div class="col-sm-8">
+                            {{input type="text" classNames="form-control" value=model.contactId5Field disabled=true}}
+                        </div>
+                        <div class="col-sm-1">
+                            {{#if isContactField5Id}}
+                            <span class="glyphicon glyphicon glyphicon-ok form-control-static" aria-hidden="true" style="color:green"></span>
+                            {{else}}
+                            <span class="glyphicon glyphicon glyphicon glyphicon-remove form-control-static" aria-hidden="true" style="color:red"></span>
+                            {{/if}}
+                        </div>
+                        <div class="col-sm-1">
+                            {{#if isContactField5Auth}}
+                            <span class="glyphicon glyphicon glyphicon-ok form-control-static" aria-hidden="true" style="color:green"></span>
+                            {{else}}
+                            <span class="glyphicon glyphicon glyphicon glyphicon-remove form-control-static" aria-hidden="true" style="color:red"></span>
+                            {{/if}}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">{{strings.capitalised.billerSettings.contactIdField6}}</label>
+                        <div class="col-sm-8">
+                            {{input type="text" classNames="form-control" value=model.contactId6Field disabled=true}}
+                        </div>
+                        <div class="col-sm-1">
+                            {{#if isContactField6Id}}
+                            <span class="glyphicon glyphicon glyphicon-ok form-control-static" aria-hidden="true" style="color:green"></span>
+                            {{else}}
+                            <span class="glyphicon glyphicon glyphicon glyphicon-remove form-control-static" aria-hidden="true" style="color:red"></span>
+                            {{/if}}
+                        </div>
+                        <div class="col-sm-1">
+                            {{#if isContactField6Auth}}
+                            <span class="glyphicon glyphicon glyphicon-ok form-control-static" aria-hidden="true" style="color:green"></span>
+                            {{else}}
+                            <span class="glyphicon glyphicon glyphicon glyphicon-remove form-control-static" aria-hidden="true" style="color:red"></span>
+                            {{/if}}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">{{strings.capitalised.billerSettings.contactIdField7}}</label>
+                        <div class="col-sm-8">
+                            {{input type="text" classNames="form-control" value=model.contactId7Field disabled=true}}
+                        </div>
+                        <div class="col-sm-1">
+                            {{#if isContactField7Id}}
+                            <span class="glyphicon glyphicon glyphicon-ok form-control-static" aria-hidden="true" style="color:green"></span>
+                            {{else}}
+                            <span class="glyphicon glyphicon glyphicon glyphicon-remove form-control-static" aria-hidden="true" style="color:red"></span>
+                            {{/if}}
+                        </div>
+                        <div class="col-sm-1">
+                            {{#if isContactField7Auth}}
+                            <span class="glyphicon glyphicon glyphicon-ok form-control-static" aria-hidden="true" style="color:green"></span>
+                            {{else}}
+                            <span class="glyphicon glyphicon glyphicon glyphicon-remove form-control-static" aria-hidden="true" style="color:red"></span>
+                            {{/if}}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">{{strings.capitalised.billerSettings.contactIdField8}}</label>
+                        <div class="col-sm-8">
+                            {{input type="text" classNames="form-control" value=model.contactId8Field disabled=true}}
+                        </div>
+                        <div class="col-sm-1">
+                            {{#if isContactField8Id}}
+                            <span class="glyphicon glyphicon glyphicon-ok form-control-static" aria-hidden="true" style="color:green"></span>
+                            {{else}}
+                            <span class="glyphicon glyphicon glyphicon glyphicon-remove form-control-static" aria-hidden="true" style="color:red"></span>
+                            {{/if}}
+                        </div>
+                        <div class="col-sm-1">
+                            {{#if isContactField8Auth}}
+                            <span class="glyphicon glyphicon glyphicon-ok form-control-static" aria-hidden="true" style="color:green"></span>
+                            {{else}}
+                            <span class="glyphicon glyphicon glyphicon glyphicon-remove form-control-static" aria-hidden="true" style="color:red"></span>
+                            {{/if}}
+                        </div>
+                    </div>
+                    {{else}}
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">{{strings.capitalised.billerSettings.contactIdField1}}</label>
+                        <div class="col-sm-8">
+                            {{#if isAdmin}}
+                                {{input type="text" classNames="form-control" value=model.contactId1Field}}
+                            {{else}}
+                                {{input type="text" classNames="form-control" value=model.contactId1Field disabled=true}}
+                            {{/if}}
+                        </div>
+                        <div class="col-sm-1">
+                            {{#if isContactField1Id}}
+                            <span class="glyphicon glyphicon glyphicon-ok form-control-static" aria-hidden="true" style="color:green"></span>
+                            {{else}}
+                            <span class="glyphicon glyphicon glyphicon glyphicon-remove form-control-static" aria-hidden="true" style="color:red"></span>
+                            {{/if}}
+                        </div>
+                        <div class="col-sm-1">
+                            {{#if isContactField1Auth}}
+                            <span class="glyphicon glyphicon glyphicon-ok form-control-static" aria-hidden="true" style="color:green"></span>
+                            {{else}}
+                            <span class="glyphicon glyphicon glyphicon glyphicon-remove form-control-static" aria-hidden="true" style="color:red"></span>
+                            {{/if}}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">{{strings.capitalised.billerSettings.contactIdField2}}</label>
+                        <div class="col-sm-8">
+                            {{#if isAdmin}}
+                                {{input type="text" classNames="form-control" value=model.contactId2Field}}
+                            {{else}}
+                                {{input type="text" classNames="form-control" value=model.contactId2Field disabled=true}}
+                            {{/if}}
+                        </div>
+                        <div class="col-sm-1">
+                            {{#if isContactField2Id}}
+                            <span class="glyphicon glyphicon glyphicon-ok form-control-static" aria-hidden="true" style="color:green"></span>
+                            {{else}}
+                            <span class="glyphicon glyphicon glyphicon glyphicon-remove form-control-static" aria-hidden="true" style="color:red"></span>
+                            {{/if}}
+                        </div>
+                        <div class="col-sm-1">
+                            {{#if isContactField2Auth}}
+                            <span class="glyphicon glyphicon glyphicon-ok form-control-static" aria-hidden="true" style="color:green"></span>
+                            {{else}}
+                            <span class="glyphicon glyphicon glyphicon glyphicon-remove form-control-static" aria-hidden="true" style="color:red"></span>
+                            {{/if}}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">{{strings.capitalised.billerSettings.contactIdField3}}</label>
+                        <div class="col-sm-8">
+                            {{#if isAdmin}}
+                                {{input type="text" classNames="form-control" value=model.contactId3Field}}
+                            {{else}}
+                                {{input type="text" classNames="form-control" value=model.contactId3Field disabled=true}}
+                            {{/if}}
+                        </div>
+                        <div class="col-sm-1">
+                            {{#if isContactField3Id}}
+                            <span class="glyphicon glyphicon glyphicon-ok form-control-static" aria-hidden="true" style="color:green"></span>
+                            {{else}}
+                            <span class="glyphicon glyphicon glyphicon glyphicon-remove form-control-static" aria-hidden="true" style="color:red"></span>
+                            {{/if}}
+                        </div>
+                        <div class="col-sm-1">
+                            {{#if isContactField3Auth}}
+                            <span class="glyphicon glyphicon glyphicon-ok form-control-static" aria-hidden="true" style="color:green"></span>
+                            {{else}}
+                            <span class="glyphicon glyphicon glyphicon glyphicon-remove form-control-static" aria-hidden="true" style="color:red"></span>
+                            {{/if}}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">{{strings.capitalised.billerSettings.contactIdField4}}</label>
+                        <div class="col-sm-8">
+                            {{#if isAdmin}}
+                                {{input type="text" classNames="form-control" value=model.contactId4Field}}
+                            {{else}}
+                                {{input type="text" classNames="form-control" value=model.contactId4Field disabled=true}}
+                            {{/if}}
+                        </div>
+                        <div class="col-sm-1">
+                            {{#if isContactField4Id}}
+                            <span class="glyphicon glyphicon glyphicon-ok form-control-static" aria-hidden="true" style="color:green"></span>
+                            {{else}}
+                            <span class="glyphicon glyphicon glyphicon glyphicon-remove form-control-static" aria-hidden="true" style="color:red"></span>
+                            {{/if}}
+                        </div>
+                        <div class="col-sm-1">
+                            {{#if isContactField4Auth}}
+                            <span class="glyphicon glyphicon glyphicon-ok form-control-static" aria-hidden="true" style="color:green"></span>
+                            {{else}}
+                            <span class="glyphicon glyphicon glyphicon glyphicon-remove form-control-static" aria-hidden="true" style="color:red"></span>
+                            {{/if}}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">{{strings.capitalised.billerSettings.contactIdField5}}</label>
+                        <div class="col-sm-8">
+                            {{#if isAdmin}}
+                                {{input type="text" classNames="form-control" value=model.contactId5Field}}
+                            {{else}}
+                                {{input type="text" classNames="form-control" value=model.contactId5Field disabled=true}}
+                            {{/if}}
+                        </div>
+                        <div class="col-sm-1">
+                            {{#if isContactField5Id}}
+                            <span class="glyphicon glyphicon glyphicon-ok form-control-static" aria-hidden="true" style="color:green"></span>
+                            {{else}}
+                            <span class="glyphicon glyphicon glyphicon glyphicon-remove form-control-static" aria-hidden="true" style="color:red"></span>
+                            {{/if}}
+                        </div>
+                        <div class="col-sm-1">
+                            {{#if isContactField5Auth}}
+                            <span class="glyphicon glyphicon glyphicon-ok form-control-static" aria-hidden="true" style="color:green"></span>
+                            {{else}}
+                            <span class="glyphicon glyphicon glyphicon glyphicon-remove form-control-static" aria-hidden="true" style="color:red"></span>
+                            {{/if}}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">{{strings.capitalised.billerSettings.contactIdField6}}</label>
+                        <div class="col-sm-8">
+                            {{#if isAdmin}}
+                                {{input type="text" classNames="form-control" value=model.contactId6Field}}
+                            {{else}}
+                                {{input type="text" classNames="form-control" value=model.contactId6Field disabled=true}}
+                            {{/if}}
+                        </div>
+                        <div class="col-sm-1">
+                            {{#if isContactField6Id}}
+                            <span class="glyphicon glyphicon glyphicon-ok form-control-static" aria-hidden="true" style="color:green"></span>
+                            {{else}}
+                            <span class="glyphicon glyphicon glyphicon glyphicon-remove form-control-static" aria-hidden="true" style="color:red"></span>
+                            {{/if}}
+                        </div>
+                        <div class="col-sm-1">
+                            {{#if isContactField6Auth}}
+                            <span class="glyphicon glyphicon glyphicon-ok form-control-static" aria-hidden="true" style="color:green"></span>
+                            {{else}}
+                            <span class="glyphicon glyphicon glyphicon glyphicon-remove form-control-static" aria-hidden="true" style="color:red"></span>
+                            {{/if}}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">{{strings.capitalised.billerSettings.contactIdField7}}</label>
+                        <div class="col-sm-8">
+                            {{#if isAdmin}}
+                            {{input type="text" classNames="form-control" value=model.contactId7Field}}
+                            {{else}}
+                            {{input type="text" classNames="form-control" value=model.contactId7Field disabled=true}}
+                            {{/if}}
+                        </div>
+                        <div class="col-sm-1">
+                            {{#if isContactField7Id}}
+                            <span class="glyphicon glyphicon glyphicon-ok form-control-static" aria-hidden="true" style="color:green"></span>
+                            {{else}}
+                            <span class="glyphicon glyphicon glyphicon glyphicon-remove form-control-static" aria-hidden="true" style="color:red"></span>
+                            {{/if}}
+                        </div>
+                        <div class="col-sm-1">
+                            {{#if isContactField7Auth}}
+                            <span class="glyphicon glyphicon glyphicon-ok form-control-static" aria-hidden="true" style="color:green"></span>
+                            {{else}}
+                            <span class="glyphicon glyphicon glyphicon glyphicon-remove form-control-static" aria-hidden="true" style="color:red"></span>
+                            {{/if}}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">{{strings.capitalised.billerSettings.contactIdField8}}</label>
+                        <div class="col-sm-8">
+                            {{#if isAdmin}}
+                            {{input type="text" classNames="form-control" value=model.contactId8Field}}
+                            {{else}}
+                            {{input type="text" classNames="form-control" value=model.contactId8Field disabled=true}}
+                            {{/if}}
+                        </div>
+                        <div class="col-sm-1">
+                            {{#if isContactField8Id}}
+                            <span class="glyphicon glyphicon glyphicon-ok form-control-static" aria-hidden="true" style="color:green"></span>
+                            {{else}}
+                            <span class="glyphicon glyphicon glyphicon glyphicon-remove form-control-static" aria-hidden="true" style="color:red"></span>
+                            {{/if}}
+                        </div>
+                        <div class="col-sm-1">
+                            {{#if isContactField8Auth}}
+                            <span class="glyphicon glyphicon glyphicon-ok form-control-static" aria-hidden="true" style="color:green"></span>
+                            {{else}}
+                            <span class="glyphicon glyphicon glyphicon glyphicon-remove form-control-static" aria-hidden="true" style="color:red"></span>
+                            {{/if}}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label"></label>
+                        <div class="col-sm-8 settings-mailer-button">
+                            {{#if hasUpdateAccess}}
+                            <button class="btn btn-primary" {{action 'updateContactFields' model biller.id}}>{{strings.capitalised.billerSettings.updateContactIdFields}}</button>
+                            {{/if}}
+                        </div>
+                    </div>
+                    {{/if}}
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">{{strings.capitalised.billerSettings.deliveryChannelFields}}</h4>
+                </div>
+                <div class="panel-body">
+                    <div class="right-margin">
+                        <div class="col-md-3" id="user-list-div">
+                            <div class="panel panel-default">
+                                <div class= "panel-heading">
+                                    {{strings.channels}}
+                                </div>
+                                <div class="panel-body">
+                                    <ul class="nav nav-pills nav-stacked">
+                                        {{#each model.billerChannelPartnerSystem as |channel|}}
+                                        <li id="{{channel.channelPartnerSystemId}}" class="settings-channel">
+                                            {{#link-to "biller.settings.biller.channel" channel.channelPartnerSystemId class="user-list-item"}}
+                                            <span class="glyphicon glyphicon-user glyphicon-user-list"></span>
+                                            <span>{{channel.channelPartnerSystemId}}</span>
+                                            {{/link-to}}
+                                        </li>
+                                        {{/each}}
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-8 col-sm-12" id="user-info-div">
+                            {{outlet}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            {{component systemComponentName
+            billerSettings=model
+            biller=biller
+            hasAllAccess=hasAllAccess
+            strings=strings
+            generateIncomingBillsEmailAddress='generateIncomingBillsEmailAddress'
+            disconnectQboAccount='disconnectQboAccount'}}
+
+        </form>
+    </div>
+</div>

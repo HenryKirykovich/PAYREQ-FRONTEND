@@ -1,0 +1,11 @@
+.textInput {
+  &:disabled {
+    background: #FFFFFF;
+    border-color: #FFFFFF;
+    box-shadow: none;
+  }
+}
+
+.helpBlock {
+  margin-top: -5px !important; //to counteract the margin bottom of the label
+}

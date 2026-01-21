@@ -1,0 +1,289 @@
+<div class="row">
+    <div class="col-md-12">
+        <h2 class="page-heading">
+            {{#if hasContacts}}
+                {{biller.strings.capitalised.contacts}} ({{recordCount}}&nbsp;total)
+            {{else}}
+                {{biller.strings.capitalised.contacts}}
+            {{/if}}
+        </h2>
+
+    </div>
+</div>
+
+{{#if hasActionButtons}}
+<div class="row actions-row">
+    <div class="actions btn-group col-sm-4">
+        {{#if canImportContacts}}
+            <button class="btn btn-default" {{action "importContacts"}}>
+            <span class="glyphicon glyphicon-import"></span> {{biller.strings.capitalised.importContacts}}
+            </button>
+        {{/if}}
+    </div>
+</div>
+{{/if}}
+
+{{#if isConnected}}
+    {{#if isNotQBOPayrollBiller}}
+        <div class="panel panel-default" role="search" >
+            <a data-toggle="collapse" href="#collapse1" {{action "showAndHide"}}>
+                <div class="panel-heading search-panel-heading">
+                <h4 class="panel-title search-panel-title"><span class="glyphicon glyphicon-search search-panel-glyphicon"/> {{globalStrings.all.search}} <span style="float: right;" class="glyphicon {{if collapse 'glyphicon-chevron-up' 'glyphicon-chevron-down'}}"/></h4>
+                </div>
+            </a>
+            <div id="collapse1" class="panel-body collapse {{if showSearch 'in'}}">
+        {{common-filter-bar action="changeCommonFilters"
+                            download="download"
+                            defaultDateRange=defaultDateRange
+                            searchFilters=selectedFilters
+                            showDates=false}}
+                <div style="display: flex;flex-direction: row;">
+                    <input type="checkbox" id="exactmatch" checked={{this.exactSearch}} onchange={{action "changedSelection"}}>
+                    <label style="margin-left: 10px;" for="exactmatch"> {{exactSearchMessage}} </label>
+                </div>
+                {{#if contactField3Name}}
+                <div style="display: flex;flex-direction: row;">
+                    <input type="checkbox" id="exactmatchNoticeGroup" checked={{this.exactSearchNoticeGroup}} onchange={{action "changedSelectionNoticeGroup"}}>
+                    <label style="margin-left: 10px;" for="exactmatchNoticeGroup">{{exactSearchNoticeGroupMessage}} </label>
+                </div>
+                {{/if}}
+            </div>
+
+        </div>
+    {{/if}}
+
+    <form class="form-inline" role="form" id="create-contact-form">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="table-responsive">
+                    <table class="data-table table table-responsive table-hover clickable-rows">
+                        {{table-thead action="sort" columns=columns typeFilters=typeFilters}}
+                        <tBody>
+                            {{#if canCreateContact}}
+                            <tr class="create-row well">
+                                {{#table-column-data columnFieldName="billerAccountNumber" columns=columns typeFilters=typeFilters biller=biller}}
+                                <div class="form-group">
+                                    {{#if hasMultipleChannels}}
+                                        <label class="sr-only" for="billerAccountNumber">{{strings.contactAccountIdLabel}}</label>
+                                    {{else}}
+                                        <label class="sr-only" for="billerAccountNumber">{{strings.billerAccountNumberLabel}}</label>
+                                    {{/if}}
+                                    {{input type="text" id="billerAccountNumber" value=newContact.billerAccountNumber name="billerAccountNumber" placeholder=strings.billerAccountNumber class="form-control"}}
+                                </div>
+                                {{/table-column-data}}
+
+                                {{#table-column-data columnFieldName="name" columns=columns typeFilters=typeFilters biller=biller}}
+                                <div class="form-group">
+                                    <label class="sr-only" for="customerName">{{strings.name}}</label>
+                                    {{input type="text" id="customerName" value=newContact.name name="name" placeholder=strings.name class="form-control"}}
+                                </div>
+                                {{/table-column-data}}
+
+                                {{#if hasMultipleChannels}}
+                                    {{#if contactField1Name}}
+                                    {{#table-column-data columnFieldName="contactId1" columns=columns typeFilters=typeFilters biller=biller}}
+                                    <div class="form-group">
+                                        <label class="sr-only" for="contactId1">{{contactField1Name}}</label>
+                                        {{input type="text" id="contactId1" value=newContact.contactId1 name="contactId1" placeholder=contactField1Name class="form-control"}}
+                                    </div>
+                                    {{/table-column-data}}
+                                    {{/if}}
+                                {{/if}}
+
+                                {{#if contactField2Name}}
+                                {{#table-column-data columnFieldName="contactId2" columns=columns typeFilters=typeFilters biller=biller}}
+                                <div class="form-group">
+                                    <label class="sr-only" for="contactId2">{{contactField1Name}}</label>
+                                    {{input type="text" id="contactId2" value=newContact.contactId2 name="contactId2" placeholder=contactField2Name class="form-control"}}
+                                </div>
+                                {{/table-column-data}}
+                                {{/if}}
+
+                                {{#if contactField3Name}}
+                                {{#table-column-data columnFieldName="contactId3" columns=columns typeFilters=typeFilters biller=biller}}
+                                <div class="form-group">
+                                    <label class="sr-only" for="contactId3">{{contactField3Name}}</label>
+                                    {{input type="text" id="contactId3" value=newContact.contactId3 name="contactId3" placeholder=contactField3Name class="form-control"}}
+                                </div>
+                                {{/table-column-data}}
+                                {{/if}}
+
+                                {{#if contactField4Name}}
+                                {{#table-column-data columnFieldName="contactId4" columns=columns typeFilters=typeFilters biller=biller}}
+                                <div class="form-group">
+                                    <label class="sr-only" for="contactId4">{{contactField4Name}}</label>
+                                    {{input type="text" id="contactId4" value=newContact.contactId4 name="contactId4" placeholder=contactField4Name class="form-control"}}
+                                </div>
+                                {{/table-column-data}}
+                                {{/if}}
+
+                                {{#if contactField5Name}}
+                                {{#table-column-data columnFieldName="contactId5" columns=columns typeFilters=typeFilters biller=biller}}
+                                <div class="form-group">
+                                    <label class="sr-only" for="contactId5">{{contactField5Name}}</label>
+                                    {{input type="text" id="contactId5" value=newContact.contactId5 name="contactId5" placeholder=contactField5Name class="form-control"}}
+                                </div>
+                                {{/table-column-data}}
+                                {{/if}}
+
+                                {{#if contactField6Name}}
+                                {{#table-column-data columnFieldName="contactId6" columns=columns typeFilters=typeFilters biller=biller}}
+                                <div class="form-group">
+                                    <label class="sr-only" for="contactId6">{{contactField6Name}}</label>
+                                    {{input type="text" id="contactId6" value=newContact.contactId6 name="contactId6" placeholder=contactField6Name class="form-control"}}
+                                </div>
+                                {{/table-column-data}}
+                                {{/if}}
+
+                                {{#if contactField7Name}}
+                                {{#table-column-data columnFieldName="contactId7" columns=columns typeFilters=typeFilters biller=biller}}
+                                <div class="form-group">
+                                    <label class="sr-only" for="contactId7">{{contactField7Name}}</label>
+                                    {{input type="text" id="contactId7" value=newContact.contactId7 name="contactId7" placeholder=contactField7Name class="form-control"}}
+                                </div>
+                                {{/table-column-data}}
+                                {{/if}}
+
+                                {{#if contactField8Name}}
+                                {{#table-column-data columnFieldName="contactId8" columns=columns typeFilters=typeFilters biller=biller}}
+                                <div class="form-group">
+                                    <label class="sr-only" for="contactId8">{{contactField8Name}}</label>
+                                    {{input type="text" id="contactId8" value=newContact.contactId8 name="contactId8" placeholder=contactField8Name class="form-control"}}
+                                </div>
+                                {{/table-column-data}}
+                                {{/if}}
+
+                                <td colspan="2">
+                                    <button class="btn btn-primary" {{action "validateContact"}}>{{strings.capitalised.create}}</button>
+                                    <a class="action-link" {{action "clearCreate"}}>{{strings.capitalised.clear}}</a>
+                                </td>
+                            </tr>
+                            {{/if}}
+
+                            {{#each model as |contact|}}
+                            {{#if isNotQBOPayrollBiller}}
+                                {{#link-to "biller.contact" contact.id tagName="tr"}}
+
+                                    {{#table-column-data columnFieldName="billerAccountNumber" columns=columns typeFilters=typeFilters biller=biller}}
+                                    {{#link-to "biller.contact" contact.id}}
+                                        {{contact.billerAccountNumber}}
+                                     {{/link-to}}
+                                     {{/table-column-data}}
+
+
+                                    {{#table-column-data columnFieldName="name" columns=columns typeFilters=typeFilters biller=biller}}
+                                        {{contact.name}}
+                                    {{/table-column-data}}
+
+                                    {{#if hasMultipleChannels}}
+                                        {{#if contactField1Name}}
+                                        {{#table-column-data columnFieldName="contactId1" columns=columns typeFilters=typeFilters biller=biller}}
+                                            {{contact.contactId1}}
+                                        {{/table-column-data}}
+                                        {{/if}}
+                                    {{/if}}
+
+                                    {{#if contactField2Name}}
+                                    {{#table-column-data columnFieldName="contactId2" columns=columns typeFilters=typeFilters biller=biller}}
+                                        {{contact.contactId2}}
+                                    {{/table-column-data}}
+                                    {{/if}}
+
+                                    {{#if contactField3Name}}
+                                    {{#table-column-data columnFieldName="contactId3" columns=columns typeFilters=typeFilters biller=biller}}
+                                        {{contact.contactId3}}
+                                    {{/table-column-data}}
+                                    {{/if}}
+
+                                    {{#if contactField4Name}}
+                                    {{#table-column-data columnFieldName="contactId4" columns=columns typeFilters=typeFilters biller=biller}}
+                                        {{contact.contactId4}}
+                                    {{/table-column-data}}
+                                    {{/if}}
+
+                                    {{#if contactField5Name}}
+                                    {{#table-column-data columnFieldName="contactId5" columns=columns typeFilters=typeFilters biller=biller}}
+                                        {{contact.contactId5}}
+                                    {{/table-column-data}}
+                                    {{/if}}
+
+                                    {{#if contactField6Name}}
+                                    {{#table-column-data columnFieldName="contactId6" columns=columns typeFilters=typeFilters biller=biller}}
+                                        {{contact.contactId6}}
+                                    {{/table-column-data}}
+                                    {{/if}}
+
+                                    {{#if contactField7Name}}
+                                    {{#table-column-data columnFieldName="contactId7" columns=columns typeFilters=typeFilters biller=biller}}
+                                        {{contact.contactId7}}
+                                    {{/table-column-data}}
+                                    {{/if}}
+
+                                    {{#if contactField8Name}}
+                                    {{#table-column-data columnFieldName="contactId8" columns=columns typeFilters=typeFilters biller=biller}}
+                                        {{contact.contactId8}}
+                                    {{/table-column-data}}
+                                    {{/if}}
+
+
+                                    {{#table-column-data preventWrap=true columnFieldName="lastUpdated" columns=columns typeFilters=typeFilters biller=biller}}
+                                        {{view-date date=contact.lastUpdated withTime=true}}
+                                    {{/table-column-data}}
+
+                                    {{#if showActions}}
+                                        <td nowrap>
+                                            {{#if canDeleteContact}}
+                                            <button class="btn btn-link" style="padding: 5px" title={{strings.capitalised.deleteContact}} {{action "promptDeleteContact" contact bubbles=false}} aria-label={{strings.capitalised.deleteContact}} role="button">
+                                                <span class="glyphicon glyphicon-remove"></span>
+                                            </button>
+                                            {{/if}}
+                                        </td>
+                                    {{/if}}
+                                {{/link-to}}
+                            {{else}}
+                                <tr>
+
+                                {{#table-column-data columnFieldName="billerAccountNumber" columns=columns typeFilters=typeFilters biller=biller}}
+                                    {{contact.billerAccountNumber}}
+                                {{/table-column-data}}
+
+
+                                {{#table-column-data columnFieldName="name" columns=columns typeFilters=typeFilters biller=biller}}
+                                    {{contact.name}}
+                                {{/table-column-data}}
+
+                                {{#if contactField2Name}}
+                                    {{#table-column-data columnFieldName="contactId2" columns=columns typeFilters=typeFilters biller=biller}}
+                                        {{contact.contactId2}}
+                                    {{/table-column-data}}
+                                {{/if}}
+
+
+                                {{#table-column-data preventWrap=true columnFieldName="lastUpdated" columns=columns typeFilters=typeFilters biller=biller}}
+                                    {{view-date date=contact.lastUpdated withTime=true}}
+                                {{/table-column-data}}
+
+                                </tr>
+                            {{/if}}
+                            {{else}}
+                            <tr>
+                                <td colspan="10">{{strings.noContactsFound}}</td>
+                            </tr>
+                            {{/each}}
+                        </tBody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </form>
+    <div class="row">
+        <div class="col-md-6">
+            {{table-page-links pageSize=pageSize totalRecords=totalRecords pageNumber=pageNumber action="pageChanged"}}
+        </div>
+    </div>
+{{else}}
+    <div class="alert alert-info text-center">
+        You have not yet connected <strong>Payreq</strong> to your <strong>QuickBooks Online</strong> account.
+        Click {{#link-to "biller.settings.biller"}}here{{/link-to}} to go to Settings to connect to your <strong>QuickBooks Online</strong>.
+    </div>
+{{/if}}

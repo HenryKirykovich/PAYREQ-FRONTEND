@@ -1,0 +1,12 @@
+# -*- dockerfile -*-
+FROM node:16.18.1-alpine
+RUN apk add --update curl && \
+    rm -rf /var/cache/apk/*
+RUN npm install react-scripts@3.4.4 -g --silent
+WORKDIR /usr/src/app
+ENV PATH=/usr/src/app/node_modules/.bin:$PATH
+COPY ./package.json ./package-lock.json ./
+RUN npm install
+CMD ["npm", "start"]
+HEALTHCHECK --interval=10s --timeout=5s --start-period=60s --retries=5 \
+	    CMD curl -f http://localhost:80

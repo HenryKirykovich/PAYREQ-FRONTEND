@@ -1,0 +1,114 @@
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h4 class="panel-title">
+            <a data-toggle="collapse" data-parent="#pr-child-billers" data-target={{href}} class="action-link">
+                {{strings.userSettings.childBiller}} "{{childBiller.tagName}}"
+            </a>
+        </h4>
+    </div>
+
+    <div id={{elemId}} class="panel-collapse collapse">
+        <div class="panel-body">
+            <form class="form-horizontal">
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">{{strings.userSettings.permissions.payreq}}</label>
+                    <div class="col-sm-9">
+                        {{#if canEditPermission}}
+                        {{item-select class-name="form-control"
+                        content=allPayreqRoles
+                        optionLabelPath="displayName"
+                        prompt=strings.userSettings.permissions.subBillerEmptyPrompt
+                        promptDisabled=false
+                        selection=payreqRole}}
+                        {{else}}
+                        {{#if payreqRole}}
+                        <p class="form-control-static">{{payreqRole.displayName}}</p>
+                        {{else}}
+                        <p class="form-control-static">{{strings.userSettings.permissions.subBillerEmptyPrompt}}</p>
+                        {{/if}}
+                        {{/if}}
+                    </div>
+                </div>
+                {{#if hasContactsFeature}}
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">{{strings.userSettings.permissions.contacts}}</label>
+                    <div class="col-sm-9">
+                        {{#if canEditPermission}}
+                        {{item-select class-name="form-control"
+                        content=allContactRoles
+                        optionLabelPath="displayName"
+                        prompt=strings.userSettings.permissions.subBillerEmptyPrompt
+                        promptDisabled=false
+                        selection=contactRole}}
+                        {{else}}
+                        {{#if contactRole}}
+                        <p class="form-control-static">{{contactRole.displayName}}</p>
+                        {{else}}
+                        <p class="form-control-static">{{strings.userSettings.permissions.subBillerEmptyPrompt}}</p>
+                        {{/if}}
+                        {{/if}}
+                    </div>
+                </div>
+                {{/if}}
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">{{strings.userSettings.permissions.registrations}}</label>
+                    <div class="col-sm-9">
+                        {{#if canEditPermission}}
+                        {{item-select class-name="form-control"
+                        content=allRegistrationRoles
+                        optionLabelPath="displayName"
+                        prompt=strings.userSettings.permissions.subBillerEmptyPrompt
+                        promptDisabled=false
+                        selection=registrationRole}}
+                        {{else}}
+                        {{#if registrationRole}}
+                        <p class="form-control-static">{{registrationRole.displayName}}</p>
+                        {{else}}
+                        <p class="form-control-static">{{strings.userSettings.permissions.subBillerEmptyPrompt}}</p>
+                        {{/if}}
+                        {{/if}}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">{{strings.userSettings.permissions.bills}}</label>
+                    <div class="col-sm-9">
+                        {{#if canEditPermission}}
+                        {{item-select class-name="form-control"
+                        content=allBillRoles
+                        optionLabelPath="displayName"
+                        prompt=strings.userSettings.permissions.subBillerEmptyPrompt
+                        promptDisabled=false
+                        selection=billRole}}
+                        {{else}}
+                        {{#if billRole}}
+                        <p class="form-control-static">{{billRole.displayName}}</p>
+                        {{else}}
+                        <p class="form-control-static">{{strings.userSettings.permissions.subBillerEmptyPrompt}}</p>
+                        {{/if}}
+                        {{/if}}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">{{strings.userSettings.permissions.billerSettings}}</label>
+                    <div class="col-sm-9">
+                        {{#if canEditPermission}}
+                        {{item-select class-name="form-control"
+                        content=allBillerSettingRoles
+                        optionLabelPath="displayName"
+                        prompt=strings.userSettings.permissions.subBillerEmptyPrompt
+                        promptDisabled=false
+                        selection=billerSettingRole}}
+                        {{else}}
+                        {{#if billerSettingRole}}
+                        <p class="form-control-static">{{billerSettingRole.displayName}}</p>
+                        {{else}}
+                        <p class="form-control-static">{{strings.userSettings.permissions.subBillerEmptyPrompt}}</p>
+                        {{/if}}
+                        {{/if}}
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</div>

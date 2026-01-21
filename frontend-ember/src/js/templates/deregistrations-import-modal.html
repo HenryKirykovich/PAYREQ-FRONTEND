@@ -1,0 +1,38 @@
+{{#modal-dialog modalTitle=biller.strings.capitalised.importDeregistrations
+                actionButtons=importActionButtons
+                isPrimaryDisabled=isPrimaryDisabled
+                onClose="closeModal"
+                confirm="doDeregisterImported"}}
+<div class="row">
+    <div class="col-md-12">
+        <p class="well">{{strings.deregistrationModal.instructions}}</p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <label class="col-md-12 control-label">{{strings.deregistrationModal.file}}</label>
+    </div>
+    <div class="col-md-12">
+        <div class="col-md-12">
+    		{{file-upload response=uploadedInfo url=deregistrationUploadUrl}}
+        </div>
+    </div>
+    {{#if uploadedInfo}}
+    <div class="col-md-12">
+        <p class="well">{{uploadSummary}}</p>
+        <p>{{strings.capitalised.click}} <a class="action-link" {{action 'showUnmatched'}}>{{strings.here}}</a> {{strings.deregistrationModal.viewUnmatched}}</p>
+    </div>
+    {{/if}}
+    {{#if displayUnmatched}}
+    <div class="col-md-12">
+        <ul class="list-unstyled">
+        {{#each uploadedInfo.unmatched as |unmatched|}}
+          <li>{{unmatched}}</li>
+        {{/each}}
+        </ul>
+    </div>
+    {{/if}}
+</div>
+
+{{/modal-dialog}}

@@ -1,0 +1,14 @@
+.row {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+
+  > div {
+    width: 300px;
+    margin-bottom: 1em;
+  }
+}
+
+.addButton {
+  margin-top: -1em;
+}

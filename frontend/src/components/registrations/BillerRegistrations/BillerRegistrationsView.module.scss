@@ -1,0 +1,79 @@
+@import "../../common/variables";
+@import "../../../resources/scss/search-form";
+
+$card-width: 800px;
+
+.buttonContainer {
+    margin-bottom: 2rem;
+}
+
+.hideOnMobile {
+    @media (max-width: 500px) {
+        display: none;
+    }
+}
+
+.searchContainer {
+    @include searchContainer();
+}
+
+.advancedSearch {
+    @include advancedSearch();
+
+    .advancedSearchField {
+        @include advancedSearchField();
+
+        :first-child {
+            @include filterLabel(80px);
+        }
+    }
+}
+
+.activeFilter {
+    @include activeFilter();
+}
+
+.resultSummaryRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    max-width: 800px;
+}
+
+.card {
+    max-width: $card-width;
+
+    .headerRow {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+
+    }
+
+    .account {
+        display: flex;
+        align-items: baseline;
+
+
+        @media (max-width: 500px) {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        :first-child {
+            margin-right: 2rem;
+        }
+    }
+}
+
+.links {
+    a {
+        text-decoration: none;
+        color: $body-text-color;
+        display: contents;
+    }
+}
+
+.pagerContainer {
+    max-width: $card-width;
+}

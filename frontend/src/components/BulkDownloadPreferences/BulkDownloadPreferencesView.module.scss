@@ -1,0 +1,7 @@
+.group {
+    > * {
+        > :first-child {
+            width: 220px;
+        }
+    }
+}

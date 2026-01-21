@@ -1,0 +1,24 @@
+.container  {
+  display: flex;
+  justify-content: center;
+}
+
+.centerDiv {
+  margin-top: 3rem;
+  width: 650px;
+
+  @media (max-width: 650px) {
+    width: 100%
+  }
+}
+
+.headingContainer {
+  text-align: center;
+}
+
+.errorMessage {
+  margin-bottom: 2rem;
+}
+
+
+

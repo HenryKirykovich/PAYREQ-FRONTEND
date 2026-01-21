@@ -1,0 +1,64 @@
+{{#if hasAllAccess}}
+<div class="panel panel-default qbo-payroll-settings">
+    <div class="panel-heading">
+        <h4 class="panel-title">{{strings.capitalised.billerSettings.qboPayrollAccountProperties}}</h4>
+    </div>
+    <div class="panel-body">
+        <div class="form-group">
+            <div class="col-sm-12">
+                {{#if hasAuthorised}}
+                <div>
+
+                    {{#if billerSettings.qboPayrollAuthorisation.needAttention}}
+                        <div class="alert alert-warning text-center">
+                            Some error occurred while reconnecting to your <strong>QuickBooks Online</strong> account.
+                            Click the button below and follow the on screen instructions to manually complete this step.
+                        </div>
+
+                        <button type="button" {{action 'reconnectToQbo'}} class="btn btn-primary">
+                        <span class="glyphicon glyphicon-refresh"></span> Manually Reconnect QuickBooks Online Account
+                        </button>
+                        <div class="hr-text">
+                            <span>  OR  </span>
+                        </div>
+                        <button type="button" {{action 'disconnectFromQbo'}} class="btn btn-danger"> Disconnect from QuickBooks
+                        </button>
+                    {{else}}
+                        <h4><span class="glyphicon glyphicon-ok"></span> Your QuickBooks Online account is connected to
+                            Payreq.</h4>
+
+                        <dl>
+                            <div>
+                                <dt>Account email address</dt>
+                                <dd>{{billerSettings.qboPayrollAuthorisation.emailAddress}}</dd>
+                            </div>
+
+                            <div>
+                                <dt>Company name</dt>
+                                <dd>{{billerSettings.qboPayrollAuthorisation.companyName}}</dd>
+                            </div>
+
+                            <div>
+                                <dt>Time authorised</dt>
+                                <dd>{{view-date date=billerSettings.qboPayrollAuthorisation.timeStarted}}</dd>
+                            </div>
+                        </dl>
+                        <button type="button" {{action 'disconnectFromQbo'}} class="btn btn-danger"> Disconnect from QuickBooks
+                        </button>
+                    {{/if}}
+                </div>
+                {{else}}
+                <div class="alert alert-info text-center">
+                    You have not yet connected <strong>Payreq</strong> to your <strong>QuickBooks Online</strong>
+                    account.
+                    Click the button below and follow the on screen instructions to complete this step.
+
+                    <a href="" {{action "connectToQbo"}} class="intuitPlatformConnectButton"></a>
+                </div>
+
+                {{/if}}
+            </div>
+        </div>
+    </div>
+</div>
+{{/if}}

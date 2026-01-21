@@ -1,0 +1,147 @@
+{{#if canUpdateUser}}
+    <div class="panel panel-default" id="user-details-div">
+        <div class="panel-heading">
+            <h4 class="panel-title">User for "{{customerName}}"</h4>
+        </div>
+        <div class="panel-body">
+            <form class="form-horizontal" role="form" id="create-user-form">
+                <div class="form-group" style="padding-right:5px;">
+                    <label class="col-sm-3 control-label">{{strings.userSettings.user.email}}</label>
+                    <div class="col-sm-9 input-append">
+                        {{input type="text" class="form-control" value=model.email id="email" placeholder=strings.userSettings.user.email}}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">{{strings.userSettings.user.name}}</label>
+                    <div class="col-sm-9">
+                        {{input type="text" class="form-control" value=model.name id="userName" placeholder=strings.userSettings.user.name}}
+                    </div>
+                </div>
+                {{#unless isPayreqInbox}}
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">{{strings.userSettings.user.workPhoneNumber}}</label>
+                        <div class="col-sm-9">
+                            {{input type="text" class="form-control" value=model.workPhoneNumber id="workPhoneNumber"
+                                        placeholder=strings.userSettings.phoneNumberFormat}}
+                        </div>
+                    </div>
+                {{/unless}}
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">{{strings.userSettings.user.mobileNumber}}</label>
+                    <div class="col-sm-9">
+                        {{input type="text" class="form-control" value=model.mobileNumber id="mobileNumber"
+                                    placeholder=strings.userSettings.phoneNumberFormat}}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">{{strings.userSettings.preferredLanguage}}</label>
+                    <div class="col-sm-9">
+                        {{item-select class-name="form-control"
+                        content=languages
+                        optionLabelPath="name"
+                        optionValuePath="id"
+                        prompt=strings.userSettings.preferredLanguagePrompt
+                        promptDisabled=true
+                        selection=model.language}}
+                    </div>
+                </div>
+                {{#if billerSettingsUsers.isPayreqUser}}
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">{{strings.userSettings.user.notes}}</label>
+                        <div class="col-sm-9">
+                            {{textarea class="form-control" rows="3" value=model.notes id="notes"
+                                                    placeholder=strings.userSettings.user.notes}}
+                        </div>
+                    </div>
+                {{/if}}
+
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">{{strings.userSettings.permissions.payreq}}</label>
+                    <div class="col-sm-9">
+                        {{item-select class-name="form-control"
+                        content=billerSettingsUsers.allPayreqRoles
+                        optionLabelPath="displayName"
+                        optionValuePath="id"
+                        selection=payreqRole}}
+                    </div>
+                </div>
+
+                {{#if permissionError}}
+                    <p class="text-danger">{{permissionError}}</p>
+                {{/if}}
+
+                {{#if billerSettingsUsers.hasContactsFeature}}
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">{{strings.userSettings.permissions.contacts}}</label>
+                    <div class="col-sm-9">
+                        {{item-select class-name="form-control"
+                        content=billerSettingsUsers.allContactRoles
+                        optionLabelPath="displayName"
+                        optionValuePath="id"
+                        prompt=strings.userSettings.permissions.emptyPrompt
+                        promptDisabled=false
+                        selection=contactRole}}
+                    </div>
+                </div>
+                {{/if}}
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">{{strings.userSettings.permissions.registrations}}</label>
+                    <div class="col-sm-9">
+                        {{item-select class-name="form-control"
+                        content=billerSettingsUsers.allRegistrationRoles
+                        optionLabelPath="displayName"
+                        optionValuePath="id"
+                        prompt=strings.userSettings.permissions.emptyPrompt
+                        promptDisabled=false
+                        selection=registrationRole}}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">{{strings.userSettings.permissions.bills}}</label>
+                    <div class="col-sm-9">
+                        {{item-select class-name="form-control"
+                        content=billerSettingsUsers.allBillRoles
+                        optionLabelPath="displayName"
+                        optionValuePath="id"
+                        prompt=strings.userSettings.permissions.emptyPrompt
+                        promptDisabled=false
+                        selection=billRole}}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">{{strings.userSettings.permissions.billerSettings}}</label>
+                    <div class="col-sm-9">
+                        {{item-select class-name="form-control"
+                        content=billerSettingsUsers.allBillerSettingRoles
+                        optionLabelPath="displayName"
+                        optionValuePath="id"
+                        prompt=strings.userSettings.permissions.emptyPrompt
+                        promptDisabled=false
+                        selection=billerSettingRole}}
+                    </div>
+                </div>
+
+                {{#if model.billers}}
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">{{strings.userSettings.billersToAdd}}</label>
+                        <div class="col-sm-9">
+                            {{multi-select  reload="reload"
+                            placeholder=billersToAddPlaceholder
+                            searchFilters=selectedFilters
+                            options=model.billers}}
+                        </div>
+                    </div>
+                {{/if}}
+
+                <div class="form-group">
+                    <div class='btn-toolbar pull-right' style="padding-right:15px">
+                        <button type="button" class="btn btn-primary" {{action "createUserAction" model biller.id}}>
+                            {{strings.userSettings.inviteUser}}
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+{{/if}}
+

@@ -1,0 +1,30 @@
+<div class="panel panel-default" style="border-color:#fff">
+  <a class="panel-heading collapse-sub-heading" data-toggle="collapse" data-parent="#accounting-plan-group" data-target={{href}}>
+    <h5 class="panel-title">
+      {{displayName}}
+    </h5>
+  </a>
+  <div id={{categoryElementId}} class="panel-collapse collapse">
+    <table class="table table-condensed table-hover">
+      {{#each accountingPlans as |accountingPlan|}}
+          <tr>
+            <td style="text-align:right; width: 30px;">
+              {{#if accountingPlan.selected}}
+                <span class="glyphicon glyphicon-ok text-success glyphicon-right-margin"></span>
+              {{else}}
+                <span class="glyphicon glyphicon-ok text-success glyphicon-right-margin hide-element"></span>
+              {{/if}}
+            </td>
+            <td>
+              <a {{action 'accountingPlanClicked' accountingPlan}} class="list-group-item list-group-item-action remove-border" href="#">
+              {{accountingPlan.name}} <small>({{accountingPlan.description}})</small>
+              </a>
+            </td>
+            <td>{{currencySymbol}}{{accountingPlan.priceDisplay}}</td>
+            <td>{{currencyCode}}</td>
+          </tr>
+      {{/each}}
+    </table>
+
+  </div>
+</div>

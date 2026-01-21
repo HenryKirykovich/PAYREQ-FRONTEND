@@ -1,0 +1,376 @@
+<div class="row">
+    <div class="col-md-12">
+        <h2 class="page-heading">
+            {{strings.capitalised.contact}} "{{model.billerAccountNumber}}"
+            <small>{{name}}</small>
+        </h2>
+    </div>
+</div>
+
+<div class="row actions-row btn-toolbar" role="toolbar">
+    <div class="actions btn-group col-sm-4">
+        <button type="button" class="btn btn-default" {{action "refreshAndGoBack" model}}><span class="glyphicon glyphicon-arrow-left"></span> {{strings.capitalised.backToContacts}}</button>
+        <button type="button" class="btn btn-default" {{action "refresh" model}}><span class="glyphicon glyphicon-refresh"></span> {{biller.strings.capitalised.refresh}}</button>
+    </div>
+
+    {{#if canDeleteContact}}
+    <div class="actions btn-group col-sm-3">
+
+        <button type="button" class="btn btn-danger" {{action "promptDeleteContact" model}}>
+            <span class="glyphicon glyphicon-remove"></span> {{strings.capitalised.deleteContact}}
+        </button>
+    </div>
+    {{/if}}
+</div>
+
+<form class="form-horizontal" role="form">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">{{strings.capitalised.contactDetails}}</h4>
+                </div>
+                <div class="panel-body">
+                    {{#if showBillerAccountNumber}}
+                        <div class="form-group">
+                            {{#if hasMultipleChannels}}
+                                <label class="col-sm-2 control-label"><abbr title="{{strings.contactAccountIdLabel}}">{{strings.contactAccountIdLabel}}</abbr></label>
+                            {{else}}
+                                <label class="col-sm-2 control-label"><abbr title="{{strings.billerAccountNumberLabel}}">{{strings.billerAccountNumber}}</abbr></label>
+                            {{/if}}
+                            <div class="col-sm-10">
+                                <p class="form-control-static"><strong>{{model.billerAccountNumber}}</strong></p>
+                            </div>
+                        </div>
+                    {{/if}}
+
+                    {{#if showLastUpdated}}
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">{{strings.lastUpdated}}</label>
+                            <div class="col-sm-10">
+                                <p class="form-control-static">{{view-date date=model.lastUpdated withTime=true}} {{biller.strings.by}} <strong>{{updatedByUserDisplay}}</strong></p>
+                            </div>
+                        </div>
+                    {{/if}}
+
+                    {{#if showName}}
+                        <div class="form-group">
+                            <label for="customerName" class="col-sm-2 control-label">{{strings.capitalised.name}}</label>
+                            <div class="col-sm-10">
+                                {{#if canUpdateContact}}
+                                {{input type="text" class="form-control" value=model.name id="customerName"}}
+                                {{else}}
+                                <p class="form-control-static">{{model.name}}</p>
+                                {{/if}}
+                            </div>
+                        </div>
+                    {{/if}}
+
+                    {{#if hasMultipleChannels}}
+                        {{#if showContactId1}}
+                            {{#if contactField1Name}}
+                            <div class="form-group">
+                                <label for="contactId1" class="col-sm-2 control-label">{{contactField1Name}}</label>
+                                <div class="col-sm-10">
+                                    <p class="form-control-static"><strong>{{model.contactId1}}</strong></p>
+                                </div>
+                            </div>
+                            {{/if}}
+                        {{/if}}
+                    {{/if}}
+
+                    {{#if showContactId2}}
+                        {{#if contactField2Name}}
+                        <div class="form-group">
+                            <label for="contactId2" class="col-sm-2 control-label">{{contactField2Name}}</label>
+                            <div class="col-sm-10">
+                                {{#if canUpdateContact}}
+                                    {{#if contactField2IsChannelId}}
+                                        <p class="form-control-static"><strong>{{model.contactId2}}</strong></p>
+                                    {{else}}
+                                        {{input type="text" class="form-control" value=model.contactId2 id="contactId2"}}
+                                    {{/if}}
+                                {{else}}
+                                    <p class="form-control-static"><strong>{{model.contactId2}}</strong></p>
+                                {{/if}}
+                            </div>
+                        </div>
+                        {{/if}}
+                    {{/if}}
+
+                    {{#if showContactId3}}
+                        {{#if contactField3Name}}
+                        <div class="form-group">
+                            <label for="contactId3" class="col-sm-2 control-label">{{contactField3Name}}</label>
+                            <div class="col-sm-10">
+                                {{#if canUpdateContact}}
+                                    {{#if contactField3IsChannelId}}
+                                        <p class="form-control-static"><strong>{{model.contactId3}}</strong></p>
+                                    {{else}}
+                                        {{input type="text" class="form-control" value=model.contactId3 id="contactId3"}}
+                                    {{/if}}
+                                {{else}}
+                                    <p class="form-control-static"><strong>{{model.contactId3}}</strong></p>
+                                {{/if}}
+                            </div>
+                        </div>
+                        {{/if}}
+                    {{/if}}
+
+                    {{#if showContactId4}}
+                        {{#if contactField4Name}}
+                        <div class="form-group">
+                            <label for="contactId4" class="col-sm-2 control-label">{{contactField4Name}}</label>
+                            <div class="col-sm-10">
+                                {{#if canUpdateContact}}
+                                    {{#if contactField4IsChannelId}}
+                                        <p class="form-control-static"><strong>{{model.contactId4}}</strong></p>
+                                    {{else}}
+                                        {{input type="text" class="form-control" value=model.contactId4 id="contactId4"}}
+                                    {{/if}}
+                                {{else}}
+                                    <p class="form-control-static"><strong>{{model.contactId4}}</strong></p>
+                                {{/if}}
+                            </div>
+                        </div>
+                        {{/if}}
+                    {{/if}}
+
+                    {{#if showContactId5}}
+                        {{#if contactField5Name}}
+                        <div class="form-group">
+                            <label for="contactId5" class="col-sm-2 control-label">{{contactField5Name}}</label>
+                            <div class="col-sm-10">
+                                {{#if canUpdateContact}}
+                                    {{#if contactField5IsChannelId}}
+                                        <p class="form-control-static"><strong>{{model.contactId5}}</strong></p>
+                                    {{else}}
+                                        {{input type="text" class="form-control" value=model.contactId5 id="contactId5"}}
+                                    {{/if}}
+                                {{else}}
+                                    <p class="form-control-static"><strong>{{model.contactId5}}</strong></p>
+                                {{/if}}
+                            </div>
+                        </div>
+                        {{/if}}
+                    {{/if}}
+
+                    {{#if showContactId6}}
+                        {{#if contactField6Name}}
+                        <div class="form-group">
+                            <label for="contactId6" class="col-sm-2 control-label">{{contactField6Name}}</label>
+                            <div class="col-sm-10">
+                                {{#if canUpdateContact}}
+                                    {{#if contactField6IsChannelId}}
+                                        <p class="form-control-static"><strong>{{model.contactId6}}</strong></p>
+                                    {{else}}
+                                        {{input type="text" class="form-control" value=model.contactId6 id="contactId6"}}
+                                    {{/if}}
+                                {{else}}
+                                    <p class="form-control-static"><strong>{{model.contactId6}}</strong></p>
+                                {{/if}}
+                            </div>
+                        </div>
+                        {{/if}}
+                    {{/if}}
+
+                    {{#if showContactId7}}
+                    {{#if contactField7Name}}
+                    <div class="form-group">
+                        <label for="contactId7" class="col-sm-2 control-label">{{contactField7Name}}</label>
+                        <div class="col-sm-10">
+                            {{#if canUpdateContact}}
+                            {{#if contactField7IsChannelId}}
+                            <p class="form-control-static"><strong>{{model.contactId7}}</strong></p>
+                            {{else}}
+                            {{input type="text" class="form-control" value=model.contactId7 id="contactId7"}}
+                            {{/if}}
+                            {{else}}
+                            <p class="form-control-static"><strong>{{model.contactId7}}</strong></p>
+                            {{/if}}
+                        </div>
+                    </div>
+                    {{/if}}
+                    {{/if}}
+
+                    {{#if showContactId8}}
+                    {{#if contactField8Name}}
+                    <div class="form-group">
+                        <label for="contactId8" class="col-sm-2 control-label">{{contactField8Name}}</label>
+                        <div class="col-sm-10">
+                            {{#if canUpdateContact}}
+                            {{#if contactField8IsChannelId}}
+                            <p class="form-control-static"><strong>{{model.contactId8}}</strong></p>
+                            {{else}}
+                            {{input type="text" class="form-control" value=model.contactId8 id="contactId8"}}
+                            {{/if}}
+                            {{else}}
+                            <p class="form-control-static"><strong>{{model.contactId8}}</strong></p>
+                            {{/if}}
+                        </div>
+                    </div>
+                    {{/if}}
+                    {{/if}}
+
+                    <div class="form-group">
+                        <label for="businessIdentifier" class="col-sm-2 control-label">{{strings.businessIdLabel}}</label>
+                        <div class="col-sm-10">
+                            {{#if canUpdateContact}}
+                            {{input type="text" class="form-control" value=model.businessIdentifier id="businessIdentifier"}}
+                            {{else}}
+                            <p class="form-control-static"><strong>{{model.businessIdentifier}}</strong></p>
+                            {{/if}}
+                        </div>
+                    </div>
+
+
+                    {{#if canUpdateContact}}
+                    <div class="alert alert-info">
+                      <p>
+                        {{{strings.extraFieldsNote}}}
+                      </p>
+                    </div>
+                    {{/if}}
+
+                    {{#if showFullName}}
+                        <div class="form-group">
+                          <label class="col-sm-2 control-label"><h4>{{strings.capitalised.fullName}}</h4></label>
+                        </div>
+                    {{/if}}
+
+                    {{#if showFirstName}}
+                        <div class="form-group">
+                            <label for="firstName" class="col-sm-2 control-label">{{strings.capitalised.firstName}}</label>
+                            <div class="col-sm-10">
+                                {{#if canUpdateContact}}
+                                {{input type="text" class="form-control" value=model.firstName id="firstName"}}
+                                {{else}}
+                                <p class="form-control-static">{{firstName}}</p>
+                                {{/if}}
+                            </div>
+                        </div>
+                    {{/if}}
+
+                    {{#if showMiddleName}}
+                        <div class="form-group">
+                            <label for="firstName" class="col-sm-2 control-label">{{strings.capitalised.middleName}}</label>
+                            <div class="col-sm-10">
+                                {{#if canUpdateContact}}
+                                {{input type="text" class="form-control" value=model.middleName id="middleName"}}
+                                {{else}}
+                                <p class="form-control-static">{{model.middleName}}</p>
+                                {{/if}}
+                            </div>
+                        </div>
+                    {{/if}}
+
+                    {{#if showLastName}}
+                        <div class="form-group">
+                            <label for="lastName" class="col-sm-2 control-label">{{strings.capitalised.lastName}}</label>
+                            <div class="col-sm-10">
+                                {{#if canUpdateContact}}
+                                {{input type="text" class="form-control" value=model.lastName id="lastName"}}
+                                {{else}}
+                                <p class="form-control-static">{{model.lastName}}</p>
+                                {{/if}}
+                            </div>
+                        </div>
+                    {{/if}}
+
+                    {{#if showAddress}}
+                        <div class="form-group">
+                          <label class="col-sm-2 control-label"><h4>{{strings.capitalised.address}}</h4></label>
+                        </div>
+                    {{/if}}
+
+                    {{#if showAddress1}}
+                          <div class="form-group">
+                            <label for="address1" class="col-sm-2 control-label">{{strings.capitalised.address1}}</label>
+                            <div class="col-sm-10">
+                              {{#if canUpdateContact}}
+                              {{input type="text" class="form-control" value=model.address1 id="address1"}}
+                              {{else}}
+                              <p class="form-control-static">{{model.address1}}</p>
+                              {{/if}}
+                            </div>
+                          </div>
+                    {{/if}}
+
+                    {{#if showAddress2}}
+                          <div class="form-group">
+                            <label for="address1" class="col-sm-2 control-label">{{strings.capitalised.address2}}</label>
+                            <div class="col-sm-10">
+                              {{#if canUpdateContact}}
+                              {{input type="text" class="form-control" value=model.address2 id="address2"}}
+                              {{else}}
+                              <p class="form-control-static">{{model.address2}}</p>
+                              {{/if}}
+                            </div>
+                          </div>
+                    {{/if}}
+
+                    {{#if showMunicipality}}
+                          <div class="form-group">
+                            <label for="municipality" class="col-sm-2 control-label">{{strings.capitalised.municipality}}</label>
+                            <div class="col-sm-10">
+                              {{#if canUpdateContact}}
+                              {{input type="text" class="form-control" value=model.municipality id="municipality"}}
+                              {{else}}
+                              <p class="form-control-static">{{model.municipality}}</p>
+                              {{/if}}
+                            </div>
+                          </div>
+                    {{/if}}
+
+                    {{#if showProvince}}
+                          <div class="form-group">
+                            <label for="province" class="col-sm-2 control-label">{{strings.capitalised.province}}</label>
+                            <div class="col-sm-10">
+                              {{#if canUpdateContact}}
+                              {{input type="text" class="form-control" value=model.province id="province"}}
+                              {{else}}
+                              <p class="form-control-static">{{model.province}}</p>
+                              {{/if}}
+                            </div>
+                          </div>
+                    {{/if}}
+
+                    {{#if showPostalCode}}
+                      <div class="form-group">
+                        <label for="postalCode" class="col-sm-2 control-label">{{strings.capitalised.postalCode}}</label>
+                        <div class="col-sm-10">
+                          {{#if canUpdateContact}}
+                          {{input type="text" class="form-control" value=model.postalCode id="postalCode"}}
+                          {{else}}
+                          <p class="form-control-static">{{model.postalCode}}</p>
+                          {{/if}}
+                        </div>
+                      </div>
+                    {{/if}}
+
+                    {{#if showCountry}}
+                    <div class="form-group">
+                        <label for="country" class="col-sm-2 control-label">{{strings.capitalised.country}}</label>
+                        <div class="col-sm-10">
+                            {{#if canUpdateContact}}
+                            {{input type="text" class="form-control" value=model.country id="country"}}
+                            {{else}}
+                            <p class="form-control-static">{{model.country}}</p>
+                            {{/if}}
+                        </div>
+                    </div>
+                    {{/if}}
+
+                    {{#if canUpdateContact}}
+                    <div class="form-group">
+                        <div class="col-sm-10 pull-right">
+                            <button class="btn btn-primary" type="button" {{action "validateContact"}}>{{strings.capitalised.updateContact}}</button>
+                            {{#if isDirty}}<a class="action-link" {{action "cancelUpdate"}}>{{biller.strings.capitalised.cancel}}</a>{{/if}}
+                        </div>
+                    </div>
+                    {{/if}}
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

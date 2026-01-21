@@ -1,0 +1,49 @@
+<div id="incoming-email">
+    <div class="row">
+        <div class="col-md-12">
+            <h4>
+                Incoming Email Configuration
+            </h4>
+        </div>
+    </div>
+
+    <div class="row actions-row" role="toolbar">
+        <div class="actions btn-group col-sm-3">
+            {{#link-to "biller.invoicesinit" class="btn btn-default"}}<span class="glyphicon glyphicon-arrow-left"></span> Back to mails{{/link-to}}
+        </div>
+    </div>
+
+    <form class="form-horizontal" role="form">
+        <div class="row">
+        	<div class="col-md-6">
+	            <div class="panel panel-default">
+	                <div class="panel-body">
+	                    <div class="form-group">
+	                        <label class="col-md-3 control-label">Prefix (optional)</label>
+	                        <div class="col-md-9">
+	                        	{{input type="text" class="form-control" value=prefix}}
+	                        </div>
+	                    </div>
+	                    <div class="form-group">
+	                        <label class="col-md-3 control-label">Suffix (optional)</label>
+	                        <div class="col-md-9">
+	                        	{{input type="text" class="form-control" value=suffix}}
+	                        </div>
+	                    </div>
+	                    <div class="form-group">
+	                        <label class="col-md-3 control-label">Full Email</label>
+	                        <div class="col-md-9">
+	                        	<p class="form-control-static">{{fullEmail}}</p>
+	                        </div>
+	                    </div>
+                        <div class="form-group">
+                            <div class="col-md-9 pull-right">
+                                <button class="btn btn-primary" type="button" {{action "updateEmail"}}>Update email</button>
+                            </div>
+                        </div>
+	                </div>
+	            </div>
+	        </div>
+       	</div>
+    </form>
+</div>

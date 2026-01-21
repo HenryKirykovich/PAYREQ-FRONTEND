@@ -1,0 +1,42 @@
+<div class="row" id="invite">
+	<div class="col-md-8 col-md-offset-2">
+		<div class="panel panel-default ">
+			<div class="panel-heading">
+				<h2 class="panel-title">{{strings.emailUnsubscribe.heading}}</h2>
+			</div>
+			{{#if model.invite.error}}
+				<div class="panel-body">
+					<div class="alert alert-danger">
+						<p>{{model.invite.error}}</p>
+					</div>
+
+					<form class="form-login form-horizontal" role="form">
+						<div class="col-sm-12">
+							<div class="btn-toolbar pull-right margin-top-sm">
+								{{#link-to "login" class="btn btn-default"}}<span>{{strings.emailUnsubscribe.backButton}}</span>{{/link-to}}
+							</div>
+						</div>
+					</form>
+				</div>
+			{{else}}
+				<div class="panel-body">
+					<div class="alert alert-info">
+						<p>{{strings.emailUnsubscribe.text}}</p>
+					</div>
+
+					<form class="form-login form-horizontal" role="form">
+						<div class="form-group">
+							<label class="control-label col-sm-4">{{strings.emailUnsubscribe.emailLabel}}</label>
+							<p class="form-control-static col-sm-8">{{model.invite.registrationValue}}</p>
+						</div>
+						<div class="col-sm-12">
+							<div class="btn-toolbar pull-right margin-top-sm">
+								<button class="btn btn-primary" {{action 'unsubscribe'}}>{{strings.emailUnsubscribe.submitButton}}</button>
+							</div>
+						</div>
+					</form>
+				</div>
+			{{/if}}
+		</div>
+	</div>
+</div>

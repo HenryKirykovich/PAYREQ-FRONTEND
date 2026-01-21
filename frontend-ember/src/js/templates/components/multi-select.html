@@ -1,0 +1,6 @@
+<select id="select-state" name="status[]" multiple class="demo-default" placeholder="{{placeholder}}"
+        onchange={{action "reloadDataNew"}}>
+    {{#each options as |opt|}}
+        <option value="{{opt.value}}">{{opt.display}}</option>
+    {{/each}}
+</select>

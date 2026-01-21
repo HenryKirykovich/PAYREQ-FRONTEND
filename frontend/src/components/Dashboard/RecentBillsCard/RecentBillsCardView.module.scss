@@ -1,0 +1,37 @@
+@import "../../common/variables";
+
+.billRow {
+  display: flex;
+  cursor: pointer;
+  padding: 0.5rem;
+
+  &:hover {
+    background-color: $hover-grey;
+    -webkit-box-shadow: 0 0 5px rgba(33,33,33,.2);
+    box-shadow: 0 0 5px rgba(33,33,33,.2);
+  }
+
+  > p {
+    margin-bottom: 0px;
+  }
+}
+
+.billerName {
+  width: 220px;
+  max-width: 220px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-right: 1rem;
+}
+
+.amountDue {
+  margin-right: 2rem;
+  width: 100px;
+  text-align: right;
+}
+
+.cardActions {
+  display: flex;
+  justify-content: flex-end;
+}

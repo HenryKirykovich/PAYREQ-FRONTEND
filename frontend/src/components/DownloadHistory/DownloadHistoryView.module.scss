@@ -1,0 +1,29 @@
+@import "../common/variables";
+
+$card-width: 800px;
+
+.pagerContainer {
+  display: flex;
+  justify-content: flex-end;
+  align-items: baseline;
+  max-width: $card-width;
+
+}
+
+.file{
+  margin-left: 0.5rem;
+  color: #333;
+}
+
+.links {
+  a {
+    text-decoration: none;
+    color: $body-text-color;
+
+    @media (max-width: 920px) {
+      width: 100%;
+    }
+  }
+}
+
+

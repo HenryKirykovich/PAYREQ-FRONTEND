@@ -1,0 +1,28 @@
+@import "../../common/variables";
+
+@mixin payment-wizard-layout() {
+  width: $card-entry-form-width;
+  display: flex;
+  flex-direction: column;
+
+  @media (min-width: $card-entry-form-width) {
+    align-items: center;
+  }
+
+  @media (max-width: $card-entry-form-width) {
+    width: 100%;
+  }
+}
+
+@mixin payment-wizard-container() {
+  display: flex;
+  justify-content: center;
+}
+
+@mixin iframe-card-details() {
+  height: 233px;
+  margin-left: -10px; //to offset the padding in the iframe that isn't aligned with the rest of the form fields
+  width: calc(100% + 20px); //to handle the negative margin above
+  border: none;
+  margin-top: 2rem; //todo: move value to variables.scss
+}

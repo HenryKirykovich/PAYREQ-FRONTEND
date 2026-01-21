@@ -1,0 +1,58 @@
+@import "../common/variables";
+
+.headingContainer{
+  text-align: center;
+}
+
+.container  {
+  display: flex;
+  justify-content: center;
+}
+
+.centerDiv {
+  width: 400px;
+
+  @media (max-width: 400px) {
+    width: 100%
+  }
+}
+
+.loginDivider  {
+  width: 100%;
+  text-align: center;
+  border-bottom: 1px solid $primary-color;
+  line-height: .1em;
+  margin: 10px 0 20px;
+
+  span {
+    color: $primary-color;
+    padding: 0 10px;
+    background: $white;
+  }
+}
+
+.createAccountContainer {
+  text-align: center;
+  font-size: 1.8rem;
+  margin-bottom: 2rem;
+  display: flex;
+  flex-direction: column;
+  margin-top: 25px;
+}
+
+.createAccountLinkContainer {
+  display: flex;
+  justify-content: center;
+  margin-top: -10px;
+}
+
+.createAccountText {
+  font-weight: 700;
+  font-size: 1.6rem;
+}
+
+.xeroButton {
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
+}

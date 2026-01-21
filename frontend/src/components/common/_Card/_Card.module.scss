@@ -1,0 +1,20 @@
+@import "../variables";
+
+.hoverBoxShadow:hover, .hoverBoxShadow:focus {
+  box-shadow: $box-shadow-hover
+}
+
+.boxShadow {
+  box-shadow: $box-shadow;
+}
+
+.subHeading {
+  margin-top: 1rem;
+  margin-bottom: 0px;
+  color: black;
+}
+
+.cardContainer {
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
+}

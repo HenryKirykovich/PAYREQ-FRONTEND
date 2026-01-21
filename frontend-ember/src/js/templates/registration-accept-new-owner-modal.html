@@ -1,0 +1,29 @@
+{{#modal-dialog modalTitle=strings.capitalised.acceptNewOwner
+actionButtons=exportActionButtons
+isPrimaryDisabled=isPrimaryDisabled
+onClose="closeModal"
+confirm="approveNew"}}
+<div class="row">
+    <div class="col-md-12">
+        <p class="well">{{{strings.acceptNewOwnerInstructions}}}</p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <label class="col-md-4 control-label">{{strings.acceptNewOwnerName}}</label>
+        <div class="col-md-8">
+            {{input type="text" class="form-control" value=name id="name"}}
+        </div>
+    </div>
+
+    {{#if errorMessage}}
+    <div class="col-md-12">
+        <p class="well-error">{{errorMessage}}</p>
+    </div>
+    {{/if}}
+
+</div>
+
+
+{{/modal-dialog}}

@@ -1,0 +1,73 @@
+{{#modal-dialog modalTitle=biller.strings.capitalised.importContacts
+                actionButtons=importActionButtons
+                isPrimaryDisabled=isPrimaryDisabled
+                onClose="doClose"
+                confirm="doImportContacts"
+                cancel="doCancel"}}
+<div class="row">
+    <div class="col-md-12">
+        <p class="well">{{{importInstructions}}}</p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="checkbox" style="padding-left:35px">
+            <label>
+                {{input type="checkbox" checked=replaceAll}}
+                {{strings.contactsImportModal.importTypeDisplay}}
+            </label>
+        </div>
+    </div>
+
+    <div class="col-md-12">
+        <label class="col-md-12 control-label">Select file for import:</label>
+    </div>
+    <div class="col-md-12">
+        <div class="col-md-12">
+            {{file-upload response=uploadedInfo url=contactsUploadUrl uploadingStarted="setUploading"}}
+        </div>
+    </div>
+
+    {{#if showLoading}}
+    <div class="col-sm-12">
+        <div class="loading-alert-inline text-center">
+        <span>
+          {{strings.contactsImportModal.validating}}
+        </span>
+        </div>
+    </div>
+    {{/if}}
+
+</div>
+
+{{#if uploadedInfo}}
+<div class="row">
+    <div class="col-md-12">
+        <p class="{{if uploadHasErrors 'well-error:well'}} {{if confirmationRequired 'well-confirm'}}">
+        {{#if uploadError}}
+        <span>Error: {{uploadError}}</span><br/>
+        {{/if}}
+
+        {{#if validationError}}
+        <span>Error: {{validationError}}</span><br/>
+        {{/if}}
+
+        {{#if confirmationMessage}}
+        <span>{{{confirmationMessage}}}</span><br/>
+        {{/if}}
+
+        {{#if confirmationRequired}}
+        <span><strong>{{strings.contactsImportModal.error.fileAlreadyUploadedConfirm}}</strong></span><br/><br/>
+        {{/if}}
+
+        {{#if affectedJob}}
+        <span><span class="glyphicon glyphicon-time"></span><strong> Job {{affectedJob.id}} </strong> ( started {{view-date date=affectedJob.time relative=true}})</span>
+        {{/if}}
+        </p>
+    </div>
+</div>
+{{/if}}
+
+
+{{/modal-dialog}}

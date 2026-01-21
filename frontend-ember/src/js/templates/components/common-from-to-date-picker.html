@@ -1,0 +1,18 @@
+<div class="form-group col-md-2" style="padding: 0; margin: 0;">
+    <label for="fromDate" class="sr-only">From date</label>
+    <div class="input-group">
+        {{input type="text" classNames="form-control search-date" value=fromDate id="fromDate" placeholder=fromDatePlaceholder}}
+        <span class="input-group-btn">
+                <button class="btn btn-default" title="Clear" type="button" {{action 'clear' "fromDate"}}><span class="glyphicon glyphicon-remove"></span></button>
+            </span>
+    </div>
+</div>
+<div class="form-group col-md-2" style="margin:0; margin-left: 2rem; padding: 0;">
+    <label for="toDate" class="sr-only">To date</label>
+    <div class="input-group">
+        {{input type="text" classNames="form-control search-date" value=toDate id="toDate" placeholder=toDatePlaceholder}}
+        <span class="input-group-btn">
+                <button class="btn btn-default" title="Clear" type="button" {{action 'clear' "toDate"}}><span class="glyphicon glyphicon-remove"></span></button>
+            </span>
+    </div>
+</div>

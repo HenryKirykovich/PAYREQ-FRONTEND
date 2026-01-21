@@ -1,0 +1,25 @@
+@import "../../common/variables";
+
+$card-width: 800px;
+
+.logo {
+  height: 150px;
+}
+
+.container {
+  max-width: $card-width;
+}
+
+.buttonContainer {
+  margin-top: 3rem;
+}
+
+.helpContainer {
+  display: flex;
+  align-items: baseline;
+
+  >:nth-child(2) {
+    display: unset;
+    padding-bottom: 0px;
+  }
+}

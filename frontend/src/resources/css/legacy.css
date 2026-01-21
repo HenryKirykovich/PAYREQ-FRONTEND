@@ -1,0 +1,164 @@
+:root {
+	--color-primary-navy: #062A4B;
+	--color-secondary-blue: #63ADF2;
+}
+
+html {
+	font-size: 62.5%; /*this is required to work in base 10px while still scaling to user's set browser font size*/
+}
+
+body {
+	/*padding-top: 51px; !* 51px to make the container go all the way to the bottom of the topbar *!*/
+	font-family: 'ClashGrotesk-Regular', Arial, sans-serif;
+	overflow-y: scroll;
+}
+
+@media (max-width: 900px) {
+	body {
+		overflow-y: auto;
+	}
+}
+
+.pr-logo h1 {
+	background-image: url(../images/payreq_logo_reverse.svg);
+	background-repeat: no-repeat;
+	background-position: left center;
+	width: 120px;
+	height: 46px;
+	margin: 0px;
+	background-size: 90%;
+}
+
+.pr-logo {
+	padding: 0px 0px;
+}
+
+@media(min-width: 1270px) {
+	.container {
+		width: 1270px;
+	}
+}
+
+/* Context menu */
+.navbar-nav span.glyphicon {
+	margin-right: 4px;
+	top: 3px;
+}
+
+/** Twitter Bootstrap theme overrides **/
+.navbar-inverse {
+	background-color: var(--color-primary-navy);
+}
+
+.nav-pills>li.active>a {
+	background-color: #428bca;
+}
+
+.nav-pills>li.active-user>a {
+	background-color: #428bca;
+}
+
+.navbar-inverse .navbar-nav>li>a {
+	color: #fff;
+}
+
+.navbar-inverse .navbar-nav>li>a:hover {
+	background-color: #615f71ad;
+}
+
+.panel-default > .panel-heading {
+	color: #fff;
+	background-color: var(--color-primary-navy);
+	border-color: var(--color-primary-navy);
+	border-top-right-radius: 0px;
+}
+
+a.list-group-item:hover {
+	background-color: #615f71ad;
+	color: #fff;
+}
+
+.navbar-inverse .navbar-nav > .open > a {
+	background-color: #615f71ad;
+	color: #fff;
+}
+.navbar-inverse .navbar-nav > .open > a:hover {
+	background-color: #615f71ad;
+	color: #fff;
+}
+.navbar-inverse .navbar-nav > .open > a:focus {
+	background-color: #615f71ad;
+	color: #fff;
+}
+
+/*.logo-hide {*/
+/*	visibility: hidden;*/
+/*}*/
+
+/*.logo-show {*/
+/*	visibility: visible;*/
+/*}*/
+
+/** Biller Name in Menu **/
+.customerName {
+	max-width: 220px;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}
+
+/* Footer style */
+footer.pr-footer {
+	margin-top: 30px;
+}
+
+.main-body {
+	padding-top: 40px;
+}
+
+h2 {
+	font-size: 2.7rem;
+}
+
+h2.page-heading {
+	margin-top: 1rem;
+}
+
+.clickable-rows>tbody>tr {
+	cursor: pointer;
+}
+
+.clickable-rows>tbody>tr:hover {
+	-webkit-box-shadow: 0 0 5px rgba(33,33,33,.2);
+	box-shadow: 0 0 5px rgba(33,33,33,.2);
+}
+
+/*Settings Navbar*/
+.nav-pills>li.active>a, .nav-pills>li.active>a:hover, .nav-pills>li.active>a:focus {
+	background-color: var(--color-primary-navy);
+}
+
+/*Panels*/
+.panel-default {
+	border-radius: 6px;
+}
+.panel-default {
+	border-color: #1c1750;
+}
+
+.panel-default > .panel-heading {
+	color: var(--color-primary-navy);
+	background-color: #fff;
+	border-color: #fff;
+	border-radius: 6px;
+}
+
+.panel-title {
+	font-size: 1.75em;
+	color: var(--color-primary-navy);
+	font-family: 'ClashGrotesk-Medium', Arial, sans-serif;
+}
+
+.text-muted {
+	color: #595959;
+}

@@ -1,0 +1,25 @@
+.container{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.formContainer {
+  width: 50%;
+}
+
+.autoPaymentPromptContainer {
+  margin-top: 30px;
+
+  .autoPaymentButtonContainer {
+    display: flex;
+
+    @media (max-width: 420px) {
+      justify-content: space-between;
+    }
+
+    @media (min-width: 421px) {
+      gap: 1em;
+    }
+  }
+}

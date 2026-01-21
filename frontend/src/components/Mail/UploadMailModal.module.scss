@@ -1,0 +1,57 @@
+@import "../common/variables";
+
+.uploadField {
+  margin-bottom: 0px;
+}
+
+.noMargins {
+  margin-left: 0px;
+  margin-right: 0px;
+}
+
+.genericCommunicationGroupSelection {
+  margin-top: 15px;
+}
+
+.genericCommunicationInfo {
+  margin-left: 0px;
+  margin-right: 0px;
+  margin-top: 2rem;
+}
+
+.billFormat {
+  margin-bottom: 5px;
+}
+
+.alertContainer {
+  margin-left: 0px;
+  margin-right: 0px;
+  max-height: 20rem;
+  overflow-y: scroll;
+
+  :first-child {
+    margin-bottom: 0px;
+  }
+}
+
+.alertIconContainer {
+  display: flex;
+
+  :first-child {
+    margin-right: 0.75rem;
+  }
+}
+
+.alertInfoIconContainer {
+  display: flex;
+  align-items: center;
+}
+
+.alertInfoIconContainer:first-child {
+    margin-right: 0.75rem;
+}
+
+
+.infoText{
+  margin-bottom: 0px;
+}

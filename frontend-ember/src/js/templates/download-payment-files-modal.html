@@ -1,0 +1,43 @@
+{{#modal-dialog modalTitle="Download Payment Files"
+                actionButtons=paymentFileActionButtons
+                onClose="closeModal"
+                confirm="doDownloadPaymentFiles"
+                isPrimaryDisabled=isParPrimaryDisabled}}
+<div class="row">
+    <div class="col-md-12">
+        <p class="well">
+          Download the Digital Mailbox Payment Files (PAR files) for the selected date range.
+          A ZIP file will be provided containing all files received between the two dates.
+        </p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="form-group col-sm-4">
+        <label for="downloadFromDate" >From date</label>
+        <div class="input-group">
+          {{common-inline-date-picker dateVal="downloadFromDate" action="selectFromDate"}}
+        </div>
+    </div>
+    <div class="col-sm-2"></div>
+    <div class="form-group col-sm-4">
+        <label for="downloadToDate">To date</label>
+        <div class="input-group">
+          {{common-inline-date-picker dateVal="downloadToDate" action="selectToDate"}}
+        </div>
+    </div>
+</div>
+
+{{#if parFileCountMessage}}
+<div class="row">
+    <div class="{{if parFilesToDownload 'well' 'well-error'}} col-md-12">
+        <p>{{parFileCountMessage}} for date range <strong>{{view-date date=downloadFromDate}} to {{view-date date=downloadToDate}}</strong></p>
+        {{#if parFilesToDownload}}
+            <p>{{strings.parFileModal.pressDownloadInstructions}}</p>
+        {{/if}}
+        <p></p>
+    </div>
+</div>
+{{/if}}
+
+{{/modal-dialog}}

@@ -1,0 +1,94 @@
+<div class="navbar navbar-fixed-top navbar-inverse" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#pr-navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+
+            <div id="nav-logo" class="logo-hide {{if isLoggedIn 'logo-show'}}">
+                {{#if isPayreqPayer}}
+                    <a href={{dashboardHref}} class="navbar-brand pr-logo ember-view">
+                        <h1 class="text-hide">{{applicationName}}</h1>
+                    </a>
+                {{else}}
+                    <a href={{dashboardAdminHref}} class="navbar-brand pr-logo ember-view">
+                        <h1 class="text-hide">{{applicationName}}</h1>
+                    </a>
+                {{/if}}
+            </div>
+
+        </div>
+        <div id="pr-navbar" class="collapse navbar-collapse">
+            {{context-menu menu=entityContext.menu entityContext=entityContext}}
+
+            {{user-context-menu entityContext=entityContext
+                                showEntityContextSwitch=showEntityContextSwitch
+                                referralMessage=referralMessage
+                                isLoggedIn=isLoggedIn
+                                showUserMenu=showUserMenu
+                                userContext=userContext
+                                hasNoEntityContext=hasNoEntityContext
+                                isPayreqBiller=isPayreqBiller
+                                isPayreqPayer=isPayreqPayer
+                                isNotQboAccount=isNotQboAccount
+                                profileSettingsLink=profileSettingsLink
+                                logout='logout'
+                                switchBillers='switchBillers'
+                                showReferralMessage='showReferralMessage'
+                                goToAccountSettings='goToAccountSettings'
+                                goToManageAutopayments='goToManageAutopayments'
+                                goToManageCards='goToManageCards'
+            }}
+        </div>
+    </div>
+</div>
+<div style="background-color: #44EABE; max-height: 15px; min-height: 15px; position: fixed; width: 100%; z-index: 140;">
+</div>
+
+<div id="global-loading-alert" class="row loading-alert">
+    <div class="col-md-2 col-md-offset-5">
+        <span>Loading...</span>
+    </div>
+</div>
+
+
+<div id="global-message" class="row application-message">
+    <div class="col-md-6 col-md-offset-3 {{message.static:static}}">
+        <div class="alert alert-dismissable {{message.type}}">
+            <button type="button" class="close" {{action 'dismissMessage'}} aria-hidden="true">&times;</button>
+            {{{message.text}}}
+        </div>
+    </div>
+</div>
+
+
+<div class="container" style="padding-top: 25px;" role="main">
+    {{outlet}}
+    {{outlet "modal"}}
+</div>
+
+
+<footer class="pr-footer">
+    {{#unless isLoggedIn}}
+        <div class="row" style="margin-bottom: 1rem;">
+            <div class="col-sm-12 text-center">
+                <a href="#" style="margin-right: 1rem" {{action 'onLanguageSelect' 'en'}}>English</a>
+                <a {{action 'onLanguageSelect' 'fr'}} href="#">Français</a>
+            </div>
+        </div>
+    {{/unless}}
+    <div class="row">
+        <div class="col-sm-12 text-center">
+            <a href="{{strings.footer.termsURL}}" class="text-muted" target="_blank">{{strings.footer.terms}}</a> | <a href="{{strings.footer.privacyURL}}" class="text-muted" target="_blank">{{strings.footer.privacy}}</a> | <a href="{{strings.footer.userAgreementURL}}" class="text-muted" target="_blank">{{strings.footer.userAgreement}}</a>
+            {{#if isLoggedIn }}
+                {{#if isPayreqPayer}}
+            | <a href='{{strings.footer.helpURL}}' rel="noopener noreferrer" target="_blank" class="text-muted">{{strings.footer.help}}</a>
+                {{/if}}
+            {{/if}}
+            <p class="text-muted">© {{copyrightYear}}, Payreq Pty Ltd.</p>
+        </div>
+    </div>
+</footer>

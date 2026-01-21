@@ -1,0 +1,12 @@
+@import "../../../common/variables";
+
+@mixin payment-form-container() {
+  width: $card-entry-form-width;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  @media (max-width: $card-entry-form-width) {
+    width: 100%;
+  }
+}

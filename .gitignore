@@ -1,0 +1,11 @@
+**/.DS_Store
+*.iml
+*.sublime-*
+.claude/
+.env
+.envrc
+.idea/
+.log
+.lsp/
+/frontend-ember/build/
+/frontend/build/

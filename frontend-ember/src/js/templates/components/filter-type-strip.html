@@ -1,0 +1,29 @@
+<div class="row actions-row">
+    <div class="col-md-12">
+        <ul class="nav nav-pills">
+		{{#each typeFilters as |t|}}
+            {{#if t.visible}}
+			<li class="{{if t.active 'active'}} {{if t.isDisabled 'disabled'}}">
+                {{#if t.isDisabled}}
+                    {{#if t.subTab}}
+                        <a><small><em>{{t.title}}</em></small><span class="badge">{{t.count}}</span></a>
+                    {{else}}
+                        <a>{{t.title}}<span class="badge">{{t.count}}</span></a>
+                    {{/if}}
+                {{else}}
+                    {{#if t.subTab}}
+                        {{#link-to routeName t.type}}
+                            <small><em>{{t.title}}</em></small><span class="badge">{{t.count}}</span>
+                        {{/link-to}}
+                    {{else}}
+                        {{#link-to routeName t.type}}
+                            {{t.title}}<span class="badge">{{t.count}}</span>
+                        {{/link-to}}
+                    {{/if}}
+                {{/if}}
+            </li>
+            {{/if}}
+		{{/each}}
+    	</ul>
+    </div>
+</div>

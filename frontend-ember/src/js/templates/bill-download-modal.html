@@ -1,0 +1,69 @@
+{{#modal-dialog modalTitle=controller.strings.downloadModalHeading
+                actionButtons=downloadActionButtons
+                isPrimaryDisabled=isPrimaryDisabled
+                onClose="doClose"
+                confirm="doBillDownload"
+                cancel="doCancel"}}
+<div class="row">
+    <div class="col-md-12">
+        <div style="margin-bottom: 2rem; font-size: larger;">
+            {{{modalTitle}}}
+        </div>
+        <div class="download-modal-radio-container">
+            <label class="download-modal-radio-label">
+                {{controller.strings.mailDownloads}}
+            </label>
+            <div class="radio download-modal-radio">
+                <label>
+                    <input type="radio" name="format" id="download_csv" value="download_csv"
+                            checked={{isCSV}} onclick={{action "setSelectedFormat" "download_csv"}}>
+                    {{controller.strings.csvOption}}
+                </label>
+            </div>
+            <div class="radio download-modal-radio">
+                <label>
+                    <input type="radio" name="format" id="download_one" value="download_one"
+                           checked={{isMerged}} onclick={{action "setSelectedFormat" "download_one"}}>
+                    {{controller.strings.pdfMergedOption}}
+                </label>
+            </div>
+            <div class="radio download-modal-radio">
+                <label>
+                    <input type="radio" name="format" id="download_bills" value="download_bills"
+                           checked={{isSingles}} onclick={{action "setSelectedFormat" "download_bills"}}>
+                    {{controller.strings.pdfIndividualOption}}
+                </label>
+            </div>
+        </div>
+
+        {{#if isFirstPageOnlyCompatible}}
+        <div class="download-modal-radio-container">
+            <label class="download-modal-radio-label">
+                {{controller.strings.pagesTitle}}
+            </label>
+            <div class="radio download-modal-radio">
+                <label>
+                    <input type="radio" name="pagesForDownload" id="all" value="all"
+                           checked={{isDownloadAllPages}} onclick={{action "setFirstPageOnly" false}}>
+                    {{controller.strings.pagesAllOption}}
+                </label>
+            </div>
+            <div class="radio download-modal-radio">
+                <label>
+                    <input type="radio" name="pagesForDownload" value="first"
+                           checked={{isDownladFirstPage}} onclick={{action "setFirstPageOnly" true}}>
+                    {{controller.strings.pagesFirstOption}}
+                </label>
+            </div>
+        </div>
+        {{/if}}
+
+        {{#unless isCSV}}
+        <div class="download-modal-checkbox">
+            <label>{{input  type="checkbox" id="notifyOnCompletion" checked=this.notifyOnCompletion}} {{controller.strings.emailNotification}}</label>
+        </div>
+        {{/unless}}
+    </div>
+</div>
+
+{{/modal-dialog}}

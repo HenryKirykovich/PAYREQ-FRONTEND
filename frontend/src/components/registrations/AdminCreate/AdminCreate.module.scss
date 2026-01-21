@@ -1,0 +1,54 @@
+@import "../../common/variables";
+
+.container {
+  width: 650px;
+  margin: 2rem auto;
+
+  @media (max-width: 650px) {
+    width: 100%
+  }
+}
+
+.searchInputContainer {
+  display: flex;
+  align-items: center;
+  margin-bottom: 2rem;
+  justify-content: space-between;
+
+  >:first-child {
+    margin-bottom: 0;
+    width: 600px;
+  }
+
+}
+
+.searchContainer {
+  margin-left: 1rem;
+}
+
+.buttonContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.backButtonContainer {
+  display: flex;
+  flex-direction: row;
+
+}
+
+.backButton {
+  padding-top: 0px;
+  padding-left: 0px;
+}
+
+.errorAlert {
+  margin-left: 0px;
+  margin-right: 0px;
+  margin-top: 1.5rem
+}
+
+.newContactLabel{
+  margin-top: 1.5rem;
+}

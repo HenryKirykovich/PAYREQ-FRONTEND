@@ -1,0 +1,73 @@
+@import "../../common/variables";
+
+$card-width: 800px;
+
+.billerContainer {
+  max-width: 800px;
+}
+
+.searchInputContainer {
+  display: flex;
+  align-items: center;
+  margin-bottom: 2rem;
+  justify-content: space-between;
+
+  >:first-child {
+    margin-bottom: 0;
+  }
+
+  @media (max-width: 720px) {
+    flex-direction: column;
+    align-items: inherit;
+  }
+
+  @media (min-width: 721px) {
+    >:first-child {
+      width: 400px;
+    }
+  }
+}
+
+.changeCountryContainer {
+  display: flex;
+  color: $light-grey;
+
+  .changeCountryButton {
+    padding: 0 0.5rem;
+    //color: $light-grey;
+    //text-decoration: underline;
+  }
+
+  > p {
+    margin: 0;
+  }
+}
+
+.links {
+  a {
+    text-decoration: none;
+    color: $body-text-color;
+  }
+}
+
+.billerCard {
+  display: flex;
+  align-items: center;
+  height: 100px;
+
+  .logoContainer {
+    min-width: 140px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    .logo {
+      height: 100px;
+      max-width: 140px;
+    }
+  }
+}
+
+.billerDetails {
+  margin-left: 0.75rem;
+}

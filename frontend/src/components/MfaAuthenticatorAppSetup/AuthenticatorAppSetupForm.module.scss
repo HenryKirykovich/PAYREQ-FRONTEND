@@ -1,0 +1,47 @@
+.formContainer {
+  max-width: 700px;
+}
+
+.alert {
+  margin: 0;
+}
+
+.form {
+  max-width: 400px;
+}
+
+.formButtonContainer {
+  display: flex;
+  margin-bottom: 2rem;
+}
+
+.errorAlert {
+    margin: 0;
+}
+
+ul {
+  list-style: none;
+}
+
+.manualCode {
+  display: flex;
+  align-items: baseline;
+  margin-bottom: 1rem;
+}
+
+.codeContainer {
+  margin-bottom: 2rem;
+  display: flex;
+  align-items: baseline;
+}
+
+.codeText {
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  margin-right: 1rem;
+}
+
+.copyText {
+  margin-left: 1rem;
+}
+
+

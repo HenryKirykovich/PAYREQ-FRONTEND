@@ -1,0 +1,9 @@
+<ul class="pagination pagination-sm"  style="margin: 0.5rem 0">
+    {{#each pageNumbers as |p|}}
+      {{#if p.active}}
+        <li class="active"><a {{action "showPage" p}}>{{p.text}}</a></li>
+      {{else}}
+        <li class=""><a {{action "showPage" p}}>{{p.text}}</a></li>
+      {{/if}}
+    {{/each}}
+</ul>

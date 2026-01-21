@@ -1,0 +1,19 @@
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h4 class="panel-title">{{strings.capitalised.billerSettings.systemProperties}}</h4>
+    </div>
+    <div class="panel-body">
+        <div class="form-group">
+            <label class="col-sm-2 control-label">{{strings.capitalised.billerSettings.emailAddress}}</label>
+            <p class="form-control-static col-sm-10">
+                {{#if billerSettings.incomingBillsEmailAddressFull}}
+                    {{billerSettings.incomingBillsEmailAddressFull}}
+                {{else}}
+                    <em><span class="glyphicon glyphicon-flag"></span> {{strings.capitalised.billerSettings.noEmailAddress}}</em>
+                    <br/>
+                    <a class="action-link" {{action "generateIncomingBillsEmailAddress" billerSettings}}>{{strings.capitalised.billerSettings.generateEmailAddress}}</a>
+                {{/if}}
+            </p>
+        </div>
+    </div>
+</div>

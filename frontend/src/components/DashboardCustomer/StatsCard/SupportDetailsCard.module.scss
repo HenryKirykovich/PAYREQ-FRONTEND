@@ -1,0 +1,17 @@
+.supportDetailsWrapper {
+  display: flex;
+  flex-direction: row;
+}
+
+.contactDetails {
+  font-size: 1.75rem;
+  margin-left: 1rem;
+}
+
+.detailsContainer {
+  div {
+    div:nth-child(1) {
+      width: 220px;
+    }
+  }
+}

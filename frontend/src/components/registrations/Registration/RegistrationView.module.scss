@@ -1,0 +1,98 @@
+.pageContainer {
+  display: flex;
+
+  @media (min-width: 1400px) {
+    >:nth-child(1) {
+      margin-right: 1rem;
+    }
+
+    >:nth-child(2) {
+      margin-left: 1rem;
+    }
+  }
+
+  @media (max-width: 1400px) {
+    flex-direction: column;
+  }
+}
+
+.buttonBar {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+
+  :first-child {
+    height: unset !important;
+    display: flex;
+    align-items: center;
+  }
+
+  .deregisterContainer {
+    display: flex;
+    align-items: baseline;
+
+    :first-child {
+      margin-right: 1rem;
+      @media (max-width: 500px) {
+        display: none;
+      }
+    }
+  }
+}
+
+.registrationDetailsContainer{
+  flex: 1;
+  -ms-flex: 1 1 auto;
+}
+
+.billDetailsContainer{
+  flex: 1;
+  -ms-flex: 1 1 auto;
+}
+
+.detailsContainer {
+  div {
+    div:nth-child(1) {
+      width: 180px;
+      min-width: 180px;
+    }
+  }
+}
+
+.billDetailsFieldGroup {
+  div {
+    div:nth-child(1) {
+      width: 80px;
+    }
+  }
+}
+
+.registeredEmailsRow {
+  display: flex;
+  align-items: baseline;
+
+  @media (max-width: 500px) {
+    flex-direction: column;
+  }
+
+  p:first-child {
+    margin-right: 1rem;
+  }
+}
+
+.billSummary {
+  display: flex;
+  align-items: baseline;
+
+  p {
+    margin-right: 1rem;
+  }
+}
+
+.xeroFieldGroup {
+  > div {
+    > :first-child {
+      min-width: 230px;
+    }
+  }
+}

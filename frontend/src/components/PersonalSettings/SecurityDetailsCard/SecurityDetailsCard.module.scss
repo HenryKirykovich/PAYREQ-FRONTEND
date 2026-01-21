@@ -1,0 +1,38 @@
+.newPassword {
+  > :first-child {
+    margin-bottom: 0.5em;
+  }
+}
+
+.detailsGroup {
+  > * {
+    > :first-child {
+      width: 18rem;
+    }
+  }
+
+  a {
+    padding-left: 0;
+  }
+
+  .mfaSelectionContainer {
+    display: flex;
+    align-items: center;
+
+    > a {
+     margin-left: 0.5em;
+    }
+  }
+}
+
+.formButtonContainer {
+  display: flex;
+}
+
+.changePasswordForm {
+ max-width: 400px;
+}
+
+.formErrors {
+  margin: auto 0;
+}

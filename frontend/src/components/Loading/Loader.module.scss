@@ -1,0 +1,25 @@
+@import "../common/variables";
+
+.loader {
+  border: 3px solid #f3f3f3; /* Light grey */
+  border-top: 3px solid lighten($primary-color, 30%);
+  border-radius: 50%;
+  width: 25px;
+  height: 25px;
+  animation: spin 1.5s linear infinite;
+  margin-right: 0.5rem;
+
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+}
+
+.loadingContainer {
+  display: flex;
+  align-items: center;
+}

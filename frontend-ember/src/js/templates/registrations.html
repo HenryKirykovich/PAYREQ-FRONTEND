@@ -1,0 +1,136 @@
+<div class="row">
+    <div class="col-md-12">
+        <h2 class="page-heading">
+            {{biller.strings.capitalised.registrations}}
+        </h2>
+    </div>
+</div>
+
+{{#if hasActionButtons}}
+<div class="row actions-row">
+    <div class="actions btn-group col-xs-12">
+        {{#if canExport}}
+        <button class="btn btn-default" {{action "exportRegistrations"}}>
+            <span class="glyphicon glyphicon-export"></span> {{biller.strings.capitalised.exports}}
+        </button>
+        {{/if}}
+        {{#if canImportDeregistrations}}
+        <button class="btn btn-default" {{action "importDeregistrations"}}>
+            <span class="glyphicon glyphicon-import"></span> {{biller.strings.capitalised.importDeregistrations}}
+        </button>
+        {{/if}}
+        {{#if hasMyBillsAgent}}
+        <button class="btn btn-default" {{action "importMyBillsRegistrations"}}>
+        <span class="glyphicon glyphicon-import"></span> {{biller.strings.capitalised.importMyBillsRegistrations}}
+        </button>
+        {{/if}}
+        {{#if canCreateRegistrations}}
+        <button class="btn btn-default" {{action "createSubscription"}}>
+        <span class="glyphicon glyphicon-plus"></span> {{biller.strings.capitalised.createSubscription}}
+        </button>
+        {{/if}}
+    </div>
+</div>
+{{/if}}
+
+<div class="panel panel-default">
+    <a data-toggle="collapse" href="#collapse1" {{action "showAndHide"}}>
+        <div class="panel-heading search-panel-heading">
+            <h4 class="panel-title search-panel-title"><span class="glyphicon glyphicon-search search-panel-glyphicon"/> {{globalStrings.all.search}} <span style="float: right;" class="glyphicon {{if collapse 'glyphicon-chevron-up' 'glyphicon-chevron-down'}}"/></h4>
+        </div>
+    </a>
+    <div id="collapse1" class="panel-body collapse {{if showSearch 'in'}}">
+{{common-filter-bar action="changeCommonFilters"
+                    download="download"
+                    defaultDateRange=defaultDateRange
+                    searchFilters=selectedFilters}}
+    </div>
+</div>
+
+{{filter-type-strip typeFilters=typeFilters routeName="biller.registrations"}}
+
+{{#if showHelpMessages}}
+<div>
+    <p><span class="glyphicon glyphicon-info-sign"></span> {{{helpMessage}}}</p>
+</div>
+{{/if}}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="table-responsive">
+            <table class="data-table table table-hover clickable-rows">
+                {{table-thead action="sort" columns=columns typeFilters=typeFilters biller=biller}}
+                <tBody>
+                    {{#each model as |registration|}}
+                    {{#link-to "biller.registration" registration.id tagName="tr"}}
+                        {{#table-column-data columnFieldName="billerAccountNumber" columns=columns typeFilters=typeFilters biller=biller}}
+                        {{#link-to "biller.registration" registration.id}}{{registration.billerAccountNumber}}{{/link-to}}
+                        {{/table-column-data}}
+
+                        {{#table-column-data columnFieldName="extPayerName" columns=columns typeFilters=typeFilters biller=biller}}
+                        {{registration.extPayerName}}
+                        {{/table-column-data}}
+
+                        {{#table-column-data columnFieldName="payerName" columns=columns typeFilters=typeFilters biller=biller}}
+                            {{#if registration.payerName}}{{registration.payerName}}{{else}}<em class="text-muted">{{biller.strings.notKnown}}</em>{{/if}}
+                        {{/table-column-data}}
+
+                        {{#table-column-data columnFieldName="newContactName" columns=columns typeFilters=typeFilters biller=biller}}
+                        {{registration.newContactName}}
+                        {{/table-column-data}}
+
+                        {{#table-column-data columnFieldName="contactUpdatedOn" columns=columns typeFilters=typeFilters biller=biller}}
+                        {{view-date date=registration.contactUpdatedOn withTime=true}}
+                        {{/table-column-data}}
+
+                        {{#table-column-data columnFieldName="channelPartnerSystemId" columns=columns typeFilters=typeFilters biller=biller}}
+                        {{registration.channelPartnerSystemDisplay}}
+                        {{/table-column-data}}
+
+                        {{#table-column-data columnFieldName="status" columns=columns typeFilters=typeFilters biller=biller}}
+                        <abbr title={{statusDescription}}>
+                            {{#if registration.requiresReviewForFailedRegistration}}<span class="glyphicon glyphicon-warning-sign"></span>{{/if}}
+                            {{registration.status}}
+                        </abbr>
+                        {{/table-column-data}}
+
+                        {{#table-column-data columnFieldName="contactExists" columns=columns typeFilters=typeFilters biller=biller}}
+                        {{#if registration.contactExists}}
+                            <span class="glyphicon glyphicon glyphicon-ok" aria-hidden="true" style="color:green"></span>
+                        {{else}}
+                            <span class="glyphicon glyphicon glyphicon glyphicon-remove" aria-hidden="true" style="color:red"></span>
+                        {{/if}}
+                        {{/table-column-data}}
+
+                        {{#table-column-data columnFieldName="contactId" columns=columns typeFilters=typeFilters biller=biller}}
+                            {{registration.contactId}}
+                        {{/table-column-data}}
+
+
+                        {{#table-column-data columnFieldName="registrationApprovalCode" columns=columns typeFilters=typeFilters biller=biller}}
+                          {{registration.registrationApprovalCodeString}}
+                        {{/table-column-data}}
+
+                        {{#table-column-data columnFieldName="dateGenerated" columns=columns typeFilters=typeFilters biller=biller}}
+                        {{view-date date=registration.dateGenerated withTime=true}}
+                        {{/table-column-data}}
+
+                        {{#table-column-data columnFieldName="deactivationDate" columns=columns typeFilters=typeFilters biller=biller}}
+                        {{view-date date=registration.deactivationDate withTime=true}}
+                        {{/table-column-data}}
+                    {{/link-to}}
+                    {{else}}
+                    <tr>
+                        <td colspan="7">{{strings.messages.noRegistrations}}</td>
+                    </tr>
+                    {{/each}}
+                </tBody>
+            </table>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6">
+        {{table-page-links pageSize=pageSize totalRecords=totalRecords pageNumber=pageNumber action="pageChanged"}}
+    </div>
+</div>

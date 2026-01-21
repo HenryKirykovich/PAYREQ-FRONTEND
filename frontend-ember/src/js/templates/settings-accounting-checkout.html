@@ -1,0 +1,64 @@
+<div class="row">
+    <div class="col-md-12">
+        <div class='btn-toolbar btn-toolbar-bottom-margin'>
+            {{#link-to "biller.settings.accounting.catalog" class="btn btn-default"}}<span class="glyphicon glyphicon-arrow-left"></span> {{settingsStrings.all.accountingPlan.back}}{{/link-to}}
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                {{settingsStrings.all.accountingPlan.purchaseAccountingPlans}}
+            </div>
+
+            <table class="table table-striped">
+                <tHead>
+                    <tr>
+                        <th>{{settingsStrings.all.accountingPlan.accountingPlan}}</th>
+                        <th>{{settingsStrings.all.accountingPlan.unitCost}} ({{currencyCode}})</th>
+                        <th class="accounting-plan-uints-col">{{settingsStrings.all.accountingPlan.quantity}}</th>
+                        <th class="text-right">{{settingsStrings.all.accountingPlan.total}}</th>
+                    </tr>
+                </tHead>
+
+                <tBody>
+                    {{#each selectedAccountingPlans as |accountingPlan|}}
+                        <tr>
+                            <td>{{accountingPlan.name}} <small>({{accountingPlan.description}})</small></td>
+                            <td>{{currencySymbol}}{{accountingPlan.priceDisplay}}</td>
+                            <td>{{input type="number" step="1" min="1" class="accounting-plan-uints-col" value=accountingPlan.quantity}}
+                                <a {{action 'removeAccountingPlanFromCheckout' accountingPlan}} href="#">
+                                    <span class="glyphicon glyphicon-remove text-danger"></span></a>
+                            </td>
+                            <td class="text-right">{{accountingPlan.totalDisplay}}</td>
+                        </tr>
+                    {{/each}}
+                    <tr>
+                        <td class="text-right" colspan="3">Sub total ({{currencyCode}})</td>
+                        <td class="text-right">{{subTotalDisplay}}</td>
+                    </tr>
+                    {{#if taxes}}
+                        {{#each taxes as |tax|}}
+                            <tr>
+                                <td class="text-right" colspan="3">{{tax.name}} ({{tax.percentage}}%)</td>
+                                <td class="text-right">{{tax.amountDisplay}}</td>
+                            </tr>
+                        {{/each}}
+                    {{/if}}
+                    <tr>
+                        <td class="text-right" colspan="3"><strong>Total ({{currencyCode}})</strong></td>
+                        <td class="text-right"><strong>{{currencySymbol}}{{totalDisplay}}</strong></td>
+                    </tr>
+                </tBody>
+            </table>
+        </div>
+        <div class='btn-toolbar pull-right' style="margin-bottom: 5px">
+            {{#if hasSelectedAccountingPlans}}
+                {{#link-to "biller.settings.accounting.catalog.checkout.payment" class="btn btn-primary"}}
+                <span class="glyphicon glyphicon-credit-card glyphicon-right-margin"></span>{{settingsStrings.all.accountingPlan.proceedToPay}}{{/link-to}}
+            {{else}}
+                {{#link-to "biller.settings.accounting.catalog.checkout.payment" class="btn btn-primary disabled"}}
+                <span class="glyphicon glyphicon-credit-card glyphicon-right-margin"></span>{{settingsStrings.all.accountingPlan.proceedToPay}}{{/link-to}}
+            {{/if}}
+
+        </div>
+    </div>
+</div>

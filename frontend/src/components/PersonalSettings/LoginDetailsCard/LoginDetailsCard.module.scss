@@ -1,0 +1,37 @@
+@import "../../common/variables";
+
+.pendingConfirmationHeading {
+  margin: 0;
+}
+
+.pendingConfirmationContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+
+  .row {
+    display: flex;
+    align-items: baseline;
+    > * {
+      margin: 0;
+    }
+  }
+}
+
+.formErrors {
+  margin-top: 1rem;
+
+  div {
+    margin-right: 0;
+    margin-left: 0;
+  }
+}
+
+.errorText {
+  color: $errorColor;
+}
+
+.emailContainer {
+  display: flex;
+  align-items: baseline;
+}

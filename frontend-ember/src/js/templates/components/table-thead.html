@@ -1,0 +1,18 @@
+<thead>
+    <tr class="small">
+        {{#each visibleColumns as |column|}}
+        <th class="{{if column.rightAligned 'text-right'}}">
+            {{#if column.sortable}}
+            <a {{action "sort" column}}>
+                {{column.title}}
+                {{#if column.sorted}}
+                <span class="glyphicon {{if column.ascending 'glyphicon-chevron-down' 'glyphicon-chevron-up'}}"></span>
+                {{/if}}
+            </a>
+            {{else}}
+            {{column.title}}
+            {{/if}}
+        </th>
+        {{/each}}
+    </tr>
+</thead>

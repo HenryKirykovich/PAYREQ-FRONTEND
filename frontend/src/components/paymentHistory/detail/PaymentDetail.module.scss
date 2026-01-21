@@ -1,0 +1,78 @@
+@import "../../common/variables";
+
+.detailsContainer {
+  max-width: $card-width;
+}
+
+.cardContainer {
+  max-width: $card-width;
+}
+
+.fieldLabel {
+  min-width: 18rem;
+}
+
+.fieldRowStatus {
+  padding-bottom: 0px !important;
+}
+
+.cardHeadingFirst {
+  margin-top: 0px;
+}
+
+.cardHeading {
+  margin-top: 1rem;
+}
+
+.card {
+  max-width: $card-width;
+}
+
+.buttonContainer {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  @media (max-width: 650px) {
+    justify-content: space-between;
+  }
+}
+
+.skipButton {
+  margin-left: auto;
+  @media (max-width: 650px) {
+    display: none;
+  }
+}
+
+.skipLinkButton {
+  @media (min-width: 650px) {
+    display: none;
+  }
+}
+
+.statusRow {
+  padding-bottom: 0px;
+}
+
+.status {
+  display: flex;
+  flex-direction: row;
+}
+
+.viewBillLink {
+  margin-left: 0.5rem;
+}
+
+.paymentOverviewButtons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1rem;
+}
+
+.aboveLimitAlert {
+  div {
+    margin-right: 0px;
+    margin-left: 0px;
+  }
+}

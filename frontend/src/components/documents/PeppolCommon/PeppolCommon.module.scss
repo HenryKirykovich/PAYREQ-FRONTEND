@@ -1,0 +1,44 @@
+
+.detailsContainer {
+  div {
+    div:nth-child(1) {
+      width: 180px;
+      min-width: 180px;
+    }
+  }
+}
+
+.pdfButtons {
+  display: flex;
+  justify-content: space-between;
+}
+
+.pageNoSpan {
+  margin-left: 1rem;
+  margin-right: 1rem;
+}
+
+.viewDownloadLink {
+  font-size: small;
+}
+
+.invoiceLine{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.shortText {
+  height: 100px;
+}
+
+.showMoreButton {
+  display: flex;
+  margin-top: 1rem;
+  margin-left: 180px;
+}
+
+.removeButtonMargin{
+  padding-left: 0px;
+}
+

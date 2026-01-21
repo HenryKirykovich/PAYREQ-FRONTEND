@@ -1,0 +1,49 @@
+<div class="row">
+	<div class="col-md-12">
+		<form class="form-horizontal" role="form">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h4 class="panel-title">{{userSettingsStrings.all.notificationsTitle}}</h4>
+				</div>
+				<div class="panel-body">
+                    <div class="well well-sm">
+						{{settingsStrings.all.userSettings.notificationsIntro}}
+                        <ul>
+							<li><strong>{{settingsStrings.all.userSettings.notificationPreferenceValues.immediate}}: </strong>{{settingsStrings.all.userSettings.notificationPreferenceValues.immediateDescription}}</li>
+							<li><strong>{{settingsStrings.all.userSettings.notificationPreferenceValues.frequent}}: </strong>{{settingsStrings.all.userSettings.notificationPreferenceValues.frequentDescription}}</li>
+							<li><strong>{{settingsStrings.all.userSettings.notificationPreferenceValues.infrequent}}: </strong>{{settingsStrings.all.userSettings.notificationPreferenceValues.infrequentDescription}}</li>
+                        </ul>
+                    </div>
+                    <div class="form-group">
+						<label class="col-sm-2 col-sm-offset-6 text-center">{{settingsStrings.all.userSettings.method}}</label>
+						<label class="col-sm-2 text-center">{{settingsStrings.all.userSettings.frequency}}</label>
+                    </div>
+					{{#each model.settings as |setting|}}
+						<div class="form-group">
+							<label class="col-sm-6 control-label">{{setting.displayDescription}}</label>
+							<div class="col-sm-2">
+                {{item-select class-name="form-control"
+                               content=alertTypes
+                               optionLabelPath="name"
+                               optionValuePath="id"
+                               selection=setting.alertType}}
+							</div>
+							<div class="col-sm-2">
+                {{item-select class-name="form-control"
+                               content=frequencies
+                               optionLabelPath="name"
+                               optionValuePath="id"
+                               selection=setting.alertFreq}}
+							</div>
+						</div>
+					{{/each}}
+					<div class="col-sm-12">
+						<div class="btn-toolbar pull-right margin-top-sm">
+							<button class="btn btn-primary" {{action 'update' model.settings}}>{{globalStrings.all.updateButton}}</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>

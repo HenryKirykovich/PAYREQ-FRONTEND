@@ -1,0 +1,35 @@
+@import "../common/variables";
+
+.sortedCell {
+  background-color: $hover-grey;
+}
+
+.unsortedCell {
+
+}
+
+.chevron {margin-left: 0.5rem;}
+
+.dangerText {
+  color: $errorColor;
+}
+
+.infoText {
+  color: $info-color;
+}
+
+.failedCount {
+  font-size: 1.4rem;
+  display: flex;
+  min-width: 30px;
+  width: 30px;
+  justify-content: center;
+  padding-top: 0.3em;
+  padding-bottom: 0.3em;
+}
+
+.failedCountStyle {
+  color: #a94442;
+  font-size: 1.5rem;
+  font-weight: bold;
+}

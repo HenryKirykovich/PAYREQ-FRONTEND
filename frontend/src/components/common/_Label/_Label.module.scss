@@ -1,0 +1,21 @@
+@import "../variables";
+
+.statusLabel {
+  letter-spacing: 0.04rem;
+}
+
+.warningLabel {
+  color: $body-text-color;
+}
+
+.successLabel {
+  background-color: #147846;
+}
+
+.defaultLabel {
+  background-color: #545454;
+}
+
+.dangerLabel {
+  background-color: #A72925;
+}

@@ -1,0 +1,56 @@
+@import "../common/variables";
+.cardEntryForm {
+  max-width: $card-entry-form-width;
+  @media (max-width: $card-entry-form-width) {
+    max-width: 100%;
+  }
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.cardPreview {
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
+
+.actionButtonsContainer {
+  display: flex;
+  align-items: center;
+}
+
+.cardsContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: baseline;
+}
+
+.viewCardDetailsContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-bottom: 2rem;
+
+  @media (max-width: 420px) {
+    align-items: center;
+  }
+}
+
+.cardActionsContainer {
+  display: flex;
+  align-items: center;
+  margin-top: 2rem;
+}
+
+.primerContainer {
+  width: 100%;
+  margin-bottom: 1.5rem;
+}
+
+.backButton {
+  margin-left: 20px;
+  margin-bottom: 20px;
+}

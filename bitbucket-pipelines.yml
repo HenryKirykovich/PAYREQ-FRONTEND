@@ -1,0 +1,48 @@
+# See
+# https://support.atlassian.com/bitbucket-cloud/docs/bitbucket-pipelines-configuration-reference/
+# for the reference.
+
+options:
+  docker: true
+  size: 2x
+
+definitions:
+  services:
+    docker:
+      memory: 4096
+  caches:
+    frontend-ember-node-modules: ./frontend-ember/node_modules
+    frontend-node-modules: ./frontend/node_modules
+  steps:
+    - step: &test-n-build-frontend
+        name: "Test and build frontends"
+        image: payeq/ci-build-tools:4.1.0
+        services:
+          - docker
+        caches:
+          - docker
+          - frontend-ember-node-modules
+          - frontend-node-modules
+        script:
+          - echo "Running React frontend tests..."
+          - docker build -f frontend/Dockerfile.development -t payreq/frontend:latest frontend
+          - docker run --rm -v "${BITBUCKET_CLONE_DIR}/frontend:/usr/src/app" -v /usr/src/app/node_modules --entrypoint /bin/sh -e CI=true payreq/frontend:latest -c "npm install && npm test"
+          - echo "Building the React frontend..."
+          - docker run --rm -v "${BITBUCKET_CLONE_DIR}/frontend:/usr/src/app" -v /usr/src/app/node_modules payreq/frontend:latest npm run build
+          - echo "Building the Ember frontend..."
+          - chmod ugo+rwx "${BITBUCKET_CLONE_DIR}/frontend-ember/node_modules"
+          - docker build -f frontend-ember/Dockerfile -t payreq/frontend-ember:latest frontend-ember
+          - docker run --rm -v "${BITBUCKET_CLONE_DIR}/frontend-ember:/app" payreq/frontend-ember:latest bash -c 'cd /app && yarnpkg install && mkdir -p build/js && cp -Rv node_modules/@bower_components build/js/lib && node ./r.js -o ./build.js'
+        artifacts:
+          - frontend/build/**
+          - frontend-ember/build/**
+
+pipelines:
+  branches:
+    main:
+      - step: *test-n-build-frontend
+  pull-requests:
+    '**':
+      - step: *test-n-build-frontend
+  default:
+    - step: *test-n-build-frontend

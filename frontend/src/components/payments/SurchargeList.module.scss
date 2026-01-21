@@ -1,0 +1,10 @@
+@import "../common/variables";
+
+.section {
+
+  > * {
+    margin-bottom: 0px;
+    color: $light-grey;
+  }
+}
+

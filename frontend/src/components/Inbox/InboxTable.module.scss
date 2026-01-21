@@ -1,0 +1,19 @@
+@import "../common/variables";
+
+.sortedCell {
+  background-color: $hover-grey;
+}
+
+.unsortedCell {
+
+}
+
+.chevron {margin-left: 0.5rem;}
+
+.dangerText {
+  color: $errorColor;
+}
+
+.infoText {
+  color: $info-color;
+}

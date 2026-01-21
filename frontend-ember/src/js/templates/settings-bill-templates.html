@@ -1,0 +1,47 @@
+
+<div class="row actions-row">
+    <div class="actions btn-group col-sm-4">
+        <button class="btn btn-default" {{action "uploadBillTemplate"}}>
+        <span class="glyphicon glyphicon-upload"></span> {{strings.capitalised.uploadBillTemplateButton}}
+        </button>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <form class="form-horizontal" role="form">
+            <div class="row">
+                <div class="col-md-12">
+                    <table class="table table-striped">
+                        <tHead>
+                        <tr>
+                            <th>{{settingsStrings.all.templates.name}}</th>
+                            <th>{{settingsStrings.all.templates.filename}}</th>
+                            <th>{{settingsStrings.all.templates.createdOn}}</th>
+                            <th>{{settingsStrings.all.templates.createdBy}}</th>
+                            <th>{{settingsStrings.all.templates.action}}</th>
+                        </tr>
+                        </tHead>
+                        <tBody>
+                        {{#each model as |template|}}
+                        <tr>
+                            <td>{{template.name}}</td>
+                            <td>{{template.fileName}}</td>
+                            <td>{{view-date date=template.createdOn withFullTime=true}}</td>
+                            <td>{{template.createdBy}}</td>
+                            <td><a href="" target="_blank" class="btn btn-xs" {{action "downloadBillTemplate" biller.id template.id}}>
+                                <span class="glyphicon glyphicon-file"></span>
+                                </a></td>
+                        </tr>
+                        {{else}}
+                        <tr>
+                            <td colspan="5">{{settingsStrings.all.templates.noTemplatesFound}}</td>
+                        </tr>
+                        {{/each}}
+                        </tBody>
+                    </table>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

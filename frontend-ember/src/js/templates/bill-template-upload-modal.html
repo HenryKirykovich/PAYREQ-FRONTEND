@@ -1,0 +1,21 @@
+{{#modal-dialog modalTitle=strings.capitalised.uploadMailTemplateTitle
+                actionButtons=uploadActionButtons
+                isPrimaryDisabled=isPrimaryDisabled
+                onClose="closeModal"
+                confirm="createBillTemplateAction"}}
+
+
+<div class="row">
+    <div class="form-group col-md-12">
+        <label class="col-md-3 control-label">{{strings.uploadMailTemplateNameLabel}}</label>
+        <div class="col-md-9">
+        {{input type="text" classNames="form-control" value=templateName id="templateName" placeholder=strings.uploadMailTemplateNameLabel}}
+        </div>
+    </div>
+    <div class="form-group col-md-12" style="margin-bottom: 0px;">
+        {{file-upload response=uploadedInfo url=billTemplateUploadUrl uploading=uploading fileName=fileName}}
+    </div>
+</div>
+
+
+{{/modal-dialog}}

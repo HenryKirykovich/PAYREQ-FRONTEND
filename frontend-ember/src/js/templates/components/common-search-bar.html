@@ -1,0 +1,37 @@
+<div class="row">
+
+    <div class="form-group col-sm-6">
+        <label for="searchTerm" class="sr-only">Search</label>
+        <div class="input-group">
+            <span class="input-group-addon"><span class="glyphicon glyphicon-search"/></span>
+            {{input type="text" classNames="form-control" value=searchTerm id="searchTerm" placeholder="Search"}}
+            <span class="input-group-btn">
+                <button class="btn btn-default" title="Clear" type="button" {{action 'clear' "searchTerm"}}><span class="glyphicon glyphicon-remove"></span></button>
+            </span>
+        </div>
+    </div>
+
+
+    {{#if downloadDropDown}}
+        <div class="col-sm-2">
+            <div class="dropdown">
+                <button class="btn btn-default dropdown-toggle" type="button" id="about-us" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <span class="glyphicon glyphicon-circle-arrow-down"></span>&nbsp;&nbsp;Download
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="about-us">
+                    {{#each downloadDropDown as |menu|}}
+                        <li> <a class="dropdown-item" {{action "downloadDropdown" menu.id}}>{{menu.name}}</a> </li>
+                   {{/each}}
+                </ul>
+            </div>
+        </div>
+    {{else}}
+        {{#if showDownload}}
+        <div class="col-sm-2">
+          <button type="button" class="btn btn-default" {{action "export"}}>
+            <span class="glyphicon glyphicon-circle-arrow-down"></span>&nbsp;&nbsp;Download {{#if count}}<span class="badge download-badge">{{count}}</span> {{/if}}</button>
+        </div>
+        {{/if}}
+    {{/if}}
+</div>

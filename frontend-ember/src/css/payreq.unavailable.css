@@ -1,0 +1,13 @@
+body {
+  background-color: #2b587b;
+  color: white;
+}
+
+.unavailable h1 {
+  background-image: url(/images/payreq_logo_reverse.svg);
+  background-repeat: no-repeat;
+	background-position: left center;
+	margin: 0px;
+	background-size: 50%;
+  padding-top: 205px;
+}

@@ -1,0 +1,16 @@
+.container  {
+  display: flex;
+  justify-content: center;
+}
+
+.centerDiv {
+  width: 650px;
+
+  @media (max-width: 650px) {
+    width: 100%
+  }
+}
+
+.linkButton {
+  margin: 1rem auto;
+}

@@ -1,0 +1,72 @@
+<div class="row" id="invite">
+	<div class="col-md-8 col-md-offset-2">
+		<div class="panel panel-default agent-card">
+			<div class="panel-heading">
+				<h2 class="panel-title">{{strings.agentConsent.heading}}</h2>
+			</div>
+			{{#if model.invite.error}}
+				<div class="panel-body">
+					<div class="alert alert-danger">
+						<p>{{model.invite.error}}</p>
+					</div>
+
+					<form class="form-login form-horizontal" role="form">
+						<div class="col-sm-12">
+							<div class="btn-toolbar pull-right margin-top-sm">
+								{{#link-to "login" class="btn btn-default"}}<span>{{strings.agentConsent.backButton}}</span>{{/link-to}}
+							</div>
+						</div>
+					</form>
+				</div>
+			{{else}}
+				{{#if model.invite.passwordVerified}}
+					<div class="panel-body">
+						<p>{{textLine1}}</p>
+						<p>{{textLine2}}</p>
+
+						<form class="form-login form-horizontal" role="form">
+							<div class="form-group">
+								<label class="control-label col-sm-4">{{strings.agentConsent.accountLabel}}</label>
+								<div class="form-control-static col-sm-8">
+									{{item-select class-name="form-control"
+												content=model.invite.accounts
+												optionLabelPath="tagName"
+												optionValuePath="id"
+												selection=this.account}}
+								</div>
+							</div>
+							<div class="col-sm-12">
+								<div class="btn-toolbar pull-right margin-top-sm">
+									<button class="btn btn-primary" {{action 'authoriseAccount' this.account}}>{{strings.agentConsent.submitButton}}</button>
+								</div>
+							</div>
+						</form>
+					</div>
+				{{else}}
+					<div class="panel-body">
+						<p>{{loginLine1}}</p>
+						<p>{{loginLine2}}</p>
+
+						<form class="form-login form-horizontal" role="form">
+							<div class="form-group">
+								<label class="control-label col-sm-4">{{strings.agentConsent.passwordLabel}}</label>
+								<p class="form-control-static col-sm-8">{{input type="password" class="form-control" value=this.password id="password"}}</p>
+							</div>
+							{{#if model.invite.mfaRequired}}
+							<div class="form-group">
+								<label class="control-label col-sm-4">{{strings.agentConsent.mfaLabel}}</label>
+								<p class="form-control-static col-sm-8">{{input type="text" class="form-control" value=this.mfacode id="mfaCode"}}</p>
+							</div>
+							{{/if}}
+							<div class="col-sm-12">
+								<div class="btn-toolbar pull-right margin-top-sm">
+									<button class="btn btn-primary" {{action 'confirmPassword' this.password this.mfacode}}>{{strings.agentConsent.verifyButton}}</button>
+								</div>
+							</div>
+						</form>
+					</div>
+				{{/if}}
+			{{/if}}
+		</div>
+	</div>
+</div>

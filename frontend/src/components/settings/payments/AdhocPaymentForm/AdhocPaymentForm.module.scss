@@ -1,0 +1,17 @@
+@import "../../../payments/PaymentForm/payment-wizard-layout";
+
+.paymentFormContainer {
+  @include payment-wizard-container();
+}
+
+.paymentForm {
+  @include payment-wizard-layout();
+
+  .cardEntry {
+    width: 100%;
+
+    iframe {
+      @include iframe-card-details();
+    }
+  }
+}

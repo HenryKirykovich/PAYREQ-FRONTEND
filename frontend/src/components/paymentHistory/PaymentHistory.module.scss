@@ -1,0 +1,96 @@
+@import "../common/variables";
+
+.billerContainer {
+  max-width: $card-width;
+  margin-top: 2rem;
+}
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  margin-left: 1rem;
+  //min-height: 80px;
+}
+
+.paymentCardHeader {
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.paymentStatusWrapper {
+  margin-right: 0.5rem;
+}
+
+.accountRef {
+  font-size: 1.4rem;
+}
+
+.links {
+  a {
+    text-decoration: none;
+    color: $body-text-color;
+  }
+}
+
+.paymentDetailRow {
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+  flex-wrap: wrap;
+}
+
+.cardHeaderText {
+  margin-bottom: 0px;
+  margin-right: 1rem;
+}
+
+.detailRow {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  flex: 1;
+}
+
+.linkValues {
+  display: flex;
+
+  a {
+    text-decoration: underline;
+    color: #337ab7;
+    padding: 0px;
+  }
+
+  @media (max-width: 650px) {
+    flex: 1 100%;
+    text-align: right;
+  }
+}
+
+.paymentHistoryContainer {
+  margin-top: 2rem;
+}
+
+.searchInputContainer {
+  display: flex;
+  align-items: center;
+  margin-bottom: 2rem;
+  justify-content: space-between;
+
+  >:first-child {
+    margin-bottom: 0;
+  }
+
+  @media (max-width: 720px) {
+    flex-direction: column;
+    align-items: inherit;
+  }
+
+  @media (min-width: 721px) {
+    >:first-child {
+      width: 400px;
+    }
+  }
+}

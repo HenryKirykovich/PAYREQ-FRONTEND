@@ -1,0 +1,678 @@
+<div class="row">
+    <div class="col-md-12">
+        <h2 class="page-heading">
+            {{model.extPayerName}}
+            <small>{{biller.strings.capitalised.payerRegistration}}</small>
+        </h2>
+    </div>
+</div>
+
+<div class="row actions-row">
+    <div class="actions btn-group col-sm-5">
+        {{#link-to "biller.registrationsinit" class="btn btn-default"}}<span class="glyphicon glyphicon-arrow-left"></span> {{strings.capitalised.backToPayerRegistrations}}{{/link-to}}
+        <button type="button" class="btn btn-default" {{action "refresh" model}}>
+          <span class="glyphicon glyphicon-refresh"></span> {{biller.strings.capitalised.refresh}}</button>
+    </div>
+    {{#if showBills}}
+    <div class="actions btn-group col-sm-2">
+        <button type="button" class="btn btn-default"><span class="glyphicon glyphicon-usd"></span> View invoices</button>
+    </div>
+    {{/if}}
+
+    <div class="actions col-sm-4">
+        {{#if canDeregister}}
+            {{#if model.isDeregistrationReasonRequired}}
+              <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown">
+                  {{strings.capitalised.deregisterSelect}}
+                  <span class="caret"></span>
+              </button>
+              <ul class="dropdown-menu" role="menu">
+                  <li><a href="#" {{action 'deregister' model "deactivationCustomerPaperBillsRecommence"}}>Cancelled by <strong>customer</strong> - paper mails will recommence</a></li>
+                  <li><a href="#" {{action 'deregister' model "deactivationCustomerNoPaperBills"}}>Cancelled by <strong>customer</strong> - mails will <strong>not</strong> recommence</a></li>
+                  <li class="divider"></li>
+                  <li><a href="#" {{action 'deregister' model "deactivationBillerPaperBillsRecommence"}}>Cancelled by <strong>mailer</strong> - paper mails will recommence</a></li>
+                  <li><a href="#" {{action 'deregister' model "deactivationBillerNoPaperBills"}}>Cancelled by <strong>mailer</strong> - mails will <strong>not</strong> recommence</a></li>
+                  {{#if showExtraDeregisterReasons}}
+                  <li><a href="#" {{action 'deregister' model "deactivationBillerOwnershipTransfer"}}>Cancelled by <strong>mailer</strong> - due to ownership transfer</a></li>
+                  <li><a href="#" {{action 'deregister' model "deactivationBillerSubdivision"}}>Cancelled by <strong>mailer</strong> - due to subdivision</a></li>
+                  <li><a href="#" {{action 'deregister' model "deactivationBillerManagingAgent"}}>Cancelled by <strong>mailer</strong> - due to notification from managing agent</a></li>
+                  {{/if}}
+              </ul>
+            {{else}}
+                {{#if isMyPayDelivery}}
+                    <button type="button" class="btn btn-danger" {{action 'deregister' model "deactivationCustomerPaperBillsRecommence"}}>
+                    {{strings.capitalised.deregister}}
+                    </button>
+                {{else}}
+                    <button type="button" class="btn btn-danger" {{action 'deregister' model}}>
+                    {{strings.capitalised.deregister}}
+                    </button>
+                {{/if}}
+            {{/if}}
+
+            {{#if model.contactChanged}}
+                <button type="button" class="btn btn-primary" {{action 'acceptContactChange' model}}>
+                {{strings.capitalised.acceptContactChange}}
+                </button>
+
+                <div class="checkbox" style="margin-top:15px">
+                    <label>
+                        {{input type="checkbox" checked=goToNextContactChanged}}
+                        {{strings.capitalised.goToNextRecord}}
+                    </label>
+                </div>
+            {{/if}}
+
+        {{/if}}
+    </div>
+</div>
+
+<form class="form-horizontal" role="form">
+    <div class="row">
+        <div class="col-md-10">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">{{strings.capitalised.payerDetails}}</h4>
+                </div>
+                <div class="panel-body">
+                    {{#if showBillerAccountNumber}}
+                        <div class="form-group col-md-10">
+                            <label class="col-md-3 control-label">
+                              <abbr title={{strings.abbrs.billerAccountNumber}}>{{strings.billerAccountNumber}}</abbr>
+                            </label>
+                            <div class="col-md-9">
+                                <p class="form-control-static {{if accountNumberCouldNotBeFound 'alert'}} {{if accountNumberCouldNotBeFound 'alert-warning'}}">
+                                    <strong>{{model.billerAccountNumber}}</strong>
+
+                                    {{#if model.accountNumberCouldNotBeFound}}
+                                    <br/>
+                                    <em><span class="glyphicon glyphicon-warning-sign"></span> {{strings.messages.billerAccountNumberNotFound}}</em>
+                                    {{/if}}
+                                </p>
+                            </div>
+                        </div>
+                    {{/if}}
+
+                    {{#if showPayerName}}
+                        {{#if isMyPay}}
+                            <div class="form-group col-md-10">
+                                <label class="col-md-3 control-label">{{strings.capitalised.payerName}}</label>
+                                <div class="col-md-9">
+                                    <p class="form-control-static">
+                                        {{#if model.payerName}}{{model.payerName}}{{else}}<em class="text-muted">{{biller.strings.capitalised.notKnown}}</em>{{/if}}
+                                    </p>
+                                </div>
+                            </div>
+                        {{else}}
+                            {{#if model.hasBeenActivated}}
+                            <div class="form-group col-md-10">
+                                <label class="col-md-3 control-label">{{strings.capitalised.payerName}}</label>
+                                <div class="col-md-9">
+                                  <p class="form-control-static">
+                                    {{#if model.payerName}}{{model.payerName}}{{else}}<em class="text-muted">{{biller.strings.capitalised.notKnown}}</em>{{/if}}
+                                  </p>
+                                </div>
+                            </div>
+                            {{/if}}
+                        {{/if}}
+                    {{/if}}
+
+                    {{#if showExtPayerName}}
+                        {{#if isMyPay}}
+                            <div class="form-group col-md-10">
+                                <label class="col-md-3 control-label">{{strings.capitalised.extPayerName}}</label>
+                                <div class="col-md-9">
+                                    <p class="form-control-static">{{model.extPayerName}}</p>
+                                </div>
+                            </div>
+                        {{else}}
+                            {{#if model.hasBeenActivated}}
+                            <div class="form-group col-md-10">
+                                <label class="col-md-3 control-label">{{strings.capitalised.extPayerName}}</label>
+                                <div class="col-md-9">
+                                    <p class="form-control-static">{{model.extPayerName}}</p>
+                                </div>
+                            </div>
+                            {{/if}}
+                        {{/if}}
+                    {{/if}}
+
+                    {{#if showChannelPartnerSystemId}}
+                        <div class="form-group col-md-10">
+                            <label class="col-md-3 control-label">{{strings.capitalised.channelPartnerSystemId}}</label>
+                            <div class="col-md-9">
+                                <p class="form-control-static">{{model.channelPartnerSystemDisplay}}</p>
+                            </div>
+                        </div>
+                    {{/if}}
+
+
+                    {{#if showHasContact}}
+                        <div class="form-group col-md-10">
+                            <label class="col-md-3 control-label">{{strings.capitalised.contactExists}}</label>
+                            <div class="col-md-9">
+                                {{#if model.contactExists}}
+                                    <span class="glyphicon glyphicon glyphicon-ok form-control-static" aria-hidden="true" style="color:green"></span>
+                                {{else}}
+                                    <span class="glyphicon glyphicon glyphicon glyphicon-remove form-control-static" aria-hidden="true" style="color:red"></span>
+                                {{/if}}
+                            </div>
+                        </div>
+                    {{/if}}
+
+                    {{#if showContactId}}
+                        {{#if model.hasBeenActivated}}
+                        <div class="form-group col-md-10">
+                            <label class="col-md-3 control-label">{{strings.capitalised.contactId}}</label>
+                            <div class="col-md-9">
+                                <p class="form-control-static"><strong>{{model.contactId}}</strong></p>
+                            </div>
+                        </div>
+                        {{/if}}
+                    {{/if}}
+
+                    {{#if showIncomingBillsEmailAddress}}
+                        {{#if showDestinationEmailAddress}}
+                        <div class="form-group col-md-10">
+                            <label class="col-md-3 control-label">
+                                <abbr title={{strings.abbrs.destinationEmailAddress}}>{{strings.capitalised.destinationEmailAddress}}</abbr>
+                            </label>
+                            <div class="col-md-9">
+                                <p class="form-control-static">
+                                    {{#if model.incomingBillsEmailAddress}}
+                                    {{model.incomingBillsEmailAddress}}
+                                    {{else}}
+                                    <em>{{strings.messages.noDestinationEmailAddressYet}}</em>
+                                    {{/if}}
+                                </p>
+                            </div>
+                        </div>
+                        {{/if}}
+                    {{/if}}
+
+                    {{#if showStatus}}
+                        <div class="form-group col-md-10">
+                            <label class="col-md-3 control-label">{{strings.capitalised.status}}</label>
+                            <div class="col-md-9">
+                                <p class="form-control-static {{if hasFailedActivation 'alert'}} {{if hasFailedActivation 'alert-danger'}}">
+                                    {{#if model.hasFailedActivation}}
+                                    <strong>{{model.status}}</strong>
+                                    <br/>
+                                    <em><span class="glyphicon glyphicon-warning-sign"></span> {{model.statusDescription}}</em>
+                                    {{else}}
+                                    {{model.status}}
+                                    {{/if}}
+                                </p>
+                                {{#if model.requiresConfirmationOfExternalAction}}
+                                <div class="alert alert-info">
+                                    <p>
+                                        {{confirmationText}}
+                                    </p>
+                                    <p class="text-center">
+                                        <button type="button" class="btn btn-primary" {{action "confirmExternalAction" model}}>
+                                            <span class="glyphicon glyphicon-flag"></span> {{biller.strings.capitalised.confirm}}
+                                        </button>
+                                    </p>
+                                </div>
+                                {{/if}}
+                            </div>
+                        </div>
+                    {{/if}}
+
+                    {{#if showRegistrationApprovalCode}}
+                        {{#if model.registrationApprovalCodeString}}
+                        <div class="form-group col-md-10">
+                            <label class="col-md-3 control-label">{{strings.capitalised.registrationApprovalCode}}</label>
+                            <div class="col-md-9">
+                                <p class="form-control-static">{{model.registrationApprovalCodeString}}</p>
+                            </div>
+                        </div>
+                        {{/if}}
+                    {{/if}}
+
+                    {{#if showDateGenerated}}
+                        <div class="form-group col-md-10">
+                            <label class="col-md-3 control-label">{{strings.capitalised.registrationDate}}</label>
+                            <div class="col-md-9">
+                                <p class="form-control-static">{{view-date date=model.dateGenerated withTime=true}}</p>
+                            </div>
+                        </div>
+                    {{/if}}
+
+                    {{#if showDeactivationDate}}
+                        {{#if model.hasBeenDeregistered}}
+                        <div class="alert alert-danger col-md-10">
+                            <div class="form-group col-md-12">
+                                <label class="col-md-3 control-label">{{strings.capitalised.deregistrationDate}}</label>
+                                <div class="col-md-9">
+                                    <p class="form-control-static">{{view-date date=model.deactivationDate withTime=true}}</p>
+                                </div>
+                            </div>
+                            {{#if showDeregistrationReason}}
+                                {{#if model.deactivationReasonCode}}
+                                <div class="form-group col-md-12">
+                                    <label class="col-md-3 control-label">{{strings.capitalised.deregistrationReason}}</label>
+                                    <div class="col-md-9">
+                                        <p class="form-control-static">{{model.deregistrationReason}}</p>
+                                    </div>
+                                </div>
+                                {{/if}}
+                            {{/if}}
+                            <div class="form-group col-md-12">
+                                <label class="col-md-3 control-label">{{strings.capitalised.deregisteredBy}}</label>
+                                <div class="col-md-9">
+                                    <p class="form-control-static">{{model.deregisteredBy}}</p>
+                                </div>
+                            </div>
+                        </div>
+                        {{/if}}
+                    {{/if}}
+
+                    {{#if canDeregister}}
+                        {{#if model.contactChanged}}
+                            <div class="alert alert-info col-md-10">
+                                {{#if showNewContactName}}
+                                    <div class="form-group col-md-12">
+                                        <label class="col-md-3 control-label">{{strings.capitalised.newContactName}}</label>
+                                        <div class="col-md-9">
+                                            <p class="form-control-static">{{model.newContactName}}</p>
+                                        </div>
+                                    </div>
+                                {{/if}}
+                                {{#if showContactUpdatedOn}}
+                                    <div class="form-group col-md-12">
+                                        <label class="col-md-3 control-label">{{strings.capitalised.contactUpdatedOn}}</label>
+                                        <div class="col-md-9">
+                                            <p class="form-control-static">{{view-date date=model.contactUpdatedOn withTime=true}}</p>
+                                        </div>
+                                    </div>
+                                {{/if}}
+                            </div>
+                        {{/if}}
+
+                    {{/if}}
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{#if model.payerRegistrationDetails}}
+    <form class="form-horizontal" role="form">
+        <div class="row">
+            <div class="panel-body row">
+                <div class="col-md-10">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">{{model.channelPartnerSystemDisplay}} Registrations</h4>
+                        </div>
+                        <div class="panel-body">
+                            {{#each model.payerRegistrationDetails as |detail|}}
+                            <div class="form-group col-md-12">
+                                <label class="col-md-2 hidden-xs hidden-sm control-label">Email</label>
+                                <div class="col-md-8 col-sm-10 col-xs-10">
+                                    <p class="form-control-static"><strong>{{detail.registrationValue}}</strong>
+                                    {{#if detail.isValid}}<small>| Active from {{view-date date=detail.activatedTime withTime=true}}</small>{{/if}}
+                                    {{#if detail.deactivatedTime}}<small>| Active from {{view-date date=detail.activatedTime withTime=true}} to {{view-date date=detail.deactivatedTime withTime=true}}</small>{{/if}}</p>
+                                </div>
+                                <div class="col-md-1 col-sm-1 col-xs-1">
+                                    {{#if detail.isValid}}
+                                    <button type="button" class="btn btn-success" title="Email active">
+                                        <span class="glyphicon glyphicon-ok-circle"></span>
+                                    </button>
+                                    {{else}}
+                                        {{#if detail.deactivatedTime}}
+                                        <button type="button" class="btn btn-danger" title="Email pending confirmation">
+                                            <span class="glyphicon glyphicon-ban-circle"></span>
+                                        </button>
+                                        {{else}}
+                                        <button type="button" class="btn btn-warning" title="Email pending confirmation">
+                                            <span class="glyphicon glyphicon-time"></span>
+                                        </button>
+                                        {{/if}}
+                                    {{/if}}
+                                </div>
+                                {{#if model.hasBeenDeregistered}}
+                                    <div class="col-md-1 col-sm-1 col-xs-1">
+                                        <button type="button" class="btn btn-danger" title="Delete email" {{action "removeEmail" detail}} disabled>
+                                        <span class="glyphicon glyphicon-remove"></span>
+                                        </button>
+                                    </div>
+                                {{else}}
+                                    {{#unless detail.deactivatedTime}}
+                                        {{#if isRegistrationEditor}}
+                                        <div class="col-md-1 col-sm-1 col-xs-1">
+                                            <button type="button" class="btn btn-danger" title="Delete email" {{action "removeEmail" detail}}>
+                                            <span class="glyphicon glyphicon-remove"></span>
+                                            </button>
+                                        </div>
+                                        {{/if}}
+                                    {{/unless}}
+                                {{/if}}
+                            </div>
+                            {{/each}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+    {{/if}}
+
+    {{#if model.migratedEmail}}
+    <div class="row">
+        <div class="panel-body row">
+            <div class="col-md-10">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">{{model.channelPartnerSystemDisplay}} Registration</h4>
+                    </div>
+                    <div class="panel-body">
+                        <div class="form-group col-md-12">
+                            <label class="col-md-2 hidden-xs hidden-sm control-label">Email</label>
+                            <div class="col-md-8 col-sm-10 col-xs-10">
+                                <p class="form-control-static"><strong>{{model.migratedEmail}}</strong></p>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{/if}}
+
+    {{#if model.autoPayment}}
+    <div class="row">
+        <div class="col-md-10">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">{{strings.capitalised.autoPayment.heading}}</h4>
+                </div>
+                <div class="panel-body">
+                    <div class="form-group col-md-10">
+                        <label class="col-md-3 control-label">
+                            {{strings.autoPayment.activeFrom}}
+                        </label>
+                        <div class="col-md-9">
+                            <p class="form-control-static">
+                                {{view-date date=model.autoPayment.createdDate withTime=true}}
+                            </p>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-10">
+                        <label class="col-md-3 control-label">
+                            {{strings.autoPayment.amountPayable.label}}
+                        </label>
+                        <div class="col-md-9">
+                            <p class="form-control-static">
+                                {{autoPaymentInstalmentDescription}}
+                            </p>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-10">
+                        <label class="col-md-3 control-label">
+                            {{strings.autoPayment.limit}}
+                        </label>
+                        <div class="col-md-9">
+                            <p class="form-control-static">
+                                {{#if model.autoPayment.debitLimit}}
+                                {{model.autoPayment.debitLimit}}
+                                {{else}}
+                                {{strings.autoPayment.noLimit}}
+                                {{/if}}
+                            </p>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-10">
+                        <label class="col-md-3 control-label">
+                            {{strings.autoPayment.paymentDay.label}}
+                        </label>
+                        <div class="col-md-9">
+                            <p class="form-control-static">
+                                {{autoPaymentDayDescription}}
+                            </p>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-10">
+                        <label class="col-md-3 control-label">
+                            {{strings.autoPayment.nextBillForAutoPayment}}
+                        </label>
+                        <div class="col-md-9">
+                            <p class="form-control-static">
+                                {{#if model.autoPayment.nextBill}}
+                                {{nextBillAutoPaymentStatusDescription}} - {{#link-to "biller.bill" model.autoPayment.nextBill.id}}{{strings.autoPayment.nextBillLink}}{{/link-to}}
+                                {{else}}
+                                {{strings.autoPayment.noNextBill}}
+                                {{/if}}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{/if}}
+
+    {{#if canViewAuthFields}}
+
+    {{#if model.hasNotLoadedAuthFields}}
+    <div class="row">
+        <div class="col-md-12 actions btn-group">
+          <button type="button" class="btn btn-primary" {{action "getAuthField" model}}>
+            {{strings.capitalised.viewAuthenticationFields}}
+          </button>
+        </div>
+    </div>
+    {{/if}}
+
+    {{#if model.hasLoadedAuthFields}}
+    <div class="row">
+        <div class="col-md-10">
+            <div class=" panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">{{strings.capitalised.authenticationFields}}</h4>
+                </div>
+                <div class="panel-body">
+                    {{#if model.requiresReviewForFailedRegistration}}
+                        <div class="form-group col-md-10" style="margin-bottom: 0px;">
+                            <label class="col-md-3"></label>
+                            <label class="col-md-3">{{strings.capitalised.userEntered}}</label>
+                            <label class="col-md-3">{{strings.capitalised.contactDetails}}</label>
+                        </div>
+                        {{#each model.authFields as |authField|}}
+
+                        <div class="form-group col-md-10" style="margin-bottom: 0px;">
+                            <label class="col-md-3 control-label">{{authField.fieldNameReadable}}</label>
+                            <div class={{authField.authFieldClass}}>
+                                <p class="form-control-static {{if hasNoFieldValue 'alert'}} {{if hasNoFieldValue 'alert-warning'}}">
+                                    {{#if authField.fieldValue}}
+                                    {{authField.fieldValue}}
+                                    {{else}}
+                                    <em class="text-muted">
+                                      <span class="glyphicon glyphicon-warning-sign"></span> {{strings.missingAuthenticationField}}</em>
+                                    {{/if}}
+                                </p>
+                            </div>
+                            <div class={{authField.authFieldClass}}>
+                                <p class="form-control-static {{if hasNoFieldValue 'alert'}} {{if hasNoFieldValue 'alert-warning'}}">
+                                    {{#if authField.hasExpectedValue}}
+                                    {{authField.expectedValue}}
+                                    {{else}}
+                                        {{#if authField.fieldValue}}
+                                        <em class="text-muted">
+                                        <span class="glyphicon glyphicon-warning-sign"></span> {{strings.noContactValue}}</em>
+                                        {{/if}}
+                                    {{/if}}
+                                </p>
+                            </div>
+
+                        </div>
+
+
+                        {{else}}
+
+                        <div class="form-group col-md-10">
+                            <label class="col-md-12 control-label">{{strings.fieldsNotRequired}}</label>
+                        </div>
+
+                        {{/each}}
+                        {{#if isMyPay}}
+                            <div class="form-group col-md-10" style="margin-bottom: 0px;">
+                                <label class="col-md-3 control-label">{{strings.capitalised.employeeNameField}}</label>
+                                <div class={{model.employeeNameClass}}>
+                                    <p class="form-control-static {{if hasNoFieldValue 'alert'}} {{if hasNoFieldValue 'alert-warning'}}">
+                                        {{#if model.extPayerName}}
+                                        {{model.extPayerName}}
+                                        {{else}}
+                                        <em class="text-muted">
+                                            <span class="glyphicon glyphicon-warning-sign"></span> {{strings.missingAuthenticationField}}</em>
+                                        {{/if}}
+                                    </p>
+                                </div>
+                                <div class={{model.employeeNameClass}}>
+                                    <p class="form-control-static {{if hasNoFieldValue 'alert'}} {{if hasNoFieldValue 'alert-warning'}}">
+                                        {{#if model.payerName}}
+                                        {{model.payerName}}
+                                        {{else}}
+                                        {{model.payerName}}
+                                        {{/if}}
+                                    </p>
+                                </div>
+
+                            </div>
+
+                        {{/if}}
+                    {{else}}
+
+                        {{#each model.authFields as |authField|}}
+                        <div class="form-group col-md-10">
+                            <label class="col-md-3 control-label">{{authField.fieldNameReadable}}</label>
+                            <div class="col-md-9">
+                                <p class="form-control-static {{if hasNoFieldValue 'alert'}} {{if hasNoFieldValue 'alert-warning'}}">
+                                    {{#if authField.fieldValue}}
+                                    {{#if authField.hasExpectedValue}}
+                                    <abbr title={{strings.abbrs.authenticationValue}}>{{authField.fieldValue}}</abbr>
+                                    <em class="text-muted">({{biller.strings.expected}}
+                                        <strong><abbr title={{strings.abbrs.authenticationExpectedValue}}>{{authField.expectedValue}}</abbr></strong>)
+                                    </em>
+                                    {{else}}
+                                    {{authField.fieldValue}}
+                                    {{/if}}
+                                    {{else}}
+                                    <em class="text-muted">
+                                        <span class="glyphicon glyphicon-warning-sign"></span> {{strings.missingAuthenticationField}}</em>
+                                    {{/if}}
+                                </p>
+                            </div>
+                        </div>
+                        {{else}}
+
+                        <div class="form-group col-md-10">
+                            <label class="col-md-12 control-label">{{strings.fieldsNotRequired}}</label>
+                        </div>
+
+                        {{/each}}
+
+                    {{/if}}
+
+                    {{#if model.requiresReviewForFailedRegistration}}
+                    <tr>
+                        <td colspan="2">
+                            <div class="actions btn-group" style="display: flex; margin-top: 15px;">
+
+                                {{#if model.contactIdIsReused}}
+                                    <div>
+                                        <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown">
+                                            <span class="glyphicon glyphicon-ok"></span> {{strings.approveRegistrationOptions}}
+                                            <span class="caret"></span>
+                                        </button>
+                                        <ul class="dropdown-menu" role="menu">
+                                            <li><a href="#" {{action "approve" model}}>{{{strings.approveRegistrationCurrent}}}</a></li>
+                                            <li><a href="#" {{action "acceptNewOwner" model}}>{{{strings.approveRegistrationNew}}}</a></li>
+                                        </ul>
+                                    </div>
+                                {{else}}
+                                    <button type="button" class="btn btn-success" {{action "approve" model}}>
+                                    <span class="glyphicon glyphicon-ok"></span> {{strings.approveRegistration}}
+                                    </button>
+                                {{/if}}
+
+                                {{#if isMyPay}}
+                                    <button type="button" class="btn btn-danger" {{action "reject" model "activationDataInsufficient"}}>
+                                    <span class="glyphicon glyphicon-remove"></span> {{strings.rejectRegistrationEpost}}
+                                    </button>
+
+                                {{else}}
+                                    <div>
+                                    <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown">
+                                        <span class="glyphicon glyphicon-remove"></span> {{strings.rejectRegistration}}
+                                        <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu" role="menu">
+                                        <li><a href="#" {{action "reject" model "activationDataInsufficient"}}>{{{strings.rejectReason.activationDataInsufficient}}}</a></li>
+                                        <li><a href="#" {{action "reject" model "activationDataNotCorrect"}}>{{{strings.rejectReason.activationDataNotCorrect}}}</a></li>
+                                        <li><a href="#" {{action "reject" model "activationBillerAccountNumberNotFound"}}>{{{strings.rejectReason.activationBillerAccountNumberNotFound}}}</a></li>
+                                        <li><a href="#" {{action "reject" model "activationNameDoesNotMatch"}}>{{{strings.rejectReason.activationNameDoesNotMatch}}}</a></li>
+                                        <li><a href="#" {{action "reject" model "activationContactBillerGeneric"}}>{{{strings.rejectReason.activationContactBillerGeneric}}}</a></li>
+                                        {{#if showExtraDeregisterReasons}}
+                                            <li><a href="#" {{action "reject" model "activationNotManagingAgent"}}>{{{strings.rejectReason.activationNotManagingAgent}}}</a></li>
+                                        {{/if}}
+                                    </ul>
+                                    </div>
+                                {{/if}}
+                            </div>
+                        </td>
+                    </tr>
+                    <div class="checkbox" style="margin-top:15px">
+                      <label>
+                        {{input type="checkbox" checked=goToNext}}
+                        {{strings.capitalised.goToNextRecord}}
+                      </label>
+                    </div>
+                    {{/if}}
+
+                </div>
+            </div>
+        </div>
+    </div>
+    {{/if}}
+    {{/if}}
+</form>
+
+{{#if showPreviousNextButtons}}
+<p>&nbsp;</p>
+<div class="row actions-row">
+    <div class="actions btn-group col-sm-6">
+      {{#if disablePrevious}}
+      <button type="button" class="btn btn-default" {{action "moveByIndex" model -1}} disabled>
+        <span class="glyphicon glyphicon-menu-left"></span>
+        {{strings.capitalised.previous}}
+      </button>
+      {{else}}
+      <button type="button" class="btn btn-default" {{action "moveByIndex" model -1}}>
+        <span class="glyphicon glyphicon-arrow-left"></span>
+        {{strings.capitalised.previous}}
+      </button>
+      {{/if}}
+
+
+    </div>
+
+    <div class="actions btn-group col-sm-4">
+      {{#if disableNext}}
+      <button type="button" class="btn btn-default" style="float: right;" {{action "moveByIndex" model 1}} disabled>
+      {{strings.capitalised.next}}
+        <span class="glyphicon glyphicon-arrow-right"></span>
+      </button>
+      {{else}}
+      <button type="button" class="btn btn-default" style="float: right;" {{action "moveByIndex" model 1}}>
+        {{strings.capitalised.next}}
+        <span class="glyphicon glyphicon-arrow-right"></span>
+      </button>
+      {{/if}}
+    </div>
+</div>
+{{/if}}
+

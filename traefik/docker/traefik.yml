@@ -1,0 +1,16 @@
+global:
+  checkNewVersion: false
+  sendAnonymousUsage: false
+api:
+  insecure: true
+  dashboard: true
+  debug: true
+  disableDashboardAd: true
+log:
+  level: WARN
+providers:
+  file:
+    filename: /etc/traefik/provided.yml
+entryPoints:
+  web:
+    address: :80

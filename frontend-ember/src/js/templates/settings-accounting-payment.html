@@ -1,0 +1,19 @@
+<div class="row">
+    <div class="col-md-12">
+        <div class='btn-toolbar btn-toolbar-bottom-margin'>
+            {{#link-to "biller.settings.accounting.catalog.checkout" class="btn btn-default"}}<span class="glyphicon glyphicon-arrow-left"></span> {{settingsStrings.all.accountingPlan.backButton}}{{/link-to}}
+        </div>
+        <p class="well">
+            <strong>{{settingsStrings.all.accountingPlan.totalPayable}} {{currencySymbol}}{{totalDisplay}} {{currencyCode}}
+            </strong><small>{{settingsStrings.all.accountingPlan.subTotal}} {{currencySymbol}}{{subTotalDisplay}}{{#each taxes as |tax|}}, {{tax.name}} {{currencySymbol}}{{tax.amountDisplay}}{{/each}}</small>
+        </p>
+
+        {{#if error}}
+            <p class="text-center"><span class="text-danger">{{error}}</span></p>
+        {{/if}}
+
+        {{accounting-payment iFrameSrc=iFrameSrc processPaymentAction='processPaymentAction'}}
+
+    </div>
+</div>
+

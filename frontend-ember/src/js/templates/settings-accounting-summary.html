@@ -1,0 +1,132 @@
+<div class="row">
+    {{#if accounting.billersUsingCredit}}
+        {{#if accounting.hasPrepayOnlyPlans}}
+        <div class="col-md-12">
+            <p> {{settingsStrings.all.accountingPlan.billerCredits}} {{accounting.billersUsingCredit}}</p>
+        </div>
+        {{/if}}
+    {{/if}}
+</div>
+<div class="row">
+    <div class="col-md-12">
+        {{#if accounting.hasPurchaseableAccountingPlans}}
+            <div class='btn-toolbar pull-right btn-toolbar-bottom-margin'>
+                {{#link-to "biller.settings.accounting.catalog" class="btn btn-primary"}}
+                    <span class="glyphicon glyphicon-list glyphicon-right-margin"></span> {{settingsStrings.all.accountingPlan.purchaseButton}} {{/link-to}}
+            </div>
+        {{/if}}
+        <form class="form-horizontal" role="form">
+            <div class="row">
+                <div class="{{if accounting.hasPrepayOnlyPlans 'col-md-8' 'col-md-12'}}">
+                    <table class="table table-striped">
+                        <tHead>
+                        <tr>
+                            <th>{{settingsStrings.all.accountingPlan.name}}</th>
+                            <th>{{settingsStrings.all.accountingPlan.creditRemaining}}</th>
+                            <th>{{settingsStrings.all.accountingPlan.expiresOn}}</th>
+                        </tr>
+                        </tHead>
+                        <tBody>
+                            {{#each accounting.customerAccountingPlan as |accountingPlan|}}
+                                <tr class="{{isActiveCredit:success}}">
+                                    <td>{{accountingPlan.name}}<small><em> {{accountingPlan.description}}</em></small></td>
+                                    <td>{{accountingPlan.availableCreditDisplay}}</td>
+                                    <td>{{view-date date=accountingPlan.endDate}}</td>
+                                </tr>
+                            {{else}}
+                                <tr>
+                                    <td colspan="3">No accounting plan found for this customer.</td>
+                                </tr>
+                            {{/each}}
+                        </tBody>
+                    </table>
+                </div>
+                {{#if accounting.hasPrepayOnlyPlans}}
+                <div class="col-md-4">
+                    {{#if accounting.isBiller}}
+                    <div class="panel {{nonPaystubRemainingUrgency}}" data-cy="nonPaystubDisplay">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">{{settingsStrings.all.accountingPlan.totalRemainingHeader}}</h4>
+                        </div>
+                        <div class="panel-body">
+                            <div class="center-aligned">
+                                <span class="really-big" data-cy="nonPaystubVal">
+                                    {{accounting.currentNonPayStubBalanceAdjusted}}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    {{else}}
+                    <div class="panel {{paystubRemainingUrgency}}" data-cy="paystubDisplay">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">{{settingsStrings.all.accountingPlan.totalPayStubRemainingHeader}}</h4>
+                        </div>
+                        <div class="panel-body">
+                            <div class="center-aligned">
+                                <span class="really-big" data-cy="paystubVal">
+                                    {{accounting.currentPayStubBalanceAdjusted}}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                        {{#if accounting.nonPayrollExists}}
+                        <div class="panel {{nonPaystubRemainingUrgency}}" data-cy="nonPaystubDisplay">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">{{settingsStrings.all.accountingPlan.totalNonPayStubRemainingHeader}}</h4>
+                            </div>
+                            <div class="panel-body">
+                                <div class="center-aligned">
+                                    <span class="really-big" data-cy="nonPaystubVal">
+                                        {{accounting.currentNonPayStubBalanceAdjusted}}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        {{/if}}
+                    {{/if}}
+                </div>
+                {{/if}}
+                {{#if accounting.chargingModel}}
+                <div class="col-md-12">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">Channel Credit Charges</h4>
+                        </div>
+                        {{#each accounting.chargingModel as |cModel|}}
+                            <table class="table table-striped">
+                                <tHead>
+                                <tr>
+                                    <th>{{cModel.channelPartnerSystemId}} {{cModel.typeDescription}}</th>
+                                    <th></th>
+                                </tr>
+                                </tHead>
+                                <tBody>
+                                <tr>
+                                    <td class="col-md-10 col-md-offset-1">Base Credit Charge</td>
+                                    <td>{{cModel.baseCredits}} credits</td>
+                                </tr>
+                                {{#if cModel.hasChannelPremium}}
+                                <tr>
+                                    <td class="col-md-10">Premium Size Charge<small><em> credit charge for each document sent</em></small></td>
+                                    <td>{{cModel.premiumCredits}} credits</td>
+                                </tr>
+                                {{/if}}
+
+                                {{#if cModel.hasSizePremium}}
+                                <tr>
+                                    <td class="col-md-10">Premium Size Charge<small><em> credit charge for each 50KB over 200KB</em></small></td>
+                                    <td>{{cModel.premiumSizeCredits}} credits</td>
+                                </tr>
+                                {{/if}}
+                                </tBody>
+                            </table>
+
+                        {{/each}}
+                    </div>
+                </div>
+                {{/if}}
+            </div>
+
+        </form>
+    </div>
+</div>

@@ -1,0 +1,59 @@
+<div>
+    <div class="row">
+        <p class="well">
+            {{{instructions}}}
+        </p>
+        <p>
+            {{#if billerDoesNotHaveSsoSamlEnabled}}
+                {{#if biller.mfaRequired}}
+                    {{strings.deactivateMfa}}
+                {{else}}
+                    {{strings.activateMfa}}  <a {{action "showActivateMfaModal"}}> {{strings.activateMfaButton}} </a>
+                {{/if}}
+            {{/if}}
+        </p>
+        <div class="right-margin">
+            <div class="col-md-3" id="user-list-div">
+                <div class="panel panel-default">
+                    <div class= "panel-heading">
+                        {{strings.users}}
+                    </div>
+                    <div class="panel-body">
+                        <ul class="nav nav-pills nav-stacked">
+                            {{#each model as |user|}}
+                                <li class="{{if user.active 'active'}}">
+                                    {{#link-to "biller.settings.users.user" user.id class="user-list-item"}}
+                                    {{#if user.isPending}}
+                                        <span class="glyphicon glyphicon-envelope glyphicon-user-list"></span>
+                                        <span><em>{{user.email}}</em></span>
+                                    {{else if user.isLocked}}
+                                        <span class="glyphicon glyphicon-lock glyphicon-user-list"></span>
+                                        <span><em>{{user.email}}</em></span>
+                                    {{else}}
+                                        <span class="glyphicon glyphicon-user glyphicon-user-list"></span>
+                                        <span>{{user.email}}</span>
+                                    {{/if}}
+
+                                    {{/link-to}}</li>
+                            {{/each}}
+                        </ul>
+                    </div>
+                    <div class="panel-footer panel-footer-user-list">
+                        {{#if canUpdateUser}}
+                        {{#if isNotQboBiller}}
+                        {{#if billerDoesNotHaveSsoSamlEnabled}}
+                                {{#link-to "biller.settings.users.create" class="pull-right" title="Create/Invite a new user"}}
+                                    <span class="glyphicon glyphicon-plus glyphicon-user-list"></span>{{strings.userSettings.inviteNewUser}}{{/link-to}}
+                        {{/if}}
+                        {{/if}}
+                        {{/if}}
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-8 col-sm-12" id="user-info-div">
+                {{outlet}}
+            </div>
+        </div>
+    </div>
+</div>

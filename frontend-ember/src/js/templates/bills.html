@@ -1,0 +1,220 @@
+<div class="row" xmlns="http://www.w3.org/1999/html">
+    <div class="col-md-12">
+        <h2 class="page-heading">
+            {{strings.capitalised.outgoingBills}}
+        </h2>
+        {{#if mailSchedule.print}}
+            <h5> {{biller.strings.printMail}} {{view-date date=mailSchedule.print withFullTime=true}}</h5>
+        {{/if}}
+    </div>
+</div>
+
+<div class="row actions-row" role="toolbar">
+
+  <div class="actions btn-group col-sm-4">
+   {{#if canUpload}}
+    <button class="btn btn-default" {{action "uploadBill"}}>
+      <span class="glyphicon glyphicon-upload"></span> {{strings.capitalised.upload}}
+    </button>
+   {{/if}}
+   {{#if canDownloadPaymentFiles}}
+    <button class="btn btn-default" {{action "downloadParFiles"}}>
+      <span class="glyphicon glyphicon-list-alt"></span> Payment files
+    </button>
+   {{/if}}
+  </div>
+
+
+  {{#if showApproveAllRejectAllButton}}
+    <div class="actions btn-group col-sm-5">
+      {{#if canApproveAll}}
+      <button type="button" class="btn btn-success" {{action "showConfirmApproveAll"}} disabled={{noBillsToReview}}>
+        <span class="glyphicon glyphicon-ok"></span> {{strings.capitalised.approveAll}}
+      </button>
+      {{/if}}
+
+      {{#if canRejectAll}}
+      <button type="button" class="btn btn-danger" {{action "showConfirmRejectAll"}} disabled={{noBillsToReview}}>
+        <span class="glyphicon glyphicon-remove"></span> {{strings.capitalised.rejectAll}}
+      </button>
+      {{/if}}
+    </div>
+  {{/if}}
+</div>
+
+
+<div class="panel panel-default">
+    <a data-toggle="collapse" href="#collapse1" {{action "showAndHide"}}>
+        <div class="panel-heading search-panel-heading">
+            <h4 class="panel-title search-panel-title"><span class="glyphicon glyphicon-search search-panel-glyphicon"/> {{globalStrings.all.search}} <span style="float: right;" class="glyphicon {{if collapse 'glyphicon-chevron-up' 'glyphicon-chevron-down'}}"/></h4>
+        </div>
+    </a>
+    <div id="collapse1" class="panel-body collapse {{if showSearch 'in'}}">
+{{common-filter-bar action="changeCommonFilters"
+                    download="download"
+                    defaultDateRange=defaultDateRange
+                    searchFilters=selectedFilters}}
+
+        <div style="display: flex;flex-direction: row; margin-top: 0.25rem;">
+            <input type="checkbox" id="exactmatch" checked={{this.exactSearch}} onchange={{action "changedSelectionExactSearch"}}>
+            <label style="margin-left: 10px;" for="exactmatch"> {{strings.exactSearch}} </label>
+        </div>
+        <div style="display: flex;flex-direction: row;">
+            <input type="checkbox" id="exactmatchJobId" checked={{this.exactSearchJobId}} onchange={{action "changedSelectionJobId"}}>
+            <label style="margin-left: 10px;" for="exactmatchJobId">{{strings.exactSearchJobId}} </label>
+        </div>
+
+        <div class="row">
+            <label style="margin-left: 10px; margin-top: 0.75rem;"> {{strings.advancedSearch}}</label>
+        </div>
+
+        <div class="row">
+            <div class="control-group col-sm-8">
+                {{multi-select  reload="reload"
+                                defaultDateRange=defaultDateRange
+                                placeholder=placeholder
+                                searchFilters=selectedFilters
+                                options=statusOptions}}
+            </div>
+
+            <div class="col-sm-2">
+                {{item-select class-name="form-control"
+                didChangeAction="changedSelection"
+                content=searchableBillFormats
+                optionLabelPath="displayName"
+                optionValuePath="id"
+                selection=this.selectedFilters.billFormat}}
+            </div>
+        </div>
+    </div>
+</div>
+
+{{filter-type-strip typeFilters=typeFilters routeName="biller.bills"}}
+
+{{#if showHelpMessages}}
+<div>
+    <p><span class="glyphicon glyphicon-info-sign"></span> {{{helpMessage}}}</p>
+</div>
+{{/if}}
+
+<div class="row">
+    <div class="col-md-12">
+        {{#if hasStatusSelected}}
+            <div class="table-responsive">
+                <table class="data-table table table-hover clickable-rows">
+                    {{table-thead action="sort" columns=columns typeFilters=typeFilters}}
+                    <tBody>
+                      {{#each model as |bill|}}
+                      {{#link-to "biller.bill" bill.id tagName="tr"}}
+                            {{#table-column-data columnFieldName="billerInvoiceNumber" columns=columns typeFilters=typeFilters biller=biller}}
+                            {{#link-to "biller.bill" bill.id}}{{bill.billerInvoiceNumber}}{{/link-to}}
+                            {{/table-column-data}}
+
+                            {{#table-column-data columnFieldName="payerName" columns=columns typeFilters=typeFilters biller=biller}}
+
+                                {{#if bill.payerName}}{{bill.payerName}}{{else}}<em class="text-muted">Not known</em>{{/if}}
+
+                            {{/table-column-data}}
+
+                            {{#table-column-data columnFieldName="billerAccountNumber" columns=columns typeFilters=typeFilters biller=biller}}
+                            {{bill.billerAccountNumber}}
+                            {{/table-column-data}}
+
+                            {{#table-column-data columnFieldName="amountDue" columns=columns typeFilters=typeFilters biller=biller}}
+                            {{bill.amountAsCurrency}}
+                            {{/table-column-data}}
+
+                            {{#table-column-data preventWrap=true columnFieldName="dueDate" columns=columns typeFilters=typeFilters biller=biller}}
+                            {{view-date date=bill.dueDateUtc}}
+                            {{/table-column-data}}
+
+                            {{#table-column-data preventWrap=true columnFieldName="receivedTime" columns=columns typeFilters=typeFilters biller=biller}}
+                            {{view-date date=bill.receivedTime}}
+                            {{/table-column-data}}
+
+                            {{#table-column-data columnFieldName="sendToPrinter" columns=columns typeFilters=typeFilters biller=biller}}
+                            {{#if bill.sendToPrinter}}
+                                <p>{{strings.print}}</p>
+                            {{else}}
+                                <p>{{strings.digital}}</p>
+                            {{/if}}
+                            {{/table-column-data}}
+
+                            {{#table-column-data columnFieldName="documentPages" columns=columns typeFilters=typeFilters biller=biller}}
+                                {{bill.documentPages}}
+                            {{/table-column-data}}
+
+                            {{#table-column-data preventWrap=true columnFieldName="firstActionedTime" columns=columns typeFilters=typeFilters biller=biller}}
+                            {{#if bill.firstActionedTime}}
+                              {{view-date date=bill.firstActionedTime}}
+                            {{else}}<em class="text-muted">{{strings.inProgress}}</em>{{/if}}
+                            {{/table-column-data}}
+
+                            {{#table-column-data columnFieldName="numPayersSentTo" columns=columns typeFilters=typeFilters biller=biller}}
+                            {{#if bill.firstActionedTime}}
+                                {{bill.numPayersSentTo}}
+                            {{else}}<em class="text-muted">{{strings.pending}}</em>{{/if}}
+                            {{/table-column-data}}
+
+                            {{#table-column-data columnFieldName="numPayersFailed" columns=columns typeFilters=typeFilters biller=biller}}
+
+                            {{#if bill.hasUndeliverables}}
+                            <span class="label label-danger">{{bill.numPayersFailed}}</span>
+                            {{else}}
+                            {{bill.numPayersFailed}}
+                            {{/if}}
+
+                            {{/table-column-data}}
+
+                            {{#table-column-data columnFieldName="jobId" columns=columns typeFilters=typeFilters biller=biller}}
+                            {{bill.jobId}}
+                            {{/table-column-data}}
+
+                            {{#table-column-data preventWrap=true columnFieldName="status" columns=columns typeFilters=typeFilters biller=biller}}
+                            <abbr title="{{bill.statusDescription}}">
+                                {{#if bill.waitingCredit}}<span class="glyphicon glyphicon-warning-sign"></span>{{/if}}
+                                {{#if bill.contactChanged}}<span class="glyphicon glyphicon-warning-sign"></span>{{/if}}
+                                {{#if bill.waitingReview}}<span class="glyphicon glyphicon-flag"></span>{{/if}}
+                                {{#if bill.inDraft}}<span class="glyphicon glyphicon-exclamation-sign"></span>{{/if}}
+                                {{#if bill.isPendingRegistration}}<span class="glyphicon glyphicon-exclamation-sign"></span>{{/if}}
+                                {{bill.statusText}}
+                            </abbr>
+                            {{/table-column-data}}
+
+                            <td nowrap>
+                                {{#if bill.documentId}}
+                                <a class="btn btn-xs" title={{this.strings.downloadDocument}} href={{bill.documentHref}} target="_blank" {{action bubbles=false}}>
+                                    <span class="glyphicon glyphicon-file"></span>
+                                </a>
+                                {{/if}}
+                                {{#if bill.waitingReview}}
+                                {{#if bill.canApprove}}
+                                <span class="label label-success">
+                                    <a class="btn btn-xs" title={{this.strings.approveBill}} {{action 'approve' bill bubbles=false}}>
+                                        <span class="glyphicon glyphicon-ok"></span>
+                                    </a>
+                                </span>
+                                {{/if}}
+                                {{/if}}
+                            </td>
+                        {{/link-to}}
+                        {{else}}
+                        <tr>
+                            <td colspan="10">{{strings.capitalised.noBillsFound}}</td>
+                        </tr>
+                        {{/each}}
+                    </tBody>
+                </table>
+            </div>
+        {{else}}
+            <div class="alert alert-info">
+                Please select a status to display mail information.
+            </div>
+        {{/if}}
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6">
+        {{table-page-links pageSize=pageSize totalRecords=totalRecords pageNumber=pageNumber action="pageChanged"}}
+    </div>
+</div>

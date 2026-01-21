@@ -1,0 +1,155 @@
+<div class="row">
+    {{#if isBiller}}
+    <div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">{{settingsStrings.consentSettings.billerHeading}}</h4>
+            </div>
+            <div class="panel-body">
+                <div class="alert alert-info">
+                    {{settingsStrings.consentSettings.billerText}}
+                </div>
+                <form class="form-login form" id="consent-form">
+                    {{#if this.errormessage}}
+                    <div class="alert alert-danger">
+                        {{this.errormessage}}
+                    </div>
+                    {{/if}}
+
+                    <div class="form-group col-md-12">
+                        <label for="agentmybillsemail" class="control-label col-md-2">{{settingsStrings.consentSettings.billerAgentEmail}}</label>
+                        <div class="col-md-10">
+                            {{input classNames="form-control" value=this.agentMyBillsEmail id="agentMyBillsEmail"}}
+                        </div>
+                    </div>
+
+                    {{#if allowAgentRegistrationsFromContacts}}
+                    <div class="form-group col-md-12">
+                        <label for="noticeid" class="control-label col-md-2">{{settingsStrings.consentSettings.noticeIdLabel}}</label>
+                        <div class="col-md-10">
+                            {{input classNames="form-control" value=this.noticeId id="noticeId"}}
+                        </div>
+                    </div>
+                    {{/if}}
+
+                    <div class="col-xs-12 center-items">
+                        <button type="button" class="btn btn-primary" {{action 'requestConsent' this.agentMyBillsEmail this.noticeId}}>
+                        <span class="glyphicon glyphicon-send"></span>&nbsp;&nbsp; {{settingsStrings.consentSettings.requestButton}}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    {{/if}}
+    <div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">{{settingsStrings.consentSettings.heading}}</h4>
+            </div>
+            <div class="panel-body">
+                <div class="col-md-12">
+                    {{#if this.resenderrormessage}}
+                    <div class="alert alert-danger">
+                        {{this.resenderrormessage}}
+                    </div>
+                    {{/if}}
+                    <form class="form-horizontal" role="form">
+                        <div class="form-group">
+                            <div class="input-group padding-left-right">
+                                {{input classNames="ember-text-field form-control ember-view" placeholder=settingsStrings.consentSettings.searchPlaceholder id="searchTerm" value=this.searchTerm}}
+                                <span class="input-group-btn">
+                                    <button title="Search" id="mailersearch" type="submit" {{action 'getAuthorisations' this.searchTerm }} class="btn btn-default"><span class="glyphicon glyphicon-search"></span></button>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <table class="table table-striped">
+                                    <tHead>
+                                    <tr>
+                                        <th>{{settingsStrings.consentSettings.emailLabel}}</th>
+                                        <th>{{settingsStrings.consentSettings.statusLabel}}</th>
+                                        <th>{{#if isBiller}}{{settingsStrings.consentSettings.agentLabel}} {{else}} {{settingsStrings.consentSettings.billerLabel}} {{/if}}</th>
+                                        {{#if allowAgentRegistrationsFromContacts}}
+                                        <th>{{settingsStrings.consentSettings.noticeIdLabel}}</th>
+                                        {{/if}}
+                                        <th>{{settingsStrings.consentSettings.authorisedOnLabel}}</th>
+                                        <th>{{settingsStrings.consentSettings.unAuthorisedOnLabel}}</th>
+                                        <th>{{settingsStrings.consentSettings.actions}}</th>
+                                    </tr>
+                                    </tHead>
+                                    <tBody>
+                                    {{#each model as |consent|}}
+                                    <tr>
+                                        <td class="consentcells">{{consent.uid}}</td>
+                                        <td class="consentcells">{{consent.statusDescription}}</td>
+                                        <td class="consentcells">{{consent.tagName}}</td>
+                                        {{#if allowAgentRegistrationsFromContacts}}
+                                        {{#if consent.isEditing}}
+                                        <td class="consentcells">{{input classNames="form-control" value=consent.noticeId id="consentNoticeId"}}</td>
+                                        {{else}}
+                                        <td class="consentcells">{{consent.noticeId}}</td>
+                                        {{/if}}
+                                        {{/if}}
+                                        <td class="consentcells">{{view-date date=consent.authorisedOn withTime=true}}</td>
+                                        <td class="consentcells">{{view-date date=consent.unauthorisedOn withTime=true}}</td>
+                                        <td class="consentcells">
+                                            <div style="display: inline-table;">
+                                                <div class="actions-row">
+                                                    <div class="actions btn-group col-xs-12 ">
+                                                {{#if consent.isEditing}}
+                                                {{else}}
+                                                {{#if consent.isActive}}
+                                                    <button type="button" class="btn btn-danger" title="Remove Authorisation" {{action "removeAuthorisationModal" consent}}>
+                                                    <span class="glyphicon glyphicon-remove"></span>
+                                                    </button>
+                                                {{/if}}
+                                                {{/if}}
+
+                                                {{#if isBiller}}
+                                                {{#if consent.isPending}}
+                                                {{#if consent.isEditing}}
+                                                {{else}}
+                                                        <button type="button" class="btn btn-default" title="Resend authorisation" {{action "resendAuthorisation" consent}}>
+                                                        <span class="glyphicon glyphicon-repeat"></span>
+                                                        </button>
+                                                {{/if}}
+                                                {{/if}}
+                                                {{#if consent.isActive}}
+                                                {{#if allowAgentRegistrationsFromContacts}}
+                                                {{#if consent.isEditing}}
+                                                    <button type="button" class="btn btn-success" title="Save" {{action "saveAuthorisation" consent}}>
+                                                    <span class="glyphicon glyphicon-ok"></span>
+                                                    </button>
+                                                    <button type="button" class="btn btn-danger" title="Cancel" {{action "cancelAuthorisation" consent}}>
+                                                    <span class="glyphicon glyphicon-ban-circle"></span>
+                                                    </button>
+                                                {{else}}
+                                                    <button type="button" class="btn btn-default" title="Edit authorisation" {{action "editAuthorisation" consent}}>
+                                                    <span class="glyphicon glyphicon-pencil"></span>
+                                                    </button>
+                                                {{/if}}
+                                                {{/if}}
+                                                {{/if}}
+                                                {{/if}}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    {{else}}
+                                    <tr>
+                                        <td colspan="5">{{settingsStrings.consentSettings.noAuthorisations}}</td>
+                                    </tr>
+                                    {{/each}}
+                                    </tBody>
+                                </table>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

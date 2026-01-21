@@ -1,0 +1,280 @@
+<div class="row">
+    <img style="display: block; margin: 0 auto; height: 100px;" src={{this.model.logoPath}}>
+    <div class="col-xs-12">
+        <h4>
+           Register for Reckon
+        </h4>
+    </div>
+
+    <div>
+        <form class="form-login form" id="reckon-form">
+            {{#if this.errormessage}}
+                <div class="alert alert-danger">
+                    {{this.errormessage}}
+                </div>
+            {{/if}}
+
+            {{#if hasReckonConnection}}
+                {{#if this.model.connection.connectionError}}
+                    <div class="alert alert-danger" role="alert">
+                        <h4 for="reckon" class="control-label">Unable to connect to Reckon. Please try registering again later.</h4>
+                        <p>Company: {{this.model.connection.company}}</p>
+                        <p>Connected since: {{reckonConnectionDateFormatted}}</p>
+                    </div>
+                {{else}}
+                    <div class="alert alert-success" role="alert">
+                        <h4 for="reckon" class="control-label">Connected to Reckon:</h4>
+                        <p>Company: {{this.model.connection.company}}</p>
+                        <p>Connected since: {{reckonConnectionDateFormatted}}</p>
+                    </div>
+                {{/if}}
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">Registration Verification</h4>
+                </div>
+                <div class="panel-body">
+                    <div class="form-group">
+                        <label for="registrationField" class="control-label">{{this.model.channel.registrationContactIdField}}</label>
+                        {{input classNames="form-control" value=this.registrationField id="registrationField"}}
+                        <small id="registrationHelp" class="form-text text-muted">{{this.model.channel.registrationContactIdHelp}}</small>
+                    </div>
+                    {{#if hasAuthField1}}
+                    <div class="form-group">
+                        <label for="authfield1" class="control-label">{{this.model.channel.authItem1Field}}</label>
+                        {{input classNames="form-control" value=this.authfield1 id="authfield1"}}
+                        <small id="authfield1Help" class="form-text text-muted">{{this.model.channel.authItem1Help}}</small>
+                    </div>
+                    {{/if}}
+
+                    {{#if hasAuthField2}}
+                    <div class="form-group">
+                        <label for="authfield2" class="control-label">{{this.model.channel.authItem2Field}}</label>
+                        {{input classNames="form-control" value=this.authfield2 id="authfield2"}}
+                        <small id="authfield2Help" class="form-text text-muted">{{this.model.channel.authItem2Help}}</small>
+                    </div>
+                    {{/if}}
+
+                    {{#if hasAuthField3}}
+                    <div class="form-group">
+                        <label for="authfield3" class="control-label">{{this.model.channel.authItem3Field}}</label>
+                        {{input classNames="form-control" value=this.authfield3 id="authfield3"}}
+                        <small id="authfield3Help" class="form-text text-muted">{{this.model.channel.authItem3Help}}</small>
+                    </div>
+                    {{/if}}
+
+                    {{#if hasAuthField4}}
+                    <div class="form-group">
+                        <label for="authfield4" class="control-label">{{this.model.channel.authItem4Field}}</label>
+                        {{input classNames="form-control" value=this.authfield4 id="authfield4"}}
+                        <small id="authfield4Help" class="form-text text-muted">{{this.model.channel.authItem4Help}}</small>
+                    </div>
+                    {{/if}}
+                </div>
+            </div>
+
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">Reckon Invoice Fields</h4>
+                </div>
+                <div class="panel-body">
+                    <div class="form-group">
+                        <label class="control-label">
+                            Would you like us to create a Supplier in Reckon for you?
+                        </label>
+                        <form action="" onclick={{action 'markedAsChanged' value="target.value"}}>
+                        <div class="btn-group radio-group">
+                            <label class="btn btn-default {{if correct 'active'}}">
+                                <span class="glyphicon glyphicon-ok"></span>
+                                <input type="radio"
+                                       name="correct"
+                                       selected={{this.markedAs}}
+                                       value="correct">Yes
+                            </label>
+                            <label class="btn btn-default {{if incorrect 'active'}}">
+                                <span class="glyphicon glyphicon-remove"></span>
+                                <input type="radio"
+                                       name="incorrect"
+                                       selected={{this.markedAs}}
+                                       value="incorrect">No
+                            </label>
+                        </div>
+                        </form>
+                    </div>
+                    {{#if incorrect}}
+                        {{#if suppliersLoading}}
+                        <div class="form-group">
+                            <label control-label>
+                                Supplier
+                            </label>
+                            <p>Reloading Suppliers from Reckon...</p>
+                        </div>
+                        {{else}}
+                        <div class="form-group">
+                            <label control-label>
+                                Supplier
+                            </label>
+                            {{#if hasReckonSuppliers}}
+                                {{item-select class-name="form-control"
+                                content=model.reckonvendors
+                                optionLabelPath="name"
+                                optionValuePath="id"
+                                selection=this.channelref1}}
+                            {{else}}
+                                <p>Unable to access Reckon suppliers</p>
+                            {{/if}}
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">
+                                Supplier Terms
+                            </label>
+                            <p class="form-control-static">{{model.supplier.terms}}</p>
+                        </div>
+                        {{/if}}
+
+                        <div class="form-group">
+                            <label class="control-label">
+                                Supplier Tax Code
+                            </label>
+                            {{#if hasReckonTaxCodes}}
+                            {{item-select class-name="form-control"
+                            content=model.reckontaxcodes
+                            optionLabelPath="name"
+                            optionValuePath="id"
+                            selection=this.channelref3}}
+                            {{else}}
+                            <p>Unable to access Reckon tax codes</p>
+                            {{/if}}
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">
+                                Default Reckon Account Code
+                            </label>
+                            {{#if hasReckonAccounts}}
+                            {{item-select class-name="form-control"
+                            content=model.reckonaccounts
+                            optionLabelPath="name"
+                            optionValuePath="id"
+                            selection=this.channelref2}}
+                            {{else}}
+                            <p>Unable to access Reckon account codes</p>
+                            {{/if}}
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">
+                                Amount Payable Total or Minimum/Installment
+                            </label>
+                            {{item-select class-name="form-control"
+                            content=amountTotalOrMinimum
+                            optionLabelPath="name"
+                            optionValuePath="id"
+                            selection=this.channelref4}}
+                        </div>
+
+
+                        <div class="form-group">
+                            <div class="alert alert-warning">
+                                By registering to receive this bill or statement electronically through Reckon, I state that I am entitled to receive the bill or statement from the biller and a paper invoice may no longer be mailed.
+                                <div>
+                                    <label for="accept" class="control-label">Accept Terms and Conditions: </label>
+                                    {{input  type="checkbox" id="accept" checked=this.accept}}
+                                </div>
+                            </div>
+                        </div>
+
+                        {{#if this.model.connection.connectionError}}
+                        <button type="button" class="btn btn-success" {{action 'saveRegistration' this.registrationField this.authfield1 this.authfield2 this.authfield3 this.authfield4 this.channelref1 this.channelref2 this.channelref3 this.channelref4 this.accept}} disabled>
+                        <span class="glyphicon glyphicon-ok"></span> Register
+                        </button>
+                        {{else}}
+                        <button type="button" class="btn btn-success" disabled={{this.disableSubmit}} {{action 'saveRegistration' this.registrationField this.authfield1 this.authfield2 this.authfield3 this.authfield4 this.channelref1 this.channelref2 this.channelref3 this.channelref4 this.accept}}>
+                        <span class="glyphicon glyphicon-ok"></span> Register
+                        </button>
+                        {{/if}}
+                    {{else}}
+                        <div class="form-group">
+                            <label control-label>
+                                Supplier Name
+                            </label>
+                            <p>{{model.channel.extBillerName}}</p>
+                        </div>
+
+                        <div class="form-group">
+                            <label control-label>
+                                Select Supplier Terms
+                            </label>
+                            {{#if hasReckonSuppliers}}
+                            {{item-select class-name="form-control"
+                            content=model.reckonterms
+                            optionLabelPath="name"
+                            optionValuePath="id"
+                            selection=this.terms}}
+                            {{else}}
+                            <p>Unable to access Reckon Terms</p>
+                            {{/if}}
+                        </div>
+                        <button type="button" class="btn btn-success"  disabled={{this.disableSubmit}} {{action 'createSupplier' this.terms }}>
+                        <span class="glyphicon glyphicon-ok"></span> Create Supplier in Reckon
+                        </button>
+                    {{/if}}
+                </div>
+            </div>
+
+            {{else}}
+            <div class="alert alert-info" role="alert">
+                <h4>Payreq Reckon Accounts Hosted Usage</h4>
+                <p>The only information accessed by Payreq from your Reckon Hosted account is:</p>
+                <ol>
+                    <li> Your general ledger account codes to allow you select an account code for your invoice. Only the ID of the account code selected is stored in Payreq.</li>
+                    <li> Your suppliers to allow you to select a supplier for your invoice. Only the ID of the account code selected is stored in Payreq.</li>
+                    <li> Your tax codes to allow you to select a sale tax code for your invoice. Only the ID of the tax code selected is stored in Payreq.</li>
+                </ol>
+                <p>No other information from Reckon is accessed by Payreq, registered billers or any other third party.</p>
+
+                <p>Payreq will use your Reckon connection to push biller invoices into your Reckon accounts payable.</p>
+
+            </div>
+            <form class="form-login form" id="myob-form">
+                <div class="form-group">
+                    <label control-label>
+                        Reckon Product Country
+                    </label>
+
+                    {{item-select class-name="form-control"
+                    content=reckonCountries
+                    optionLabelPath="name"
+                    optionValuePath="id"
+                    selection=this.reckonCountry}}
+                </div>
+                <div class="alert alert-warning" role="alert">
+                    <p>For a company file that <strong>is not</strong> shared with other users Q:\File name.QBW E.g. Q:\API2019.QBW</p>
+                    <p>For a company file that <strong>is</strong> shared with other users \\Shared-Folder-Name\FileName.QBW or \\\\Shared-Folder-Name\\FileName.QBW or \\FS-Path\Full-Shared-Folder-Name\File name.QBW or \\\\FS-Path\\Full-Shared-Folder-Name\\File name.QBW E.g. \\\\api2019\\API2019.QBW or \\\\RAH-FSS-07-AP2A\\067185-1574783-API2019\\API2019.QBW.</p>
+                    <p>Click <a href="http://support.payreq.com/payer_reckon_faqs.html">here</a> for more information on finding your company file path.</p>
+                </div>
+                <div class="form-group">
+                    <label control-label>
+                        Reckon Company File
+                    </label>
+
+                    {{input type="text" class="form-control" value=this.reckonCountryFile id="reckonCountryFile"}}
+                </div>
+                <div class="form-group">
+                    <label control-label>
+                        Reckon Accounts Hosted Company File Username
+                    </label>
+
+                    {{input type="text" class="form-control" value=this.reckonAPIUsername id="reckonAPIUsername"}}
+                </div>
+                <div class="form-group">
+                    <label control-label>
+                        Reckon Accounts Hosted Company File Password
+                    </label>
+
+                    {{input type="password" class="form-control" value=this.reckonAPIPassword id="reckonAPIPassword"}}
+                </div>
+                <img style="display: block; margin: 0 auto;" src="./images/reckon-connect-button.png" alt="reckon-connect-button" disabled={{this.disableCreateConnection}} {{action 'connectToReckon' this.reckonCountry this.reckonCountryFile this.reckonAPIUsername this.reckonAPIPassword}}>
+            </form>
+            {{/if}}
+        </form>
+    </div>
+
+</div>

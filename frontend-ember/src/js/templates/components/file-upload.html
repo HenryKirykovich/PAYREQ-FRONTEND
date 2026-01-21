@@ -1,0 +1,24 @@
+<div class="row">
+	<div class="col-md-12">
+		<div class="col-md-6">
+			{{#if uploading}}
+				<p>{{filename}}</p>
+			{{else}}
+				<input id="fileUpload" type="file" name="files[]" accept=".jpeg,.jpg,.gif,.png,.bmp,.heic,.pdf,.csv,.xlsx,.xls,.xml,.html,.json,.tar,.txt,.zip,.7z" multiple/>
+			{{/if}}
+
+		</div>
+		<div class="col-md-2 col-md-offset-4">
+			<p>{{progress}}%</p>
+		</div>
+	</div>
+</div>
+<div class="row" style="margin-top: 2rem;">
+	{{#if errorMessage}}
+	<div class="col-md-12">
+		<div class="alert alert-danger" style="margin-bottom: 0px;">
+			<p>{{errorMessage}}</p>
+		</div>
+	</div>
+	{{/if}}
+</div>

@@ -1,0 +1,48 @@
+<div class="row" id="invite">
+	<div class="verify-new-account-container">
+		<div class="panel panel-default verify-new-account-panel">
+			<div class="panel-heading">
+				<h2 class="panel-title">{{strings.verifyAccount.heading}}</h2>
+			</div>
+			<div class="panel-body">
+
+				{{#if model.resent}}
+					<div class="alert alert-success">
+						<p>{{resentMessage}}</p>
+					</div>
+				{{/if}}
+
+				{{#if model.error}}
+					<div class="alert alert-danger">
+						<p>{{errorMessage}}</p>
+					</div>
+				{{/if}}
+
+				{{#if model.maxerror}}
+				<div class="alert alert-danger">
+					<p>{{strings.verifyAccount.errorMaxResends}}</p>
+				</div>
+				{{/if}}
+
+				<p style="margin-bottom: 2rem">{{strings.deviceLogin.codeSentTo}}<br>{{model.username}}</p>
+
+				<form class="form-login form" id="login-form-mobile">
+					<div class="form-group">
+						<label for="verificationCode">{{strings.deviceLogin.mfaLabel}}</label>
+						{{input type="text" placeholder=strings.deviceLogin.mfaPlaceholder classNames="form-control" value=this.verificationCode id="verificationCode" class="verify-new-account-input"}}
+					</div>
+					<div class="form-group">
+						<button class="btn btn-primary" type="submit" {{action 'verify' model.username this.verificationCode}}>{{strings.deviceLogin.submitButton}}</button>
+					</div>
+				</form>
+				<br/>
+				<p style="font-weight: bold">{{strings.verifyAccount.resendLine1}}</p>
+				<p>{{{strings.verifyAccount.resendLine2}}}</p>
+				<div style="margin-bottom: 1.5rem">
+					<a class="btn btn-default" role="button" {{action "resendEmail" model.username model.companyId}}>{{strings.verifyAccount.resendButton}}</a>
+				</div>
+				<p>{{{strings.verifyAccount.contactLine1}}}</p>
+			</div>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,88 @@
+@import "../common/variables";
+
+.headingContainer {
+  h2 {
+    margin-bottom: 0.5rem;
+  }
+  h4 {
+    margin-bottom: 2rem;
+  }
+}
+
+.buttonContainer {
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: 2rem;
+  gap: 1em;
+}
+
+.buttonContainerForm {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  margin-bottom: 2rem;
+}
+
+.selectedRego {
+  p {
+    font-weight: 600;
+  }
+}
+
+.surchargeDetails {
+  div {
+    margin-top: 0px;
+  }
+  p {
+    color: #333;
+  }
+}
+
+.autoPaymentItem {
+  max-width: 800px;
+  overflow: hidden;
+
+  a {
+    color: inherit;
+    text-decoration: none;
+
+    &:hover {
+      color: inherit;
+      text-decoration: none;
+    }
+  }
+}
+
+.formErrors {
+  margin-top: 1rem;
+
+  div {
+    margin-right: 0px;
+    margin-left: 0px;
+  }
+}
+
+.detailsContainer {
+  div {
+    div:nth-child(1) {
+      width: 180px;
+    }
+  }
+}
+
+.fieldLabel {
+  min-width: 18rem;
+}
+
+.informationContainer {
+  display: flex;
+  :first-child {
+    margin-right: 0.5rem;
+  }
+}
+
+.infoBox {
+  margin-right: 0px;
+  margin-left: 0px;
+}
+

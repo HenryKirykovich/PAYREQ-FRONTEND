@@ -1,0 +1,46 @@
+.container  {
+  display: flex;
+  justify-content: center;
+}
+
+.centerDiv {
+  width: 650px;
+
+  @media (max-width: 650px) {
+    width: 100%
+  }
+}
+
+.headingContainer {
+  text-align: center;
+}
+
+.errorContainer {
+  margin-top: 1.5rem;
+  >:first-child {
+    margin: 0;
+  }
+}
+
+.detailsContainer {
+  margin-top: 2rem;
+  margin-bottom: 0.5rem;
+  div {
+    div:nth-child(1) {
+      width: 180px;
+      min-width: 180px;
+    }
+  }
+}
+
+.buttonContainer {
+  button {
+    @media (min-width: 650px) {
+      margin-left: 180px;
+    }
+  }
+}
+
+.emailAddress {
+  overflow-x: scroll;
+}

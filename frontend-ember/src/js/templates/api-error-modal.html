@@ -1,0 +1,17 @@
+<div class="modal fade api-error-modal" tabindex="-1" role="dialog" aria-labelledby="apiErrorLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="apiErrorLabel">Error</h4>
+            </div>
+             <div class="modal-body">
+                 <p>An unknown error has occurred.</p>
+                 <p>Please refresh and try again.</p>
+                 <p>If the error continues, contact <a href="mailto:support@payreq.com?subject=Payreq Support Enquiry">support@payreq.com</a></p>
+              </div>
+             <div class="modal-footer">
+                 <button type="button" class="btn btn-primary" {{action 'refresh'}}><span class="glyphicon glyphicon-refresh"></span> Refresh</button>
+            </div>
+        </div>
+    </div>
+</div>

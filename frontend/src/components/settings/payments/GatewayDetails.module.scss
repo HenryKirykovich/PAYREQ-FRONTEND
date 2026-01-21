@@ -1,0 +1,26 @@
+@import "../../common/variables";
+
+.section {
+  margin-bottom: 4rem;
+}
+
+.summaryLine {
+  display: flex;
+  align-items: baseline;
+
+  :first-child {
+    margin-right: 0.5rem;
+  }
+}
+
+.cards {
+  td {
+    padding-bottom: 0.5rem;
+    padding-right: 2rem;
+  }
+}
+
+.cardsHeading {
+  color: $light-grey;
+  margin-bottom: 0px;
+}

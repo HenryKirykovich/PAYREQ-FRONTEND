@@ -1,0 +1,66 @@
+<div class="row">
+	<div class="col-md-12">
+		<h2 class="page-heading">
+			{{strings.sentMailOverview}}
+		</h2>
+	</div>
+</div>
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h4 class="panel-title">{{strings.searchGrouping}} <span style="float: right;"><a data-toggle="collapse" href="#collapse1" style="color:  #595959;" {{action "showAndHide"}}>{{strings.hideShow}}</a></span></h4>
+    </div>
+    <div id="collapse1" class="panel-body collapse {{if showSearch 'in'}}">
+        {{common-filter-bar action="changeCommonFilters"
+        showDownload=false
+        defaultDateRange=defaultDateRange
+        searchFilters=selectedFilters}}
+        <hr>
+        <div class="form-group">
+            <div class="col-md-2">
+                <h5>{{strings.groupbyColumn1}}</h5>
+            </div>
+            <div class="col-md-4">
+                {{item-select class-name="form-control"
+                didChangeAction="changedSelection"
+                content=drilldownOne
+                optionLabelPath="name"
+                optionValuePath="id"
+                selection=this.groupingField1
+                disabled=hasGroupingFieldTwo}}
+            </div>
+            <div class="col-md-2">
+                <h5>{{strings.groupbyColumn2}}</h5>
+            </div>
+            <div class="col-md-4">
+                {{item-select class-name="form-control"
+                didChangeAction="changedSelection"
+                content=drilldownTwo
+                optionLabelPath="name"
+                optionValuePath="id"
+                selection=this.groupingField2}}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h4 class="panel-title">{{strings.graph}} <span style="float: right;"><a data-toggle="collapse" href="#collapse2" style="color: #595959;" {{action "showAndHideGraph"}}>{{strings.hideShow}}</a></span></h4>
+    </div>
+    <div id="collapse2" class="panel-body collapse {{if showSearchGraph 'in'}}">
+        <div class="col-md-12">
+            {{zing-chart data=this.chartData}}
+        </div>
+    </div>
+</div>
+
+<div class="row">
+	<div class="col-md-12">
+		{{data-table-sent-mail data=this.tableData
+                     groupingField1=this.groupingField1
+                     groupingField2=this.groupingField2
+                     fields=fields
+                     dataColumns=dataColumns}}
+	</div>
+</div>

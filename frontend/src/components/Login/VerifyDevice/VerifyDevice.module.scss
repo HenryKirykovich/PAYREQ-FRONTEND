@@ -1,0 +1,44 @@
+.container  {
+  display: flex;
+  justify-content: center;
+}
+
+.centerDiv {
+  width: 400px;
+
+  @media (max-width: 400px) {
+    width: 100%
+  }
+}
+
+.headingContainer {
+  text-align: center;
+}
+
+.resendContainer {
+  margin-top: 1.5rem;
+}
+
+.resendHeading {
+  font-weight: bold;
+}
+
+.verifyHelp {
+  margin-top: 15px;
+}
+
+.alert {
+  margin-right: 0px;
+  margin-left: 0px;
+  margin-top: 1rem;
+}
+
+.backLink {
+  padding-left: 0px;
+}
+
+.errorContainer {
+  >:first-child {
+    margin: 0;
+  }
+}

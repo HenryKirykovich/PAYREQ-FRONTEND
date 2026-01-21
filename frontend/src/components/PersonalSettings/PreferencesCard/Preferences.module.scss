@@ -1,0 +1,7 @@
+.detailsGroup {
+  > * {
+    > :first-child {
+      width: 20rem;
+    }
+  }
+}

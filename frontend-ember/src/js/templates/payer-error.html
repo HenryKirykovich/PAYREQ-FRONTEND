@@ -1,0 +1,18 @@
+<div class="row">
+    <div class="col-md-8 col-md-offset-2">
+        <div class="panel panel-default" id="login-panel">
+            <div class="panel-heading">
+                <h2 class="panel-title">{{strings.createAcctError.heading}}</h2>
+            </div>
+            <div class="panel-body">
+                <div class="alert alert-warning">
+                    <p>{{strings.createAcctError.textLine1}}</p>
+                    <p>{{{strings.createAcctError.textLine2}}}</p>
+                </div>
+                <div class="form-group">
+                    {{#link-to "login" }}<button class="btn btn-default" type="submit">{{strings.createAcctError.backButton}}</button> {{/link-to}}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

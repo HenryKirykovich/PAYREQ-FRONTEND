@@ -1,0 +1,12 @@
+.dateParams {
+  display: flex;
+
+  :first-child {
+    margin-right: 1.5rem;
+  }
+}
+
+.paramsContainer {
+  width: max-content;
+  margin-bottom: 2rem;
+}

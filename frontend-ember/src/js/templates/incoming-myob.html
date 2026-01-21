@@ -1,0 +1,176 @@
+<div class="row">
+    <img style="display: block; margin: 0 auto; height: 100px;" src={{this.model.logoPath}}>
+    <div>
+        <h4>
+           Register for MYOB
+        </h4>
+    </div>
+
+    <div>
+        <form class="form-login form" id="myob-connect-form">
+            {{#if this.errormessage}}
+                <div class="alert alert-danger">
+                    {{this.errormessage}}
+                </div>
+            {{/if}}
+
+
+            {{#if hasMyobConnection}}
+                {{#if this.model.connection.connectionError}}
+                <div class="alert alert-danger" role="alert">
+                    <h4 for="xero" class="control-label">Unable to connect to MYOB. Please try reconnecting your account under Settings.</h4>
+                    <p>MYOB Username: {{this.model.connection.name}}</p>
+                    <p>MYOB Product: {{this.model.connection.extraInfo1}}</p>
+                    <p>Connected since: {{myobConnectionDateFormatted}}</p>
+                </div>
+                {{else}}
+                <div class="alert alert-success" role="alert">
+                    <h4 for="xero" class="control-label">Connected to MYOB:</h4>
+                    <p>MYOB Username: {{this.model.connection.name}}</p>
+                    <p>MYOB Product: {{this.model.connection.extraInfo1}}</p>
+                    <p>Connected since: {{myobConnectionDateFormatted}}</p>
+                </div>
+                {{/if}}
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">Registration Verification</h4>
+                </div>
+                <div class="panel-body">
+                    <div class="form-group">
+                        <label for="registrationField" class="control-label">{{this.model.channel.registrationContactIdField}}</label>
+                        {{input classNames="form-control" value=this.registrationField id="registrationField"}}
+                        <small id="registrationHelp" class="form-text text-muted">{{this.model.channel.registrationContactIdHelp}}</small>
+                    </div>
+                    {{#if hasAuthField1}}
+                    <div class="form-group">
+                        <label for="authfield1" class="control-label">{{this.model.channel.authItem1Field}}</label>
+                        {{input classNames="form-control" value=this.authfield1 id="authfield1"}}
+                        <small id="authfield1Help" class="form-text text-muted">{{this.model.channel.authItem1Help}}</small>
+                    </div>
+                    {{/if}}
+
+                    {{#if hasAuthField2}}
+                    <div class="form-group">
+                        <label for="authfield2" class="control-label">{{this.model.channel.authItem2Field}}</label>
+                        {{input classNames="form-control" value=this.authfield2 id="authfield2"}}
+                        <small id="authfield2Help" class="form-text text-muted">{{this.model.channel.authItem2Help}}</small>
+                    </div>
+                    {{/if}}
+
+                    {{#if hasAuthField3}}
+                    <div class="form-group">
+                        <label for="authfield3" class="control-label">{{this.model.channel.authItem3Field}}</label>
+                        {{input classNames="form-control" value=this.authfield3 id="authfield3"}}
+                        <small id="authfield3Help" class="form-text text-muted">{{this.model.channel.authItem3Help}}</small>
+                    </div>
+                    {{/if}}
+
+                    {{#if hasAuthField4}}
+                    <div class="form-group">
+                        <label for="authfield4" class="control-label">{{this.model.channel.authItem4Field}}</label>
+                        {{input classNames="form-control" value=this.authfield4 id="authfield4"}}
+                        <small id="authfield4Help" class="form-text text-muted">{{this.model.channel.authItem4Help}}</small>
+                    </div>
+                    {{/if}}
+                </div>
+            </div>
+
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">MYOB Invoice Fields</h4>
+                </div>
+                <div class="panel-body">
+                    <div class="form-group">
+                        <label class="control-label">
+                            MYOB Business
+                        </label>
+                        {{#if hasMyobBusinesses}}
+                        {{item-select class-name="form-control"
+                        content=model.myobaccounts
+                        optionLabelPath="name"
+                        optionValuePath="id"
+                        selection=this.channelref2}}
+                        {{else}}
+                        <p>Unable to access MYOB Businesses</p>
+                        {{/if}}
+                    </div>
+                    <div class="form-group">
+                        <label control-label>
+                            GST Inclusive or Exclusive
+                        </label>
+
+                        {{item-select class-name="form-control"
+                        content=gstInclusiveExclusive
+                        optionLabelPath="name"
+                        optionValuePath="id"
+                        selection=this.channelref1}}
+                    </div>
+                    <div class="form-group">
+                        <label control-label>
+                            Amount Payable Total or Minimum/Installment
+                        </label>
+
+                        {{item-select class-name="form-control"
+                        content=amountTotalOrMinimum
+                        optionLabelPath="name"
+                        optionValuePath="id"
+                        selection=this.channelref3}}
+                    </div>
+                </div>
+
+            </div>
+
+                <div class="form-group">
+                    <div class="alert alert-warning">
+                        By registering to receive this bill or statement electronically through MYOB, I state that I am entitled to receive the bill or statement from the biller and a paper invoice may no longer be mailed.
+                        <div>
+                            <label for="accept" class="control-label">Accept Terms and Conditions: </label>
+                            {{input  type="checkbox" id="accept" checked=this.accept}}
+                        </div>
+                    </div>
+                </div>
+
+                {{#if this.model.connection.connectionError}}
+                    <button type="button" class="btn btn-success" {{action 'saveRegistration' this.registrationField this.authfield1 this.authfield2 this.authfield3 this.authfield4 this.channelref1 this.channelref2 this.channelref3 this.channelref4 this.accept}} disabled>
+                    <span class="glyphicon glyphicon-ok"></span> Register
+                    </button>
+                {{else}}
+                    <button type="button" class="btn btn-success" disabled={{this.disableSubmit}} {{action 'saveRegistration' this.registrationField this.authfield1 this.authfield2 this.authfield3 this.authfield4 this.channelref1 this.channelref2 this.channelref3 this.channelref4 this.accept}}>
+                    <span class="glyphicon glyphicon-ok"></span> Register
+                    </button>
+                {{/if}}
+
+        {{else}}
+            <div class="alert alert-info" role="alert">
+                <h4>Payreq MYOB Usage</h4>
+                <p>Payreq needs to access your MYOB account to obtain the following details:</p>
+                <ol>
+                    <li> Your MYOB Business Names and Identifiers to allow you to select the MYOB Business for invoice delivery. Only the Business Identifier is stored n Payreq.</li>
+                    <li> Your profile Username. This is stored in Payreq and is visible to your registered Billers.</li>
+                </ol>
+                <p>No other information form MYOB is accessed by Payreq, registered Billers or any other third party.</p>
+
+                <p>Payreq will use your MYOB connection to create a Supplier Contact if authorised by you and push biller invoices to your MYOB InTray.</p>
+
+            </div>
+
+            <form class="form-login form" id="myob-form">
+                <div class="form-group">
+                    <label control-label>
+                        MYOB Product
+                    </label>
+
+                    {{item-select class-name="form-control"
+                    content=myobProducts
+                    optionLabelPath="name"
+                    optionValuePath="id"
+                    selection=this.myobProduct}}
+                </div>
+
+                <button style="display: block; margin: 0 auto;" class="btn btn-primary" {{action 'connectToMyob' this.myobProduct}}>Connect to MYOB</button>
+            </form>
+        {{/if}}
+        </form>
+    </div>
+
+</div>

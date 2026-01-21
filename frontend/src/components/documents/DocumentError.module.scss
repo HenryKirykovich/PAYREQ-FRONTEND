@@ -1,0 +1,11 @@
+@import "../common/variables";
+
+.buttonContainer {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  @media (max-width: 650px) {
+    justify-content: space-between;
+  }
+}

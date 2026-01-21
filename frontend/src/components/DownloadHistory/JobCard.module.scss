@@ -1,0 +1,20 @@
+@import "../common/variables";
+
+$card-width: 1030px;
+
+.detailContainers{
+  div{
+    div{
+      margin-bottom: 0;
+    }
+
+    div:first-child{
+      width: 120px;
+    }
+  }
+}
+
+.card{
+  max-width: $card-width;
+  margin-bottom: 2rem;
+}

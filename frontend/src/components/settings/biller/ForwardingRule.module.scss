@@ -1,0 +1,54 @@
+@import "../../common/variables";
+
+.card {
+  border-color: #1c1750;
+  border-radius: 6px;
+  border: 1px  solid;
+  margin-bottom: 1rem;
+}
+
+.cardHeaderPannel{
+  color: $primary-color;
+  background-color: #fff;
+  border-color: #fff;
+  border-radius: 6px;
+  padding: 10px 15px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.cardHeading{
+  font-size: 1.8rem;
+}
+
+.cardBody{
+  color: $primary-color;
+  background-color: #fff;
+  border-color: #fff;
+  border-radius: 6px;
+  padding: 0px 15px 15px  15px;
+}
+
+.buttonContainer {
+  margin-top: 2rem;
+}
+
+.buttonWrapper{
+  margin-left: 1rem;
+}
+
+.button {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.fieldGroup {
+  div {
+    div:nth-child(1) {
+      width: 175px;
+    }
+  }
+}

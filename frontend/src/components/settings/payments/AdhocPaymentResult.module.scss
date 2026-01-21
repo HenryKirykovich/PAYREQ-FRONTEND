@@ -1,0 +1,23 @@
+@import "../../payments/PaymentForm/payment-wizard-layout";
+
+.backButton {
+  margin-top: 2em; //todo: move to a variables.scss
+}
+
+.resultHeading {
+  margin-bottom: 1em; //todo: move to a variables.scss
+}
+
+.detailsContainer {
+  @include payment-wizard-layout();
+}
+
+.container {
+  @include payment-wizard-container();
+}
+
+.actions {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+}

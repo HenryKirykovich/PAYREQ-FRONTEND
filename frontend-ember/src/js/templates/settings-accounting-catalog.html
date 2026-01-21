@@ -1,0 +1,42 @@
+<div class="row">
+    <div class="col-md-12">
+        <div class='btn-toolbar btn-toolbar-bottom-margin'>
+            <div class="btn-group">
+                {{#link-to "biller.settings.accounting" class="btn btn-default"}}
+                    <span class="glyphicon glyphicon-arrow-left"></span> {{settingsStrings.all.accountingPlan.backButton}}{{/link-to}}
+            </div>
+            {{#if hasSelectedAccountingPlans}}
+                <div class='btn-group pull-right'>
+                    {{#link-to "biller.settings.accounting.catalog.checkout" class="btn btn-primary"}}
+                    <span class="glyphicon glyphicon-credit-card"></span> {{settingsStrings.all.accountingPlan.checkout}}{{/link-to}}
+                </div>
+            {{else}}
+                <div class='btn-group pull-right'>
+                    {{#link-to "biller.settings.accounting.catalog.checkout" class="btn btn-primary disabled"}}
+                    <span class="glyphicon glyphicon-credit-card"></span> {{settingsStrings.all.accountingPlan.checkout}}{{/link-to}}
+                </div>
+            {{/if}}
+            <div class='pull-right' style="margin-right: 25px; margin-top: 5px;">
+                <span class="badge" style="position: relative; top: -13px; left: 7px;">{{{numberOfSelectedAccountingPlans}}}</span><span class="glyphicon glyphicon-shopping-cart text-info" style="font-size: 1.6em;"></span>
+            </div>
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">{{settingsStrings.all.accountingPlan.selectPlansToPurchase}}</h4>
+            </div>
+
+            <div class="panel-group" id="accounting-plan-group">
+                {{#each categories as |category|}}
+                    {{accounting-plan-group
+                        strings=strings
+                        accountingPlanCategory=category
+                        allAccountingPlans=model
+                        currencyCode=currencyCode
+                        currencySymbol=currencySymbol
+                        accountingPlanClicked='accountingPlanClicked'}}
+                {{/each}}
+            </div>
+        </div>
+    </div>
+</div>

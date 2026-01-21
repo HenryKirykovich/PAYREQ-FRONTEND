@@ -1,0 +1,55 @@
+@import "payment-wizard-layout";
+
+.paymentFormContainer {
+  @include payment-wizard-container();
+  width: 100%
+}
+
+.paymentForm {
+  @include payment-wizard-layout();
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 2rem;
+}
+
+.step {
+  width: 100%;
+}
+
+.disabledAmount {
+  font-size: larger;
+  select {
+    font-size: larger;
+    height: auto;
+  }
+}
+
+.surchargeContainer {
+  display: flex;
+  width: 100%;
+  justify-content: flex-end;
+}
+
+.cardEntry {
+  width: 100%;
+
+  iframe {
+    @include iframe-card-details();
+  }
+}
+
+.cardSelect {
+  margin-bottom: 0px;
+  margin-top: 1rem;
+}
+
+.useDifferentCardLink {
+  margin-bottom: 2rem;
+}
+
+.backButton {
+  margin-bottom: 20px;
+}

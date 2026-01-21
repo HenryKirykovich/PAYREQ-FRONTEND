@@ -1,0 +1,67 @@
+<div class="row">
+	<div class="col-md-12">
+		<h2 class="page-heading">
+            {{strings.reports}}
+		</h2>
+	</div>
+</div>
+
+<div class="row">
+	<div class="col-md-12">
+		<h4>{{strings.monthlySummary}}</h4>
+		<form class="form-inline" role="form" id="monthly-summary-form">
+			<label>{{strings.billerLabel}}&nbsp;</label>
+       {{item-select class-name="form-control"
+                     content=reportBillerOptions
+                     optionLabelPath="name"
+                     optionValuePath="id"
+                     selection=reportBillerOption}}
+            <label>{{strings.periodLabel}}&nbsp;</label>
+      {{item-select class-name="form-control"
+                     content=reportTimeOptions
+                     optionLabelPath="name"
+                     optionValuePath="id"
+                     selection=reportTimeOption}}
+            <button class="btn btn-primary" type="submit" {{action 'monthlySummary'}}
+            	style="margin-left: 30px;">{{strings.run}}</button>
+		</form>
+
+        <hr/>
+        <h4>{{strings.billingSummary}}</h4>
+        <form class="form-inline" role="form" id="monthly-summary-form">
+            <label>{{strings.billerLabel}}&nbsp;</label>
+            {{item-select class-name="form-control"
+            content=reportBillerOptions
+            optionLabelPath="name"
+            optionValuePath="id"
+            selection=reportBillerOption2}}
+            <label>{{strings.periodLabel}}&nbsp;</label>
+            {{item-select class-name="form-control"
+            content=reportTimeOptions
+            optionLabelPath="name"
+            optionValuePath="id"
+            selection=reportTimeOption2}}
+            <button class="btn btn-primary" type="submit" {{action 'billingReportSummary'}}
+            style="margin-left: 30px;">{{strings.run}}</button>
+        </form>
+
+        <hr/>
+        <h4>{{strings.billingDetail}}</h4>
+        <form class="form-inline" role="form" id="monthly-summary-form">
+            <label>{{strings.billerLabel}}&nbsp;</label>
+            {{item-select class-name="form-control"
+            content=reportBillerOptions
+            optionLabelPath="name"
+            optionValuePath="id"
+            selection=reportBillerOption3}}
+            <label>{{strings.periodLabel}}</label>
+            {{item-select class-name="form-control"
+            content=reportTimeOptions
+            optionLabelPath="name"
+            optionValuePath="id"
+            selection=reportTimeOption3}}
+            <button class="btn btn-primary" type="submit" {{action 'billingReportDetail'}}
+            style="margin-left: 30px;">{{strings.run}}</button>
+        </form>
+	</div>
+</div>

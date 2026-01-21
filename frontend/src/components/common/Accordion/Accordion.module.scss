@@ -1,0 +1,37 @@
+@import "../variables";
+
+.imagesDiv{
+  border: none;
+}
+
+.title {
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+  margin-top: 0.5rem;
+}
+
+.caretLink {
+  padding: 0px;
+  margin-right: 0.5rem;
+}
+
+.noDecoration {
+  .caretLink {
+    text-decoration: none !important;
+
+    &:focus {
+      outline: 0px !important;
+    }
+  }
+
+  .caret {
+    color: $body-text-color;
+  }
+
+  .title {
+    color: $body-text-color;
+  }
+}
+
+

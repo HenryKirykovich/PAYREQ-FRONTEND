@@ -1,0 +1,52 @@
+<div class="row">
+	<div class="col-md-12">
+		<h4>
+			{{strings.reportTitle}}
+		</h4>
+	</div>
+</div>
+<div class="row actions-row">
+	<div class="col-md-12">
+		<button type="button" class="btn btn-default" {{action "download" this}}>
+			<span class="glyphicon glyphicon-circle-arrow-down"></span>&nbsp;&nbsp;{{strings.export}}</button>
+	</div>
+</div>
+<div class="row">
+	<div class="col-md-12">
+		<table class="table data-table table-striped">
+			<thead>
+				<tr>
+					<th rowspan="2">{{strings.month}}</th>
+					<th rowspan="2">{{strings.name}}</th>
+					<th rowspan="2">{{strings.billerid}}</th>
+					<th rowspan="2">{{strings.contacts}}</th>
+					<th colspan="5">{{strings.registrations}}</th>
+					<th rowspan="2">{{strings.bills}}</th>
+				</tr>
+        <tr>
+          <th>{{strings.newRegistrations}}</th>
+					<th>{{strings.totalRegistrations}}</th>
+					<th>{{strings.newDeregistrations}}</th>
+					<th>{{strings.totalDeregistrations}}</th>
+          <th>Net</th>
+        </tr>
+			</thead>
+			<tbody>
+				{{#each model.data as |item|}}
+					<tr>
+						<td nowrap>{{view-date date=item.month withMonthYear=true}}</td>
+						<td>{{item.name}}</td>
+						<td>{{item.billerid}}</td>
+						<td>{{item.contacts}}</td>
+						<td>{{item.registrations}}</td>
+						<td>{{item.totalRegistrations}}</td>
+						<td>{{item.deregistrations}}</td>
+						<td>{{item.totalDeregistrations}}</td>
+            <td><strong>{{item.netRegistrations}}</strong></td>
+						<td>{{item.bills}}</td>
+					</tr>
+				{{/each}}
+			</tbody>
+		</table>
+	</div>
+</div>

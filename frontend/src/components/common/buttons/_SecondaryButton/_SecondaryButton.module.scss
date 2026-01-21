@@ -1,0 +1,18 @@
+@import "../../variables";
+@import "../button";
+
+// todo: should change to use bootstrap button classes once ready to test in all the places
+.button {
+  @include button($white, $primary-color, $primary-color);
+
+  .buttonIcon {
+    margin-right: 0.5rem;
+    top: 0px;
+    vertical-align: middle;
+  }
+  &:hover, &:focus {
+    background-color: $accent-color-one;
+    border-color: $accent-color-one;
+    color: $primary-color;
+  }
+}

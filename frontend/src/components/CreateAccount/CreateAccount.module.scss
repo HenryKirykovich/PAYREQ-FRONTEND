@@ -1,0 +1,49 @@
+.container {
+  display: flex;
+  justify-content: center;
+  margin-top: 2.5rem;
+}
+
+.centerDiv {
+  width: 650px;
+
+  @media (max-width: 650px) {
+    width: 100%
+  }
+
+}
+
+.errorAlert {
+  margin: 0;
+}
+
+.createAccountButtons {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+}
+
+.newPassword {
+  > :first-child {
+    margin-bottom: 0.5em;
+  }
+}
+
+.emailContainer {
+  > div {
+    display: flex;
+    flex-direction: column;
+    > :first-child {
+      width: 16rem;
+    }
+  }
+  margin: 1.5rem auto;
+}
+
+.icon {
+  margin-left: 0.5rem;
+}
+
+.terms {
+  margin-top: 0.5rem;
+}

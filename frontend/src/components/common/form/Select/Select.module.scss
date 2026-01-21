@@ -1,0 +1,8 @@
+.selectInput {
+  &:disabled {
+    background: #FFFFFF;
+    border-color: #FFFFFF;
+    box-shadow: none;
+    appearance: none;
+  }
+}

@@ -1,0 +1,11 @@
+.reportTableContainer {
+  table {
+    tbody {
+      tr {
+        :first-child {
+          width: 20%
+        }
+      }
+    }
+  }
+}

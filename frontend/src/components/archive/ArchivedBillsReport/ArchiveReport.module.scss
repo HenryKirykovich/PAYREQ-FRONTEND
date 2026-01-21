@@ -1,0 +1,26 @@
+.tableContainer{
+  > table{
+    $first-col-width: 150px;
+    $rest-col-width: 100px;
+    > thead {
+      > tr {
+        >:first-child {
+          width: $first-col-width;
+        }
+        >th {
+          width: $rest-col-width;
+        }
+      }
+    }
+    > tbody {
+      > tr {
+        >:first-child {
+          width: $first-col-width;
+        }
+        >td {
+          width: $rest-col-width;
+        }
+      }
+    }
+  }
+}

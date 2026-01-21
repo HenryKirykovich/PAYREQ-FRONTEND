@@ -1,0 +1,34 @@
+.form-group {
+	margin-bottom: 2rem;
+}
+
+.progress{
+	height: 0.33rem !important;
+	margin-bottom: 0;
+}
+
+#nav-right-dropdown:focus-visible{
+	outline: -webkit-focus-ring-color auto 1px;
+}
+
+body, .btn  {
+	font-size: 1.6rem;
+}
+
+.form-control  {
+	font-size: 1.6rem;
+	height: 3.4rem;
+	min-height: 34px;
+}
+
+table {
+	font-size: 1.5rem;
+}
+
+.dropdown-header {
+	font-size: 1.4rem;
+}
+
+.dropdown-menu {
+	font-size: 1.4rem;
+}

@@ -1,0 +1,16 @@
+@import "../../variables";
+@import "../button";
+
+.button {
+  @include button($danger-color, $danger-color, $white);
+  display: flex;
+  align-items: center;
+  &:hover, &:focus {
+    background-color: #b92b39;
+    border-color: #b92b39;
+  }
+}
+
+.loader {
+  @include loader();
+}

@@ -1,0 +1,15 @@
+.detailsGroup {
+  > * {
+    > :first-child {
+      width: 15rem;
+    }
+  }
+}
+
+.formErrors {
+  margin-top: 1rem;
+  div {
+    margin-right: 0px;
+    margin-left: 0px;
+  }
+}

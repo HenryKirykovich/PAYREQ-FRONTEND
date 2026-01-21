@@ -1,0 +1,23 @@
+@import "../../payments/PaymentForm/payment-wizard-layout";
+
+.confirmationHeading {
+  margin-bottom: 2rem;
+}
+
+.confirmationDetails {
+  margin-bottom: 2.5rem;
+}
+
+.container {
+  @include payment-wizard-container();
+}
+
+.detailsContainer {
+  @include payment-wizard-layout();
+
+  .actions {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+  }
+}

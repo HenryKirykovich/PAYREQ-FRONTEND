@@ -1,0 +1,30 @@
+@import "../../../common/variables";
+
+.headerCard {
+  height: auto;
+  min-height: 15rem;
+  box-shadow: $box-shadow;
+}
+
+.card {
+  width: 50%;
+  height: 25rem;
+  box-shadow: $box-shadow;
+
+  @media (max-width: 1200px) {
+    width: 100%;
+    height: auto;
+    min-height: 25rem;
+  }
+}
+
+.subHeading {
+  margin-top: 1rem;
+  margin-bottom: 0px;
+  color: black;
+}
+
+.cardContainer {
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
+}

@@ -1,0 +1,195 @@
+<div class="row">
+    <div class="col-xs-12">
+        <h4>
+          Imported Registrations for Authorised MyBills Agent
+        </h4>
+    </div>
+
+    <div class="row actions-row">
+        <div class="actions btn-group col-sm-4">
+
+            {{#link-to "biller.registrationsinit" biller class="btn btn-default"}}<span class="glyphicon glyphicon-arrow-left"></span> Back{{/link-to}}
+        </div>
+    </div>
+
+    {{#if this.bulkregocreated}}
+    <div>
+        <div class="panel-body">
+            <div class="alert alert-info text-center">
+                <h3>MyBills Agent Registrations Successfully Loaded</h3>
+                <h5>MyBills registrations have been loaded for {{this.authorisationName}}.</h5>
+            </div>
+            {{#if this.registrationsCreatedCount}}
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">New Registrations Loaded: {{this.registrationsCreatedCount}}</h4>
+                </div>
+                <div class="panel-body">
+                    {{#each this.registrationsCreated as |created|}}
+                    <p><strong>{{this.model.channel.registrationContactIdField}}</strong>: {{created.accountNumber}} {{#if this.model.channel.useAuthItem1}}, <strong>{{this.model.channel.authItem1Field}}</strong>: {{created.authfield1}} {{/if}}</p>
+                    {{/each}}
+                </div>
+            </div>
+            {{/if}}
+            {{#if this.registrationsExistingCount}}
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">Registrations Already Active: {{this.registrationsExistingCount}}</h4>
+                </div>
+                <div class="panel-body">
+                    {{#each this.registrationsExisting as |existing|}}
+                    <p><strong>{{this.model.channel.registrationContactIdField}}</strong>: {{existing.accountNumber}} {{#if this.model.channel.useAuthItem1}}, <strong>{{this.model.channel.authItem1Field}}</strong>: {{existing.authfield1}} {{/if}}</p>
+                    {{/each}}
+                </div>
+            </div>
+            {{/if}}
+            <form class="form-login form-horizontal" role="form">
+                <div class="btn-toolbar margin-top-sm text-center" >
+                    {{#link-to "biller.registrationsinit" class="btn btn-default"}} <span> Back to Registrations</span>{{/link-to}}
+                </div>
+            </form>
+        </div>
+    </div>
+
+    {{else}}
+
+    {{#if this.hasImportedRegistrations}}
+        <div class="alert alert-info scroll" style="max-height: 150px; overflow-y: scroll;">
+            <h4>Successful Payreq MyBills Agent Registration Import </h4>
+            New registrations: {{this.importedRegistrationCount}} {{#if registrationsToCreate}} (There are no new MyBills Agent registrations to upload){{/if}}<br>
+            Existing active registrations: {{this.importedExistsCount}} <br>  <br>
+
+            {{#if this.importedErrorCount}}
+                {{this.importedErrorCount}} Payreq MyBills Agent registrations couldn't be imported sucessfully as both mandatory fields are not populated.
+                {{#each this.model.importedRegistrationsError as |error|}}
+                    <li><strong>{{this.model.channel.registrationContactIdField}}</strong>: "{{error.accountNumber}}", <strong>{{this.model.channel.authItem1Field}}</strong>: "{{error.authfield1}}"</li>
+                {{/each}}
+            {{/if}}
+        </div>
+    {{/if}}
+    <div class="alert alert-warning">
+        <p> Please select the Agent and then enter the MyBills Agent registrations for import.</p>
+    </div>
+
+    <div class="row">
+        <div class="col-xs-2">
+            <label for="authorisation" class="control-label">Select Agent</label>
+        </div>
+        <div class="col-xs-10">
+            {{item-select class-name="form-control"
+            content=model.authorisations
+            optionLabelPath="name"
+            optionValuePath="id"
+            selection=this.authorisedAgent
+            disabled=this.hasImportedRegistrations}}
+        </div>
+    </div>
+    <hr>
+    <div class="row actions-row">
+
+        <div class="actions btn-group col-xs-12 center-items">
+            <button type="button" class="btn btn-primary" {{action 'importRegistrations' }}>
+            <span class="glyphicon glyphicon-import"></span> Import Registrations
+            </button>
+        </div>
+    </div>
+    <div class="hr-text-black">
+        <span>  OR  </span>
+    </div>
+
+
+    <div>
+        <form class="form-login form" id="mybillsagent-form">
+            {{#if this.errormessage}}
+                <div class="alert alert-danger">
+                    {{this.errormessage}}
+                </div>
+            {{/if}}
+
+            {{#if model.updateerror}}
+            <div class="alert alert-danger">
+                <p>{{model.updateerror}}</p>
+                <ul>
+                    {{#each this.errorsemail as |error|}}
+                    <li>{{error.message}}</li>
+                    {{/each}}
+                </ul>
+            </div>
+            {{/if}}
+
+
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">Registrations</h4>
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-xs-1">
+                            <label for="registrationField" class="control-label">Reg. No.</label>
+                        </div>
+                        <div class="col-xs-4">
+                            <label for="registrationField" class="control-label">{{this.model.channel.registrationContactIdField}}</label>
+                        </div>
+                        {{#if hasAuthField1}}
+                        <div class="col-xs-6">
+                            <label for="authfield1" class="control-label">{{this.model.channel.authItem1Field}}</label>
+                        </div>
+                        {{/if}}
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-1">
+                        </div>
+                        <div class="col-xs-4">
+                            <small id="registrationHelp" class="form-text text-muted">{{this.model.channel.registrationContactIdHelp}}</small>
+                        </div>
+                        {{#if hasAuthField1}}
+                        <div class="col-xs-6">
+                            <small id="authfield1Help" class="form-text text-muted">{{this.model.channel.authItem1Help}}</small>
+                        </div>
+                        {{/if}}
+                    </div>
+                    {{#each this.registrations as |registration|}}
+                        <div class="row">
+                            <div class="col-xs-1">
+                                <h5 class="form-control-static text-center">
+                                    {{registration.regNo}}
+                                </h5>
+                            </div>
+                            <div class="col-xs-4">
+                                <div class="form-group">
+                                    {{input classNames="form-control" value=registration.accountNumber id=registration.id}}
+                                </div>
+                            </div>
+                            {{#if hasAuthField1}}
+                            <div class="col-xs-6">
+                                <div class="form-group">
+                                    {{input classNames="form-control" value=registration.authfield1 id=registration.id}}
+                                </div>
+                            </div>
+                            {{/if}}
+                            <div class="col-md-1 col-sm-1 col-xs-1" style="line-height: 28px;">
+                            <span class="label label-danger" style="display: inline-block;">
+                                <a class="btn btn-xs" title="Delete Agent Registration" {{action "removeMyBillsAgentRegistration" registration}}>
+                                    <span class="glyphicon glyphicon-remove"></span>
+                                </a>
+                            </span>
+                            </div>
+                        </div>
+                    {{/each}}
+                    <div class="form-group col-md-12">
+                        <div class="actions btn-group col-md-4 col-md-offset-4" style="padding-left: 5px;">
+                            <button type="button" class="btn btn-default" style="width: 100%;" {{action 'addMyBillsAgentRegistration'}}><span class="glyphicon glyphicon-plus"></span> Add Registration</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <button type="button" class="btn btn-success" {{action 'saveRegistration' this.registrations}}>
+            <span class="glyphicon glyphicon-ok"></span> Import
+            </button>
+        </form>
+    </div>
+    {{/if}}
+
+</div>

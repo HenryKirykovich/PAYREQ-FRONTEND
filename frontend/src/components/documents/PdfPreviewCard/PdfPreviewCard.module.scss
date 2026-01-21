@@ -1,0 +1,14 @@
+.pdfButtons {
+  display: flex;
+  justify-content: space-between;
+}
+
+.ieUnsupported {
+  display: flex;
+  align-items: baseline;
+}
+
+.pageNoSpan {
+  margin-left: 1rem;
+  margin-right: 1rem;
+}

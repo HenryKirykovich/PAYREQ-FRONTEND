@@ -1,0 +1,11 @@
+@import "../common/variables";
+
+.bannerAlert {
+  padding-top: 1rem;
+  //position: fixed;
+  width: $page-width;
+
+  @media (max-width: $page-width) {
+    width: 100%;
+  }
+}

@@ -1,0 +1,44 @@
+.logo {
+  display: block;
+  margin: 0 auto;
+  height: 100px;
+}
+
+.headerTop{
+  width: 100%;
+  height: 50px;
+}
+
+.container{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.wrapper {
+  width: 700px;
+  @media (max-width: 700px) {
+    width: 100%;
+  }
+}
+
+.buttonResendContainer{
+  font-size: 1.6rem;
+  margin-bottom: 4rem;
+  display: flex;
+  flex-direction: column;
+  padding-top: 0.5rem;
+}
+
+
+.linkButton {
+  margin: 1rem auto;
+}
+
+.detailText{
+  padding-top: 0.5rem;
+}
+
+.alert{
+  margin: 0;
+}

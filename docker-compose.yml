@@ -1,0 +1,51 @@
+name: payreq
+
+services:
+  frontend:
+    image: payreq/frontend:latest
+    pull_policy: build
+    build:
+      context: frontend
+      dockerfile: Dockerfile.development
+    environment:
+      NODE_ENV: development
+      PORT: 80
+    expose:
+      - 80
+    # This is required so that react-scripts is happy under Docker.
+    tty: true
+    volumes:
+      - ./frontend:/usr/src/app
+      - frontend-node-modules:/usr/src/app/node_modules
+    restart: unless-stopped
+  frontend-ember:
+    image: payreq/frontend-ember:latest
+    pull_policy: build
+    build:
+      context: frontend-ember
+      dockerfile: Dockerfile
+    expose:
+      - 80
+    volumes:
+      - ./frontend-ember/docker/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./frontend-ember/docker/conf.d/default.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./frontend-ember/src:/usr/share/nginx/html/app:ro
+    restart: unless-stopped
+  traefik:
+    image: payreq/traefik:latest
+    pull_policy: build
+    build:
+      context: traefik
+      dockerfile: Dockerfile
+    environment:
+      COMPOSE_PROJECT_NAME: ${COMPOSE_PROJECT_NAME}
+      NGROK_DOMAIN: ${NGROK_DOMAIN}
+    ports:
+      - "${STACK_PORT:-80}:80"
+    volumes:
+      # We need this to automatically route to http services
+      - /var/run/docker.sock:/var/run/docker.sock
+    restart: unless-stopped
+
+volumes:
+  frontend-node-modules:

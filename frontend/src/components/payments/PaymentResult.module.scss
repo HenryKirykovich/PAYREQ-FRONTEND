@@ -1,0 +1,38 @@
+@import "./PaymentForm/payment-wizard-layout";
+
+
+.resultHeading {
+  margin-bottom: 1em; //todo: move to a variables.scss
+}
+
+.detailsContainer {
+  @include payment-wizard-layout();
+}
+
+.container {
+  @include payment-wizard-container();
+}
+
+.failureActions {
+  margin-top: 2rem;
+  display: flex;
+}
+
+.actions {
+  margin-top: 2rem;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+
+  :last-child {
+    margin-left: 1rem;
+  }
+}
+
+.fieldGroup {
+  div {
+    div:nth-child(1) {
+      width: 150px;
+    }
+  }
+}

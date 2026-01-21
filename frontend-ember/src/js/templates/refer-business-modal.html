@@ -1,0 +1,17 @@
+{{#modal-dialog
+    modalTitle=strings.referral.modalTitle
+    actionButtons=referBusinessButtons
+    onClose="closeModal"
+    copyCode='copyCode'}}
+
+    {{{referralMessage}}}
+
+    <div class="input-group" style="margin-top:20px">
+        <input id="uniqueCode" type="text" class="form-control input-lg primary-border" placeholder=strings.referral.copyToClipPlaceholder disabled value="{{entityContext.referralCode}}">
+        <span class="input-group-btn">
+            <button class="btn btn-primary input-lg" type="button" {{action 'copyCode'}}>{{strings.referral.copyToClip}}</button>
+        </span>
+
+    </div>
+
+{{/modal-dialog}}

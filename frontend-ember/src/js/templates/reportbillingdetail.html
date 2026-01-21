@@ -1,0 +1,63 @@
+<div class="row">
+	<div class="col-md-12">
+		<h4>
+			{{strings.billingDetail}}
+		</h4>
+	</div>
+</div>
+<div class="row actions-row">
+	<div class="col-md-12">
+		<button type="button" class="btn btn-default" {{action "download" this}}>
+			<span class="glyphicon glyphicon-circle-arrow-down"></span>&nbsp;&nbsp;{{strings.export}}</button>
+	</div>
+</div>
+<div class="row">
+	<div class="col-md-12">
+		<table class="table data-table table-striped report-table">
+			<thead>
+				<tr>
+					<th colspan="2">{{strings.month}}</th>
+					<th colspan="2">{{strings.billerName}}</th>
+					<th colspan="2">{{strings.billId}}</th>
+					<th colspan="2">{{strings.invoiceNo}}</th>
+					<th colspan="2">{{strings.jobId}}</th>
+					<th colspan="2">{{strings.billFeedType}}</th>
+					<th colspan="2">{{strings.channel}}</th>
+					<th colspan="2">{{strings.totalSent}}</th>
+					<th colspan="2">{{strings.emailsSent}}</th>
+					<th colspan="2">{{strings.xeroSent}}</th>
+					<th colspan="2">{{strings.bpaySent}}</th>
+					<th colspan="2">{{strings.epostSent}}</th>
+					<th colspan="2">{{strings.myobSent}}</th>
+					<th colspan="2">{{strings.mybillsAgentSent}}</th>
+					<th colspan="2">{{strings.reckonSent}}</th>
+					<th colspan="2">{{strings.payreqSent}}</th>
+					<th colspan="2">{{strings.einvoicingSent}}</th>
+				</tr>
+			</thead>
+			<tbody>
+				{{#each model.data as |item|}}
+					<tr>
+						<td colspan="2">{{view-date date=item.actionedTime withMonthYear=true}}</td>
+						<td colspan="2">{{item.tagName}}</td>
+						<td colspan="2">{{item.billId}}</td>
+						<td colspan="2">{{item.billerInvoiceNumber}}</td>
+						<td colspan="2">{{item.jobId}}</td>
+						<td colspan="2">{{item.billFeedType}}</td>
+						<td colspan="2">{{item.dispatchType}}</td>
+						<td colspan="2">{{item.quantity}}</td>
+						<td colspan="2">{{item.emailQtyRaw}}</td>
+						<td colspan="2">{{item.xeroQtyRaw}}</td>
+						<td colspan="2">{{item.bpvQtyRaw}}</td>
+						<td colspan="2">{{item.epostQtyRaw}}</td>
+						<td colspan="2">{{item.myobQtyRaw}}</td>
+						<td colspan="2">{{item.mybillsagentQtyRaw}}</td>
+						<td colspan="2">{{item.reckonQtyRaw}}</td>
+						<td colspan="2">{{item.mybillsQtyRaw}}</td>
+						<td colspan="2">{{item.einvoicingQtyRaw}}</td>
+					</tr>
+				{{/each}}
+			</tbody>
+		</table>
+	</div>
+</div>

@@ -1,0 +1,147 @@
+{{#modal-dialog modalTitle=strings.capitalised.upload
+actionButtons=uploadActionButtons
+isPrimaryDisabled=isPrimaryDisabled
+onClose="closeModal"
+confirm="doUploadBill"}}
+<div class="row">
+    <div class="col-md-12">
+        <p class="well">{{{strings.uploadInstructions}}}</p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <label class="col-md-12 control-label">{{strings.uploadFile}}</label>
+    </div>
+    <div class="col-md-12" style="margin-bottom: 1rem">
+        {{multi-file-upload uploadId=uploadId uploadIds=uploadIds url=billUploadUrl}}
+    </div>
+
+    {{#if showFormats}}
+    <div class="col-md-12">
+        <label class="col-md-4 control-label">{{strings.billFormats}}</label>
+        <div class="col-md-8">
+            {{#each billFormats as |billFormat|}}
+            <div class="checkbox" style="margin-top: 0px;" onclick={{action 'markedAsChanged' value="target.value"}}>
+                <label>
+                    <input type="radio"
+                           name="billTemplates"
+                           checked={{is-equal billFormatSelected billFormat.idString}}
+                           value={{billFormat.idString}}>
+                    <span>{{billFormat.displayName}}</span>
+                </label>
+            </div>
+            {{/each}}
+            <span id="helpBlock" class="help-block">{{strings.billFormatsInstructions}}</span>
+        </div>
+    </div>
+    {{/if}}
+
+    {{#if showBillLoadOptions}}
+    <div class="col-md-12" style="margin-bottom: 1rem;">
+        <label class="col-md-4 control-label">{{strings.selectBillLoadType}}</label>
+        <div class="col-md-8">
+            {{item-select class-name="form-control"
+            content=billLoadOptions
+            optionLabelPath="name"
+            optionValuePath="value"
+            selection=selectedBillLoadOption}}
+        </div>
+    </div>
+    {{/if}}
+
+    {{#if showContactOptions}}
+    <div class="col-md-12">
+        <label class="col-md-4 control-label">{{strings.uploadContacts}}</label>
+        <div class="col-md-8">
+            {{item-select class-name="form-control"
+                     content=contactOptions
+                     optionLabelPath="name"
+                     optionValuePath="value"
+                     selection=selectedContactOption}}
+        </div>
+    </div>
+    {{/if}}
+
+    {{#if showAvailableCredits}}
+    <div class="col-md-12">
+        <div class="col-md-12" style="margin-top: 2rem">{{strings.availableCreditsPrefixText}} <label class="control-label">{{availableCreditsText}}</label> {{strings.availableCreditsSuffixText}}</div>
+    </div>
+    {{/if}}
+
+    {{#if showSplittingInfo}}
+    <div class="col-md-12">
+        <div class="col-md-12" style="margin-top: 2rem">{{{splittingInfo}}}</div>
+    </div>
+    {{/if}}
+
+
+    {{#if errorMessage}}
+    <div class="col-md-12">
+        <p class="well-error">{{errorMessage}}</p>
+    </div>
+    {{/if}}
+
+    {{#if affectedJobsErrorMessage}}
+    <div class="col-md-12">
+        <div class="{{if confirmationRequired 'well-confirm' 'well-error'}}">
+            <p><span class="glyphicon glyphicon-time"></span> {{affectedJobsErrorMessage}}</p>
+
+            <ul>
+                {{#if confirmationRequired}}
+                {{#each reRunnableJobs as |reRunnableJob|}}
+                <li>"{{reRunnableJob.displayName}}" - <strong> Job {{nonRunnableJob.id}} </strong> ( ended {{view-date date=reRunnableJob.time relative=true}})</li>
+                {{/each}}
+                {{else}}
+                {{#each nonRunnableJobs as |nonRunnableJob|}}
+                <li>"{{nonRunnableJob.displayName}}" - <strong> Job {{nonRunnableJob.id}} </strong> ( started {{view-date date=nonRunnableJob.time relative=true}})</li>
+                {{/each}}
+                {{/if}}
+            </ul>
+        </div>
+    </div>
+    {{/if}}
+
+    {{#if validationErrorMessage}}
+    <div class="col-md-12">
+        <div class="well-error">
+            <p><span class="glyphicon glyphicon-time"></span> {{validationErrorMessage}}</p>
+
+            <ul>
+                {{#each validationErrors as |validationError|}}
+                {{#if validationError.displayName}}
+                <li>"{{validationError.displayName}}" - </li>
+
+                {{/if}}
+                <ul>
+                        {{#each validationError.billErrors as |billError|}}
+                            <li>Page {{billError.page}}</li>
+                            <ul>
+                                {{#each billError.errors as |error|}}
+                                    <li>{{error.errorMessage}}</li>
+                                {{/each}}
+                            </ul>
+                        {{/each}}
+
+                    </ul>
+
+                {{/each}}
+            </ul>
+        </div>
+    </div>
+    {{/if}}
+
+    {{#if uploadingFile}}
+    <div class="col-sm-12">
+        <div class="loading-alert-inline text-center">
+        <span>
+          Verifying file...
+        </span>
+        </div>
+    </div>
+    {{/if}}
+
+</div>
+
+
+{{/modal-dialog}}

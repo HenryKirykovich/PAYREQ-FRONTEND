@@ -1,0 +1,67 @@
+@import "../../common/variables";
+
+$card-width: 800px;
+
+.logo {
+  height: 150px;
+}
+
+.iconContainer {
+  margin-left: 1rem;
+  width: 60px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  .emailIcon {
+    font-size: 3rem;
+    color: $primary-color;
+  }
+
+  .imagePayreq {
+    width: 60px;
+  }
+
+  .imageMyob {
+    height: 40px;
+  }
+
+  .imageXero {
+    height: 45px;
+  }
+
+  .imageBpv {
+    height: 40px;
+  }
+
+  .imageReckon {
+    height: 50px;
+  }
+}
+
+.channelCard {
+  display: flex;
+  align-items: center;
+
+  :first-child {
+    margin-right: 1rem;
+  }
+
+  .channelDetails {
+    h2 {
+      margin-bottom: 0.5rem;
+      margin-top: 0.5rem;
+    }
+  }
+}
+
+.channelsContainer {
+  max-width: $card-width;
+}
+
+.links {
+  a {
+    text-decoration: none;
+    color: $body-text-color;
+  }
+}

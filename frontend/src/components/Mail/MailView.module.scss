@@ -1,0 +1,190 @@
+@import "../common/variables";
+@import "../../resources/scss/search-form";
+
+$card-width: 800px;
+
+.resultSummaryRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+.resultSummaryRowCardsView {
+  max-width: $card-width;
+}
+
+.resultSummaryRowTableView {
+  max-width: 100%;
+}
+
+.rightSearchResultActions {
+  display: flex;
+}
+
+.tableViewDropdown {
+  > div {
+    > ul {
+      right: 0; //justifies the bootstrap dropdown to be alighed on the right edge so it doesn't overflow off the screen
+      left: inherit;
+    }
+  }
+}
+
+.tripleDotButton {
+  border: none;
+  background-color: #ccc;
+  font-size: 1.8rem;
+
+  @media (max-width: 1000px) {
+    border-bottom-left-radius: 4px !important;
+    border-top-left-radius: 4px !important;
+  }
+}
+
+.showOnMobile {
+  @media (min-width: 1001px) {
+    display: none;
+  }
+}
+
+.hideOnMobile {
+  @media (max-width: 700px) {
+    display: none;
+  }
+}
+
+.searchContainer {
+  @include searchContainer();
+
+  input {
+    border-top-right-radius: 0px;
+    border-bottom-right-radius: 0px;
+  }
+
+  > :first-child {
+    margin-right: 0px;
+  }
+}
+
+.searchTerms {
+  margin-right: 0px;
+}
+
+.statusOptions {
+  select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    border-bottom-left-radius: 0px;
+    border-top-left-radius: 0px;
+    background: url("../../resources/images/arrow_drop_down_FILL0_wght400_GRAD0_opsz48.svg") 96% / 15% no-repeat;
+
+  }
+
+
+  > :first-child {
+    min-width: 20.5rem;
+    margin-right: 1rem;
+    margin-bottom: 0;
+  }
+}
+
+.additionalSearchFieldContainer {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+
+  > :first-child {
+    width: $search-input-width;
+    margin-right: 1rem;
+    margin-bottom: 0;
+  }
+}
+
+.pagerContainerCardsView {
+  max-width: $card-width;
+}
+.pagerContainerTableView {
+  max-width: 100%;
+}
+
+.advancedSearch {
+  @include advancedSearch();
+
+  .advancedSearchField {
+    @include advancedSearchField();
+
+    :first-child {
+      @include filterLabel(130px);
+    }
+  }
+
+  .activeFilter {
+    @include activeFilter();
+  }
+}
+
+.advancedSearchFields {
+  margin-top: 1rem;
+}
+
+.exactSearch {
+  margin-top: 0.75rem;
+  margin-bottom: 1rem;
+
+  div {
+    margin-top: 0.75rem;
+    margin-bottom: 0.2rem;
+  }
+}
+
+.links {
+  overflow-x: scroll;
+
+  a {
+    text-decoration: none;
+    color: $body-text-color;
+    display: inline-block;
+    width: 100%;
+    margin-bottom: 2rem;
+  }
+}
+
+.rejectButton{
+  color: $danger-color;
+
+  &:hover {
+    color: $danger-color;
+    background-color: $hover-grey;
+  }
+
+  @media (max-width: 1000px) {
+    display: none;
+  }
+}
+
+.approveButton{
+  color: #046307;
+
+  &:hover {
+    color: #046307;
+    background-color: $hover-grey;
+  }
+
+  @media (max-width: 1000px) {
+    display: none;
+  }
+}
+
+.actionButton{
+  &:hover {
+    background-color: $hover-grey;
+  }
+
+  @media (max-width: 1000px) {
+    display: none;
+  }
+}
+
+.noMailFound {
+  margin-top: -10px;
+  text-align: center;
+}

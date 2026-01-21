@@ -1,0 +1,16 @@
+{{#modal-dialog modalTitle=strings.capitalised.externalAction.modalTitle
+actionButtons=actionButtons
+isPrimaryDisabled=isPrimaryDisabled
+onClose="closeModal"
+save="saveExternalActionAction"}}
+
+<div class="row">
+    <div class="col-md-12">
+        <label class="col-md-4 control-label">{{strings.externalAction.actionDescriptionLabel}}</label>
+        <div class="col-md-8">
+            {{input type="text" class="form-control" value=actionDescription}}
+        </div>
+    </div>
+</div>
+
+{{/modal-dialog}}

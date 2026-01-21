@@ -1,0 +1,30 @@
+.container  {
+  display: flex;
+  justify-content: center;
+}
+
+.centerDiv {
+  width: 650px;
+
+  @media (max-width: 650px) {
+    width: 100%
+  }
+}
+
+.linkButton {
+  margin: 1rem auto;
+}
+
+.buttons {
+  margin-top: 2rem;
+  display: flex;
+  justify-content: space-between;
+}
+
+.error {
+  margin-top: 2rem;
+  >:first-child {
+    margin-left: 0px;
+    margin-right: 0px;
+  }
+}

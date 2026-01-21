@@ -1,0 +1,29 @@
+@import "../variables";
+
+.panelTitle {
+  > a {
+    display: flex;
+    flex-direction: row;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-top: 0.5rem;
+    width: 100%;
+
+    &:link, &:visited, &:hover, &:active {
+      text-decoration: none;
+    }
+
+    > h2 {
+      margin-top: 0.25em;
+      margin-bottom: 0.25em;
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+
+    > .caret {
+      color: $body-text-color;
+      font-size: 0.75em;
+    }
+  }
+}

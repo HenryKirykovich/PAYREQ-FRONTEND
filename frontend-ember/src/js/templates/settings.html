@@ -1,0 +1,19 @@
+<div class="row margin-bottom-sm">
+	{{#if model.isSub}}
+		<p class="well">
+			{{{subBillerInfo}}}
+		</p>
+	{{/if}}
+	<ul class="nav nav-pills">
+		{{#each tabs as |t|}}
+			<li class="{{if t.active 'active'}}">
+				{{#if t.href}}
+					<a href={{t.href}}>{{t.title}}</a>
+				{{else}}
+					{{#link-to t.linkTo}}{{t.title}}{{/link-to}}
+				{{/if}}
+			</li>
+		{{/each}}
+	</ul>
+</div>
+{{outlet}}

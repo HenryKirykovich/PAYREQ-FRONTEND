@@ -1,0 +1,26 @@
+<div class="row" id="invite">
+	<div class="col-md-8 col-md-offset-2">
+		<div class="panel panel-default ">
+			<div class="panel-heading">
+				<h2 class="panel-title">{{strings.welcomeHeading}}</h2>
+			</div>
+			<div class="panel-body">
+                <div class="alert alert-info">
+                    <p>{{strings.verify.text}}</p>
+                </div>
+
+				<form class="form-login form-horizontal" role="form">
+   					<div class="form-group">
+                        <label class="control-label col-sm-4">{{strings.verify.emailLabel}}</label>
+                        <p class="form-control-static col-sm-8">{{model.invite.email}}</p>
+					</div>
+   					<div class="col-sm-12">
+						<div class="btn-toolbar pull-right margin-top-sm">
+							<button class="btn btn-primary" {{action 'verifyAndAddUser'}}>{{strings.verify.button}}</button>
+						</div>
+					</div>
+                </form>
+			</div>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,145 @@
+@import "../common/variables";
+@import "../../resources/scss/search-form";
+
+$card-width: 800px;
+
+.resultSummaryRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 1rem;
+}
+.resultSummaryRowCardsView {
+  max-width: $card-width;
+}
+
+.resultSummaryRowTableView {
+  max-width: 100%;
+}
+
+.rightSearchResultActions {
+  display: flex;
+  @media (max-width: 600px) {
+    display: none;
+  }
+}
+
+.tableViewDropdown {
+  > div {
+    > ul {
+      right: 0; //justifies the bootstrap dropdown to be alighed on the right edge so it doesn't overflow off the screen
+      left: inherit;
+    }
+  }
+}
+
+.tripleDotButton {
+  border: none;
+  background-color: $hover-grey;
+  font-size: 1.8rem;
+}
+
+.bpayBatchLink {
+  color: $body-text-color;
+
+  &:hover {
+    color: $body-text-color;
+    text-decoration: none;
+  }
+}
+
+.hideOnMobile {
+  @media (max-width: 500px) {
+    display: none;
+  }
+}
+
+.searchContainer {
+  @include searchContainer();
+}
+
+.pagerContainerCardsView {
+  max-width: $card-width;
+}
+.pagerContainerTableView {
+  max-width: 100%;
+}
+
+.advancedSearch {
+
+  @include advancedSearch();
+
+  .advancedSearchField {
+    @include advancedSearchField();
+
+    :first-child {
+      @include filterLabel(130px);
+    }
+  }
+
+  .activeFilter {
+    @include activeFilter();
+  }
+}
+
+.links {
+  a {
+    text-decoration: none;
+    color: $body-text-color;
+    //overflow: hidden;
+    display: inline-block;
+    width: 800px;
+    margin-bottom: 2rem;
+
+    @media (max-width: 920px) {
+      width: 100%;
+    }
+  }
+}
+
+.card {
+  max-width: $card-width;
+  margin-bottom: 0;
+
+  >:first-child { //in bootstrap, there will be a panel-body as the first child
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+
+    .logoContainer {
+      width: 150px;
+      flex: 0 150px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-right: 2rem;
+
+      @media (max-width: 500px) {
+        display: none;
+      }
+
+      .logo {
+        height: 100px;
+        max-width: 150px;
+      }
+    }
+
+    .mainBody {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .paymentStatusWrapper {
+      @media (max-width: 650px) {
+        flex: 1 100%;
+        text-align: right;
+        margin-top: -1rem;
+        p {
+          margin-bottom: 0px;
+        }
+      }
+    }
+  }
+}

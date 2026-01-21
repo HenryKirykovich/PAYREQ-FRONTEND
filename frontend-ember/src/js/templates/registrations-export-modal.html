@@ -1,0 +1,72 @@
+{{#modal-dialog modalTitle=strings.exportModal.title
+                actionButtons=exportActionButtons
+                onClose="closeModal"
+                confirm="downloadCsv"}}
+<div class="row">
+    <div class="col-md-12">
+        <p class="well">{{{strings.exportModal.instructions}}}</p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="list-group">
+            {{#if hasPreviousExports}}
+            <a class="list-group-item action-link {{if isLastExport 'active' 'inactive'}}" {{action "selectExportType" "last-export"}}>
+                <h4 class="list-group-item-heading">{{strings.exportModal.allRegistrationsSinceLast}}</h4>
+                <p>
+                  {{strings.exportModal.allRegistrationsSinceLastInstructions}} <em>{{view-date date=lastExport.endTime withFullTime=true}}</em>.
+                </p>
+            </a>
+
+            <a class="list-group-item action-link {{if isFromPreviousExport 'active' 'inactive'}}" {{action "selectExportType" "from-previous-export"}}>
+                <h4 class="list-group-item-heading">{{{strings.exportModal.allRegistrationsSinceSelect}}}</h4>
+                {{#if isFromPreviousExport}}
+                <label for="fromPreviousReport" class="control-label">{{strings.exportModal.allRegistrationsSinceSelectInstructions}}</label>
+                {{item-select class-name="form-control"
+                     content=previousExportOptions
+                     optionLabelPath="range"
+                     optionValuePath="id"
+                     selection=previousExport
+                     disabled=fromPreviousExportsDisabled}}
+                {{/if}}
+            </a>
+
+            <a class="list-group-item action-link {{if isPreviousExport 'active' 'inactive'}}" {{action "selectExportType" "previous-export"}}>
+                <h4 class="list-group-item-heading">{{strings.exportModal.previousExport}}</h4>
+                {{#if isPreviousExport}}
+                <label for="previousReport" class="control-label">{{strings.exportModal.previousExportInstructions}}</label>
+                {{item-select class-name="form-control"
+                     content=previousExportOptions
+                     optionLabelPath="range"
+                     optionValuePath="id"
+                     selection=previousExport
+                     disabled=previousExportsDisabled}}
+                {{/if}}
+            </a>
+
+            <a class="list-group-item action-link {{if isCurrentSnapshot 'active' 'inactive'}}" {{action "selectExportType" "current-snapshot"}}>
+                <h4 class="list-group-item-heading">{{strings.exportModal.currentSnapshot}}</h4>
+                <p>{{{strings.exportModal.currentSnapshotInstructions1}}}</p>
+                <p>{{{strings.exportModal.currentSnapshotInstructions2}}}</p>
+                <p>{{{snapshotDataSummary}}} {{{snapshotStats}}}</p>
+            </a>
+            {{else}}
+            <a class="list-group-item active">
+                <h4 class="list-group-item-heading">{{strings.exportModal.firstExport}}</h4>
+                <p>{{{strings.exportModal.firstExportInstructions1}}}</p>
+                <p>{{{snapshotDataSummary}}} {{{snapshotStats}}}</p>
+            </a>
+            {{/if}}
+        </div>
+
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <p>{{selectedExportSummary}}</p>
+    </div>
+</div>
+
+{{/modal-dialog}}

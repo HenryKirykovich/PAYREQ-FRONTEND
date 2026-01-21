@@ -1,0 +1,423 @@
+openapi: "3.0.0"
+info:
+  description: "The Payreq Inbox API for managing the retrieval of bills\n\n
+  All services communicate using JSON (JavaScript Object Notation) for transmitting data,
+either as POST parameters, or within the body of the result of a GET request."
+  version: "2"
+  title: "Payreq API"
+servers:
+  # Added by API Auto Mocking Plugin
+  - description: SwaggerHub API Auto Mocking
+    url: https://virtserver.swaggerhub.com/PayreqAPIs/PayreqAPI/2
+paths:
+  /token:
+    post:
+      tags:
+        - "Authentication"
+      summary: "Get an api authenication token"
+      description: "In order to access a Payreq web service, you must first be authenticated within the
+Payreq system. This process involves submitting your credentials to a known endpoint to
+retrieve a token, which will be used for authentication for subsequent web service calls.\n\n
+The token must be submitted within the Authorisation http header for each subsequent
+request to a Payreq web service as Token <token returned by call>.\n\n
+If using Swagger add authorise add Token aaabbbcccdddeeefffggg. Assuming aaabbbcccdddeeefffggg was returned your call to this API. \n\n
+Note: authentication tokens are valid for a maximum of 15 minutes."
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Auth"
+      responses:
+        "200":
+          description: "successful operation"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponseToken"
+        "400":
+          description: "error"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponseError"
+        "500":
+          description: "system error"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SystemError"
+
+  /accounts/{type}:
+    get:
+      tags:
+        - "Accounts"
+      summary: "Accounts Visible to API User"
+      description: "Get details of the accounts the API user has access  to by  type delivery, inbox or mypay."
+      parameters:
+        - in: "path"
+          name: "type"
+          description: "Account Type"
+          required: true
+          schema:
+            type: "string"
+        - in: "query"
+          name: "page-number"
+          description: "Page number defaults to 1 if not provided"
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: "successful operation"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponseAccounts"
+        "400":
+          description: "Invalid parameter"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponseErrorV3"
+        "401":
+          description: "Permission denied"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponseError"
+        "500":
+          description: "system error"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SystemError"
+      security:
+        - payreq_auth: [ ]
+
+  /mybills/{account-id}/bills:
+    get:
+      tags:
+        - "Payreq Inbox"
+      summary: "Bills - search by Received Date"
+      description: "Search for invoices by received date."
+      parameters:
+        - in: "path"
+          name: "account-id"
+          description: "MyBills Account Id"
+          required: true
+          schema:
+            type: "string"
+        - in: "query"
+          name: "from-date"
+          description: "Bills received from date"
+          schema:
+            type: string
+            format: "yyyyMMddHHmm"
+        - in: "query"
+          name: "to-date"
+          description: "Bills received to date"
+          schema:
+            type: string
+            format: "yyyyMMddHHmm"
+        - in: "query"
+          name: "page-number"
+          description: "Page number defaults to 1 if not provided"
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: "successful operation"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponseBills"
+        "400":
+          description: "Invalid parameter"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponseErrorV3"
+        "500":
+          description: "system error"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SystemError"
+      security:
+        - payreq_auth: [ ]
+  /mybills/{account-id}/bills/{id}:
+    get:
+      tags:
+        - "Payreq Inbox"
+      summary: "Bill detail by id"
+      description: "Get bill detail for an invoice by id."
+      parameters:
+        - in: "path"
+          name: "account-id"
+          description: "MyBills Account Id"
+          required: true
+          schema:
+            type: "string"
+        - in: "path"
+          name: "id"
+          description: "Bill id"
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: "successful operation"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponseBillDetail"
+        "404":
+          description: "Bill ID not found in biller"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponseError"
+        "500":
+          description: "system error"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SystemError"
+      security:
+        - payreq_auth: [ ]
+
+components:
+  securitySchemes:
+    payreq_auth:
+      type: "apiKey"
+      in: "header"
+      name: "Authorization"
+  schemas:
+    Auth:
+      type: "object"
+      required:
+        - "user"
+        - "password"
+      properties:
+        user:
+          type: "string"
+        password:
+          type: "string"
+      example:
+        user: "person1@company.com"
+        password: "password"
+    ResponseToken:
+      type: "object"
+      properties:
+        token:
+          type: "string"
+      example:
+        token: "eyJhb...snip"
+
+    ResponseAccounts:
+      type: "object"
+      properties:
+        accounts:
+          type: "array"
+          items:
+            $ref: '#/components/schemas/ResponseAccountDetails'
+        meta:
+          type: "object"
+          properties:
+            total:
+              type: "integer"
+            total-pages:
+              type: "integer"
+            params:
+              type: "object"
+              properties:
+                type:
+                  type: "string"
+                page-number:
+                  type: "integer"
+                num-records:
+                  type: "integer"
+      example:
+        accounts:
+          - id: 2
+            name: "My Payreq MyBills Account"
+            tax-id: "12345678912"
+            ext-biller-id: null
+            document-location-id: 1
+            country-id: "au"
+            state-id: null
+        meta:
+          total: 1
+          total-pages: 1
+          params:
+            type: "inbox"
+            page-number: 1
+            num-records: 100
+
+    ResponseAccountDetails:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+        name:
+          type: "string"
+        tax-id:
+          type: "string"
+        ext-biller-id:
+          type: "string"
+        document-location-id:
+          type: "integer"
+          description: "1 = Australia, 2 = Canada, 3 = UK"
+        country-id:
+          type: "string"
+        state-id:
+          type: "string"
+
+    ResponseBills:
+      type: "object"
+      properties:
+        bills:
+          type: "array"
+          items:
+            $ref: '#/components/schemas/ResponseBillSummary'
+        meta:
+          type: "object"
+          properties:
+            total:
+              type: "integer"
+            total-pages:
+              type: "integer"
+            params:
+              type: "object"
+              properties:
+                from-date:
+                  type: "string"
+                  format: "date-time"
+                to-date:
+                  type: "string"
+                  format: "date-time"
+                page-number:
+                  type: "integer"
+                num-records:
+                  type: "integer"
+      example:
+        bills:
+          - id: 2
+            description: "Invoice from Demo Company for work"
+            min-amount-due: null
+            currency-code: "AUD"
+            status: "payment-due"
+            received-by: "payreq"
+            due-date: "2021-02-20"
+            invoice-number: "INV-092"
+            received-time: "2021-01-20 13:28:01"
+            amount-due: 102.98
+        meta:
+          total: 1
+          total-pages: 1
+          params:
+            from-date: null
+            to-date: "2021-01-25 02:30:54"
+            page-number: 1
+            num-records: 100
+
+    ResponseBillSummary:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+        description:
+          type: "string"
+        min-amount-due:
+          type: "number"
+        currency-code:
+          type: "string"
+        status:
+          type: "string"
+          enum: ["payment-due", "paid", "no-payment-due", "payment-network-error"]
+        received-by:
+          type: "string"
+        due-date:
+          type: "string"
+          format: "date"
+        invoice-no:
+          type: "string"
+        received-time:
+          type: "string"
+          format: "date-time"
+        amount-due:
+          type: "number"
+
+    ResponseBillDetail:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+        description:
+          type: "string"
+        min-amount-due:
+          type: "number"
+        currency-code:
+          type: "string"
+        status:
+          type: "string"
+          enum: [ "payment-due", "paid", "no-payment-due", "payment-network-error" ]
+        received-by:
+          type: "string"
+        due-date:
+          type: "string"
+          format: "date"
+        invoice-no:
+          type: "string"
+        received-time:
+          type: "string"
+          format: "date-time"
+        amount-due:
+          type: "number"
+        pdf-base-64:
+          type: "string"
+        bill-detail:
+          type: "object"
+          description: "See invoicing spec for details"
+      example:
+        id: 2
+        description: "Invoice from Demo Company for work"
+        min-amount-due: null
+        currency-code: "AUD"
+        status: "payment-due"
+        received-by: "payreq"
+        due-date: "2021-02-20"
+        invoice-number: "INV-092"
+        received-time: "2021-01-20 13:28:01"
+        amount-due: 102.98
+        pdf-base-64: "binary file as base 64"
+        bill-detail: "See invoicing spec for details"
+
+    ResponseError:
+      type: "object"
+      properties:
+        message:
+          type: "string"
+      example:
+        message: "The error message."
+    ResponseErrorV3:
+      type: "object"
+      properties:
+        error:
+          type: "string"
+      example:
+        error: "An error message"
+    SystemError:
+      type: "object"
+      properties:
+        success:
+          type: "boolean"
+        error:
+          type: "object"
+          properties:
+            id:
+              type: "string"
+      example:
+        success: false
+        error:
+          id: "011b96fc-fbaa-486b-946e-128c516cbe9b"

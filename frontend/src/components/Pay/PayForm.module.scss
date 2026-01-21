@@ -1,0 +1,83 @@
+.formErrors {
+  margin-top: 20px;
+}
+
+.padHeading {
+  margin-top: 30px;
+  margin-bottom: 10px;
+}
+
+.paymentFormContainer {
+  margin-top: 20px;
+}
+
+.paymentDetails {
+  background-color: #f7f7f7;
+  padding: 15px;
+  margin: 20px 0;
+  border-radius: 4px;
+  
+  p {
+    margin-bottom: 5px;
+    font-size: 16px;
+  }
+}
+
+.paymentDetailLabel {
+  width: 60% !important;
+}
+
+.detailsContainer {
+  color: grey;
+}
+
+.cardFormContainer {
+  margin-top: 30px;
+  border: 1px solid #ddd;
+  padding: 20px;
+  border-radius: 4px;
+}
+
+.cardPreview {
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+  display: flex;
+  justify-content: center;
+}
+
+.cardForm {
+  min-height: 200px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.actionButtonsContainer {
+  display: flex;
+  align-items: center;
+  margin-top: 2rem;
+}
+
+.monoovaWidget {
+  margin-top: 20px;
+}
+
+.payButton {
+  padding: 10px 30px;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.images {
+  max-width: 100%;
+}
+
+.alert {
+  margin-left: 0;
+  margin-right: 0;
+}

@@ -1,0 +1,93 @@
+<ul class="nav navbar-nav navbar-right">
+    {{#if showEntityContextSwitch}}
+    <li role="presentation" class="hidden-sm hidden-md">
+        <a {{action 'switchBillers'}} style="display: flex;" href="/" title={{entityContext.nameDisplay}} >
+            <span class="customerName" style="margin-right: 0.5rem">{{entityContext.nameDisplay}}</span>
+            <span class="glyphicon glyphicon-transfer" style="margin-left: 0.5rem"></span>
+        </a>
+    </li>
+    {{/if}}
+
+    {{#if entityContext.referMasterBiller}}
+        <li role="presentation" class="refer-button">
+            <a {{action "showReferralMessage"}} href="#">
+            <span class="glyphicon glyphicon-gift" title="Introduce business"></span>
+            </a>
+        </li>
+    {{/if}}
+
+    {{#if isLoggedIn}}
+    <li class="dropdown">
+        <a href="#" data-toggle="dropdown" aria-label="User Menu">
+            <span class="glyphicon glyphicon-wrench"></span>
+            <span class="caret"></span>
+        </a>
+        <ul class="dropdown-menu" role="menu">
+            {{#if showUserMenu}}
+
+                <li role="presentation" class="dropdown-header">{{globalStrings.all.loggedInAs}} <abbr title={{userContext.username}}>{{userContext.email}}</abbr></li>
+                {{#if showEntityContextSwitch}}
+                <!-- Only showing these to small devices, as we hide the switch button on the main navbar, for space reasons -->
+                <li role="presentation" class="dropdown-header visible-sm visible-md"><abbr title={{entityContext.extBillerId}}>{{entityContext.nameDisplay}}</abbr></li>
+                <li class="hidden-xs" role="presentation"><a href="/" {{action 'switchBillers'}}>{{globalStrings.all.switchAccount}}</a></li>
+                <li class="visible-xs" data-toggle="collapse" data-target="#pr-navbar" role="presentation"><a href="/" {{action 'switchBillers'}}>{{globalStrings.all.switchAccount}}</a></li>
+                {{/if}}
+
+
+                {{#if isNotQboAccount}}
+                    {{#unless hasNoEntityContext}}
+                    <li class="hidden-xs" role="presentation"><a href={{profileSettingsLink}}>{{globalStrings.all.userSettings}}</a></li>
+                    <li class="visible-xs" data-toggle="collapse" data-target="#pr-navbar" role="presentation"><a href={{profileSettingsLink}}>{{globalStrings.all.userSettings}}</a></li>
+                    {{/unless}}
+                {{/if}}
+                {{#if isPayreqBiller}}
+                <li class="hidden-xs" role="presentation">{{#link-to "user.notifications"}}{{globalStrings.all.notificationSettings}}{{/link-to}}</li>
+                <li class="visible-xs" data-toggle="collapse" data-target="#pr-navbar" role="presentation">{{#link-to "user.notifications"}}{{globalStrings.all.notificationSettings}}{{/link-to}}</li>
+                {{/if}}
+                {{#if isPayreqPayer}}
+                <li class="hidden-xs" role="presentation"><a href="#" {{action 'goToAccountSettings'}}>{{globalStrings.all.accountSettings}}</a></li>
+                <li class="visible-xs" data-toggle="collapse" data-target="#pr-navbar" role="presentation"><a href="#" {{action 'goToAccountSettings'}}>{{globalStrings.all.accountSettings}}</a></li>
+                {{/if}}
+
+                <!-- Actions: add account           -->
+                {{#if showEntityContextSwitch}}
+                <!-- Always show -->
+                <li class="hidden-xs" role="presentation">{{#link-to "user.organisations.add"}}{{globalStrings.all.addMyBillsAccount}}{{/link-to}}</li>
+                <li class="visible-xs" data-toggle="collapse" data-target="#pr-navbar" role="presentation">{{#link-to "user.organisations.add"}}{{globalStrings.all.addMyBillsAccount}}{{/link-to}}</li>
+                {{else}}
+                    {{#if hasNoEntityContext}}
+                    {{else}}
+                    <!-- if it has an entity context and we are not showing the switch-->
+                    <li class="hidden-xs" role="presentation">{{#link-to "user.organisations.add"}}{{globalStrings.all.addMyBillsAccount}}{{/link-to}}</li>
+                    <li class="visible-xs" data-toggle="collapse" data-target="#pr-navbar" role="presentation">{{#link-to "user.organisations.add"}}{{globalStrings.all.addMyBillsAccount}}{{/link-to}}</li>
+                    {{/if}}
+                {{/if}}
+
+                {{#if hasNoEntityContext}}
+                <li class="hidden-xs" role="presentation"><a href="/" {{action 'switchBillers'}}>{{globalStrings.all.selectOrganistaion}}</a></li>
+                <li class="visible-xs" data-toggle="collapse" data-target="#pr-navbar" role="presentation"><a href="/" {{action 'switchBillers'}}>{{globalStrings.all.selectOrganistaion}}</a></li>
+
+                <li class="hidden-xs" role="presentation">{{#link-to "user.organisations.add"}}{{globalStrings.all.addMyBillsAccount}}{{/link-to}}</li>
+                <li class="visible-xs" data-toggle="collapse" data-target="#pr-navbar" role="presentation">{{#link-to "user.organisations.add"}}{{globalStrings.all.addMyBillsAccount}}{{/link-to}}</li>
+                {{/if}}
+
+                {{#if isPayreqPayer}}
+                <hr style="margin-top: 0px; margin-bottom: 5px"/>
+                <li class="hidden-xs" role="presentation"><a href="#" {{action 'goToManageAutopayments' }}>{{globalStrings.all.manageAutopayments}}</a></li>
+                <li class="visible-xs" data-toggle="collapse" data-target="#pr-navbar" role="presentation"><a href="#" {{action 'goToManageAutopayments' entityContext.id}}>{{globalStrings.all.manageAutopayments}}</a></li>
+
+                <li class="hidden-xs" role="presentation"><a href="#" {{action 'goToManageCards' }}>{{globalStrings.all.manageCards}}</a></li>
+                <li class="visible-xs" data-toggle="collapse" data-target="#pr-navbar" role="presentation"><a href="#" {{action 'goToManageCards' entityContext.id}}>{{globalStrings.all.manageCards}}</a></li>
+                <hr style="margin-top: 5px; margin-bottom: 0px"/>
+                {{/if}}
+
+            {{/if}}
+            <li class="hidden-xs" role="presentation"><a href="{{globalStrings.all.helpCentreURL}}">{{globalStrings.all.accessHelpCentre}}</a></li>
+            <li class="visible-xs" data-toggle="collapse" data-target="#pr-navbar" role="presentation"><a href="{{globalStrings.all.helpCentreURL}}">{{globalStrings.all.accessHelpCentre}}</a></li>
+
+            <li class="hidden-xs" role="presentation"><a href="#" {{action logout}}>{{globalStrings.all.logout}}</a></li>
+            <li class="visible-xs" data-toggle="collapse" data-target="#pr-navbar" role="presentation"><a href="#" {{action logout}}>{{globalStrings.all.logout}}</a></li>
+        </ul>
+    </li>
+    {{/if}}
+</ul>

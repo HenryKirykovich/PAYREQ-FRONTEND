@@ -1,0 +1,38 @@
+@import "../../variables";
+@import "../button";
+
+// todo: should change to use bootstrap primary button classes once ready to test in all the places
+.button {
+  @include button($primary-color, $primary-color, $white);
+}
+
+.icon {
+  margin-right: 0.5rem;
+  top: 0px;
+  vertical-align: middle;
+}
+
+.buttonContent {
+  display: flex;
+  align-items: center;
+}
+
+.loader {
+  margin-left: 1rem;
+  border: 3px solid #f3f3f3; /* Light grey */
+  border-top: 3px solid lighten($primary-color, 30%);
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  animation: spin 1.5s linear infinite;
+  margin-right: 0.5rem;
+
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+}

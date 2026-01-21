@@ -1,0 +1,40 @@
+<div class="row">
+    <img style="display: block; margin: 0 auto; height: 100px;" src={{this.model.logoPath}}>
+    <div class="col-md-12">
+        <h4>{{strings.importText.heading}}</h4>
+    </div>
+</div>
+
+<div class="row actions-row">
+    <div class="actions btn-group col-sm-4">
+        <button type="button" class="btn btn-default" {{action 'back' }}>
+        <span class="glyphicon glyphicon-arrow-left"></span> {{strings.importText.backButton}}
+        </button>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12 well" style="margin-left: 15px; margin-right: 15px;">
+        <p><strong>{{strings.importText.text}}</strong></p>
+        <strong>{{strings.importText.column1}}</strong> {{this.model.channel.registrationContactIdField}}{{#if this.model.channel.registrationContactIdHelp}}: {{this.model.channel.registrationContactIdHelp}} {{/if}}
+
+        {{#if this.model.channel.useAuthItem1}}
+        <br>
+        <strong>{{strings.importText.column2}}</strong> {{this.model.channel.authItem1Field}}{{#if this.model.channel.authItem1Help}}: {{this.model.channel.authItem1Help}} {{/if}}
+        {{/if}}
+    </div>
+</div>
+
+<div class="row">
+    <form  id="import-from-text">
+        <div class="col-md-12">
+
+                {{textarea-numbered content=this.registrations placeholder=this.placeholder}}
+        </div>
+        <div class="actions btn-group col-xs-12 center-items">
+            <button type="button" class="btn btn-primary col-xs-2" {{action "importCopyPaste" this.registrations}}>
+            <span class="glyphicon glyphicon-import"></span> {{strings.importText.importButton}}
+            </button>
+        </div>
+    </form>
+</div>

@@ -1,0 +1,15 @@
+@import "../common/variables";
+
+.card {
+  max-width: $card-width;
+  margin-top: 2rem;
+}
+
+.buttons {
+  display: flex;
+  margin-top: 2rem;
+}
+
+.viewButton {
+  margin-left: 2rem;
+}
