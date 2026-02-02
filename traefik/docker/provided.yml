@@ -1,15 +1,5 @@
 http:
   services:
-    COMPOSE_PROJECT_NAME-ap:
-      loadbalancer:
-        servers:
-          - url: http://ap:8080/
-        passHostHeader: true
-    COMPOSE_PROJECT_NAME-assets:
-      loadbalancer:
-        servers:
-          - url: http://assets/
-        passHostHeader: true
     COMPOSE_PROJECT_NAME-backend:
       loadbalancer:
         servers:
@@ -25,82 +15,27 @@ http:
         servers:
           - url: http://frontend-ember/
         passHostHeader: true
-    COMPOSE_PROJECT_NAME-localstack:
-      loadbalancer:
-        servers:
-          - url: http://localstack:4566/
-        passHostHeader: true
-    COMPOSE_PROJECT_NAME-ngrok:
-      loadbalancer:
-        servers:
-          - url: http://ngrok:4040/
-        passHostHeader: true
-    COMPOSE_PROJECT_NAME-mailhog:
-      loadbalancer:
-        servers:
-          - url: http://mailhog:8025/
-        passHostHeader: true
-    COMPOSE_PROJECT_NAME-smp:
-      loadbalancer:
-        servers:
-          - url: http://smp:8080/
-        passHostHeader: true
-    COMPOSE_PROJECT_NAME-portal:
-      loadbalancer:
-        servers:
-          - url: http://backend:8888/
-        passHostHeader: true
     COMPOSE_PROJECT_NAME-traefik:
       loadbalancer:
         servers:
           - url: http://traefik:8080/
         passHostHeader: true
   routers:
-    COMPOSE_PROJECT_NAME-ap:
-      rule: Host(`ap.COMPOSE_PROJECT_NAME.localhost`)
-      entrypoints: web
-      service: COMPOSE_PROJECT_NAME-ap
-    COMPOSE_PROJECT_NAME-assets:
-      rule: Host(`assets.COMPOSE_PROJECT_NAME.localhost`)
-      entrypoints: web
-      service: COMPOSE_PROJECT_NAME-assets
     COMPOSE_PROJECT_NAME-backend:
-      rule: (Host(`localhost`) || Host(`go.COMPOSE_PROJECT_NAME.localhost`) || Host(`NGROK_DOMAIN`))
+      rule: (Host(`localhost`) || Host(`go.COMPOSE_PROJECT_NAME.localhost`))
       entrypoints: web
       service: COMPOSE_PROJECT_NAME-backend
       priority: 1
     COMPOSE_PROJECT_NAME-frontend:
-      rule: (Host(`localhost`) || Host(`go.COMPOSE_PROJECT_NAME.localhost`) || Host(`NGROK_DOMAIN`)) && PathRegexp(`^(/|/daily-download.*|/error.*|/fastform/.*|/forgot-password.*|/manifest.json|/pay.*|/payreq-ui.*|/portal.*|/sockjs-node.*|/sso.*|/static/.*|/verify/.*|/xero-sso\.js|.*\.hot-update\.js)$`)
+      rule: (Host(`localhost`) || Host(`go.COMPOSE_PROJECT_NAME.localhost`)) && PathRegexp(`^(/|/daily-download.*|/error.*|/fastform/.*|/forgot-password.*|/manifest.json|/pay.*|/payreq-ui.*|/portal.*|/sockjs-node.*|/sso.*|/static/.*|/verify/.*|/xero-sso\.js|.*\.hot-update\.js)$`)
       entrypoints: web
       service: COMPOSE_PROJECT_NAME-frontend
       priority: 2
     COMPOSE_PROJECT_NAME-frontend-ember:
-      rule: (Host(`localhost`) || Host(`go.COMPOSE_PROJECT_NAME.localhost`) || Host(`NGROK_DOMAIN`)) && PathRegexp(`^(/apple-touch-icon.*|/css/.*|/customer|/favicon.ico|/fonts/.*|/images/.*|/js/.*|/mypay/.*|/opt-out-result/.*|/robots.txt)$`)
+      rule: (Host(`localhost`) || Host(`go.COMPOSE_PROJECT_NAME.localhost`)) && PathRegexp(`^(/apple-touch-icon.*|/css/.*|/customer|/favicon.ico|/fonts/.*|/images/.*|/js/.*|/mypay/.*|/opt-out-result/.*|/robots.txt)$`)
       entrypoints: web
       service: COMPOSE_PROJECT_NAME-frontend-ember
       priority: 3
-    COMPOSE_PROJECT_NAME-localstack:
-      rule: Host(`localstack.COMPOSE_PROJECT_NAME.localhost`)
-      entrypoints: web
-      service: COMPOSE_PROJECT_NAME-localstack
-    COMPOSE_PROJECT_NAME-mailhog:
-      rule: Host(`mailhog.COMPOSE_PROJECT_NAME.localhost`)
-      entrypoints: web
-      service: COMPOSE_PROJECT_NAME-mailhog
-    COMPOSE_PROJECT_NAME-ngrok:
-      rule: Host(`ngrok.COMPOSE_PROJECT_NAME.localhost`)
-      priority: 1000
-      entrypoints: web
-      service: COMPOSE_PROJECT_NAME-ngrok
-    COMPOSE_PROJECT_NAME-portal:
-      rule: Host(`portal.COMPOSE_PROJECT_NAME.localhost`)
-      entrypoints: web
-      service: COMPOSE_PROJECT_NAME-portal
-      priority: 1
-    COMPOSE_PROJECT_NAME-smp:
-      rule: Host(`smp.COMPOSE_PROJECT_NAME.localhost`)
-      entrypoints: web
-      service: COMPOSE_PROJECT_NAME-smp
     COMPOSE_PROJECT_NAME-traefik:
       rule: Host(`traefik.COMPOSE_PROJECT_NAME.localhost`)
       entrypoints: web

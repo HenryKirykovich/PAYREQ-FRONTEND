@@ -38,8 +38,7 @@ services:
       context: traefik
       dockerfile: Dockerfile
     environment:
-      COMPOSE_PROJECT_NAME: ${COMPOSE_PROJECT_NAME}
-      NGROK_DOMAIN: ${NGROK_DOMAIN}
+      COMPOSE_PROJECT_NAME: ${COMPOSE_PROJECT_NAME:-payreq}
     ports:
       - "${STACK_PORT:-80}:80"
     volumes:

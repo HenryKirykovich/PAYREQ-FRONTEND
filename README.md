@@ -63,9 +63,16 @@ docker compose run --rm frontend-ember bash -c 'yarnpkg install && mkdir -p buil
 
 ## Configuration
 
-The stack uses environment variables from `.envrc` or can be set in your shell:
+The stack uses environment variables that can be set in your shell or `.env` file:
 
 - `COMPOSE_PROJECT_NAME` - Project name (default: `payreq`)
 - `STACK_PORT` - Port to expose (default: `80`)
 
 All API requests are proxied to `https://test.payreq.com` via Traefik.
+
+You can create a `.env` file in the project root if you want to override defaults:
+
+```sh
+COMPOSE_PROJECT_NAME=payreq
+STACK_PORT=80
+```
