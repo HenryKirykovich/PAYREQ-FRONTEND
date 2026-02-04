@@ -23,15 +23,14 @@ const PayreqLogo = ({biller, intl}) => {
 
     if (isPayer(biller)) {
         return (
-            <Link to={`/portal/customer/biller/${billerId}/dashboard`} className="navbar-brand pr-logo">
+            <Link to={`/customer/biller/${billerId}/dashboard`} className="navbar-brand pr-logo">
                 <h1 className="text-hide">Payreq {intl.formatMessage({id: "dashboard.heading"})}</h1>
             </Link>
         )
     }
 
-
     return (
-        <Link to={`/portal/customer/biller/${billerId}/admin-dashboard`} className="navbar-brand pr-logo">
+        <Link to={`/customer/biller/${billerId}/admin-dashboard`} className="navbar-brand pr-logo">
             <h1 className="text-hide">Payreq {intl.formatMessage({id: "dashboard.heading"})}</h1>
         </Link>
     )
@@ -59,7 +58,7 @@ const Navber = ({biller = {}, user, intl}) => {
                     <div>
                         <ul className="nav navbar-nav navbar-right">
                             {canSwitchBillers && billerId &&  <CustomerSwitch {...biller}/>}
-                            <SpannerMenu biller={biller} user={user}/>
+                            <SpannerMenu biller={{...biller, id: billerId}} user={user}/>
                         </ul>
                     </div>
                 </Navbar.Collapse>

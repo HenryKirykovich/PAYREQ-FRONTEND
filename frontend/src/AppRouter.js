@@ -76,9 +76,16 @@ const RESTRICTED_ROUTE_PATH = "/portal/customer";
 const LOGIN_PATH= `${RESTRICTED_ROUTE_PATH}/login`;
 const RESTRICTED_ACCOUNT_PATH = `${RESTRICTED_ROUTE_PATH}/biller`;
 
-const isRestrictedPath = () => window.location.pathname.startsWith(RESTRICTED_ROUTE_PATH);
-const isLoginPath = () => window.location.pathname.startsWith(LOGIN_PATH);
-const isRestrictedAccountPath = () =>  window.location.pathname.startsWith(RESTRICTED_ACCOUNT_PATH);
+// Support both /portal/customer and /customer paths
+const isRestrictedPath = () => 
+    window.location.pathname.startsWith(RESTRICTED_ROUTE_PATH) || 
+    window.location.pathname.startsWith("/customer");
+const isLoginPath = () => 
+    window.location.pathname.startsWith(LOGIN_PATH) || 
+    window.location.pathname.startsWith("/customer/login");
+const isRestrictedAccountPath = () =>  
+    window.location.pathname.startsWith(RESTRICTED_ACCOUNT_PATH) ||
+    window.location.pathname.startsWith("/customer/biller");
 
 const doAuthChecks = (dispatch, setAuthChecksComplete) => {
     axios.get("/auth/login-session", {headers: {"Cache-Control": "no-store"}})
@@ -122,7 +129,9 @@ const AppRouter = () => {
                 <Route path="/" exact>
                     <Redirect to={LOGIN_PATH}/>
                 </Route>
-                <Route path={RESTRICTED_ROUTE_PATH} component={UserShell}/>
+                {/* Support both /portal/customer and /customer paths for React */}
+                <Route path="/portal/customer" component={UserShell}/>
+                <Route path="/customer" component={UserShell}/>
                 <Route path="/portal/sign-up" component={SignUpShell}/>
                 <Route path="/portal/reset" component={ResetPasswordShell}/>
                 <Route path="/fastform" component={FastFormShell}/>

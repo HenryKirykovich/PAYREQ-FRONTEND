@@ -31,12 +31,12 @@ const RegistrationsShell = ({match, location}) => {
             <Route path={`${match.url}/billers`} exact>
                 <Billers payerId={biller.id}/>
             </Route>
-            <Route path={`${match.url}/billers/:registrationsForBillerId`} exact>
-                <BillerRegistrations payerId={biller.id}/>
-            </Route>
-            <Route path={`${match.url}/billers/:registrationsForBillerId/:registrationId`} exact>
-                <Registration payerId={biller.id}/>
-            </Route>
+            <Route path={`${match.url}/billers/:registrationsForBillerId`} exact
+                   render={(props) => <BillerRegistrations {...props} payerId={biller.id}/>}
+            />
+            <Route path={`${match.url}/billers/:registrationsForBillerId/:registrationId`} exact
+                   render={(props) => <Registration {...props} payerId={biller.id}/>}
+            />
             <Route path={`${match.url}/billers/:registrationsForBillerId/:registrationId/updated`} exact>
                 <RegistrationUpdated emailsToVerify={location.state && location.state.emailsToVerify}
                                      registrationId={location.state && location.state.registrationId}
@@ -50,33 +50,33 @@ const RegistrationsShell = ({match, location}) => {
             <Route path={`${match.url}/create`} exact>
                 <BillerSelection payerId={biller.id}/>
             </Route>
-            <Route path={`${match.url}/create/:registeringForbillerId`} exact>
-                <ChannelSelection payerId={biller.id}/>
-            </Route>
+            <Route path={`${match.url}/create/:registeringForbillerId`} exact
+                   render={(props) => <ChannelSelection {...props} payerId={biller.id}/>}
+            />
             <Route path={`${match.url}/create/:registeringForbillerId/message`} exact>
                 <AuthorisedAgentMessage payerId={biller.id}/>
             </Route>
-            <Route path={`${match.url}/create/:registeringForbillerId/email`} exact>
-                <CreateEmailRegistration payerId={biller.id}/>
-            </Route>
-            <Route path={`${match.url}/create/:registeringForbillerId/mybillsagent`} exact>
-                <CreateMyBillsAgentRegistration payerId={biller.id}/>
-            </Route>
-            <Route path={`${match.url}/create/:registeringForbillerId/xero`} exact>
-                <CreateXeroRegistration payerId={biller.id}/>
-            </Route>
-            <Route path={`${match.url}/create/:registeringForbillerId/myob`} exact>
-                <CreateMyobRegistration payerId={biller.id}/>
-            </Route>
-            <Route path={`${match.url}/create/:registeringForbillerId/reckon`} exact>
-                <CreateReckonRegistration payerId={biller.id}/>
-            </Route>
-            <Route path={`${match.url}/create/:registeringForbillerId/payreq`} exact>
-                <CreatePayreqRegistration payerId={biller.id}/>
-            </Route>
-            <Route path={`${match.url}/create/:registeringForbillerId/payreq-bills`} exact>
-                <CreatePayreqBillsRegistration payerId={biller.id}/>
-            </Route>
+            <Route path={`${match.url}/create/:registeringForbillerId/email`} exact
+                   render={(props) => <CreateEmailRegistration {...props} payerId={biller.id}/>}
+            />
+            <Route path={`${match.url}/create/:registeringForbillerId/mybillsagent`} exact
+                   render={(props) => <CreateMyBillsAgentRegistration {...props} payerId={biller.id}/>}
+            />
+            <Route path={`${match.url}/create/:registeringForbillerId/xero`} exact
+                   render={(props) => <CreateXeroRegistration {...props} payerId={biller.id}/>}
+            />
+            <Route path={`${match.url}/create/:registeringForbillerId/myob`} exact
+                   render={(props) => <CreateMyobRegistration {...props} payerId={biller.id}/>}
+            />
+            <Route path={`${match.url}/create/:registeringForbillerId/reckon`} exact
+                   render={(props) => <CreateReckonRegistration {...props} payerId={biller.id}/>}
+            />
+            <Route path={`${match.url}/create/:registeringForbillerId/payreq`} exact
+                   render={(props) => <CreatePayreqRegistration {...props} payerId={biller.id}/>}
+            />
+            <Route path={`${match.url}/create/:registeringForbillerId/payreq-bills`} exact
+                   render={(props) => <CreatePayreqBillsRegistration {...props} payerId={biller.id}/>}
+            />
             <Route path={`${match.url}/create/:registeringForbillerId/email/saved`} exact>
                 <RegistrationsCreated emailsToVerify={location.state && location.state.emailsToVerify}
                                       registeringForbillerId={location.state && location.state.registeringForbillerId}
