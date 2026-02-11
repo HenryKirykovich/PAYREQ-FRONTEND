@@ -23,6 +23,8 @@ import AuthorisedAgentMessage from "../components/registrations/AuthorisedAgentM
 import CreateMyobRegistration from "../components/registrations/myob/CreateMyobRegistration"
 import AdminCreate from "../components/registrations/AdminCreate";
 import AdminCreateSuccess from "../components/registrations/AdminCreateSuccess";
+import AgentImport from "../components/registrations/mybillsagent/AgentImport";
+import AgentImportFromText from "../components/registrations/mybillsagent/AgentImportFromText";
 
 const RegistrationsShell = ({match, location}) => {
     const [{biller}] = useAppState();
@@ -98,6 +100,14 @@ const RegistrationsShell = ({match, location}) => {
             </Route>
             <Route path={`${match.url}/admin/create/success`} exact>
                 <AdminCreateSuccess billerId={biller.id}/>
+            </Route>
+
+            {/*mybills agent import screens*/}
+            <Route path={`${match.url}/import`} exact>
+                <AgentImport billerId={biller.id}/>
+            </Route>
+            <Route path={`${match.url}/import-from-text`} exact>
+                <AgentImportFromText billerId={biller.id}/>
             </Route>
 
             <Route component={PageNotFound}/>

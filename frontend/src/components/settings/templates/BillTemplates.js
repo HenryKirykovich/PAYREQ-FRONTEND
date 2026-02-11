@@ -4,10 +4,12 @@ import {injectIntl} from "react-intl";
 import {Button} from "react-bootstrap";
 import Loading from "../../Loading";
 import {getDateAsUTCFormatted} from "../../../utils/date-utils";
+import {BillTemplateUploadModal} from "../../modals";
 
 const BillTemplates = ({billerId, intl}) => {
     const [templates, setTemplates] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [showUploadModal, setShowUploadModal] = useState(false);
 
     useEffect(() => {
         if (billerId) {
@@ -24,8 +26,19 @@ const BillTemplates = ({billerId, intl}) => {
     }, [billerId]);
 
     const handleUpload = () => {
-        // TODO: Implement upload modal
-        alert("Bill template upload to be implemented");
+        setShowUploadModal(true);
+    };
+
+    const handleUploadComplete = (data) => {
+        // Refresh the templates list
+        axios.get("/data/bill-templates", {params: {billerId}})
+            .then(({data}) => {
+                setTemplates(data.templates || []);
+            })
+            .catch(error => {
+                console.error("Error refreshing templates:", error);
+            });
+        alert("Template uploaded successfully!");
     };
 
     const handleDownload = (templateId) => {
@@ -98,6 +111,13 @@ const BillTemplates = ({billerId, intl}) => {
                     </form>
                 </div>
             </div>
+
+            <BillTemplateUploadModal
+                show={showUploadModal}
+                onClose={() => setShowUploadModal(false)}
+                onUploadComplete={handleUploadComplete}
+                billerId={billerId}
+            />
         </div>
     );
 };

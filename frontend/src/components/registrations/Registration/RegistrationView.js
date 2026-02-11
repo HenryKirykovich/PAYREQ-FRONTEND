@@ -1,6 +1,7 @@
 import React, {useState} from "react";
-import {Link} from "react-router-dom";
+import {Link, useHistory} from "react-router-dom";
 import {Document, Page} from 'react-pdf/dist/esm/entry.webpack'
+import axios from "axios";
 
 import {FormattedDate, FormattedNumber, injectIntl} from "react-intl";
 import {
@@ -9,7 +10,8 @@ import {
     LinkButton,
     DefaultButton,
     Card,
-    DangerButton
+    DangerButton,
+    PrimaryButton
 } from "../../common";
 import FieldGroup from "../../common/FieldGroup";
 import styles from "./RegistrationView.module.scss"
@@ -19,13 +21,15 @@ import UpdateEmailRegistrationModal from "../email/UpdateEmailRegistrationModal"
 import DeregisterConfirmationModal from "./DeregisterConfirmationModal";
 import {CARD_SCHEME_LABELS} from "../../payments/payment-constants";
 import UpdateXeroRegistrationModal from "../xero/UpdateXeroRegistrationModal";
+import {RegistrationAcceptNewOwnerModal} from "../../modals";
 
 import RegistrationDetailsCard from "./Cards/RegistrationDetailsCard";
 import {isMonetaryDocument} from "../../../utils/document-utils";
 import {getDateAsUTCFormatted} from "../../../utils/date-utils";
 import BrowserUI from "../../BrowserUI";
 import UpdateReckonRegistrationModal from "../reckon/UpdateReckonRegistrationModal";
-import UpdateMyobRegistrationModal from "../myob/UpdateMyobRegistrationModal"
+import UpdateMyobRegistrationModal from "../myob/UpdateMyobRegistrationModal";
+import {Button, DropdownButton, MenuItem} from "react-bootstrap";
 
 const canEdit = registration => registration.status === "active" || registration.status === "pending";
 
@@ -47,22 +51,145 @@ const EmailLabel = ({registration, detail, intl}) => {
     }
 };
 
-const ActionButtons = ({registration}) => {
-    const [showModal, setShowModal] = useState(false);
+const ActionButtons = ({registration, onRefresh}) => {
+    const [showDeregisterModal, setShowDeregisterModal] = useState(false);
+    const [showAcceptNewOwnerModal, setShowAcceptNewOwnerModal] = useState(false);
+    const [showRejectModal, setShowRejectModal] = useState(false);
+    const [rejectionReason, setRejectionReason] = useState("");
+    const history = useHistory();
+    
+    const isPending = registration.status === "pending";
+    const hasContactChanged = registration.contactIdIsReused === true;
+    
+    const handleApprove = () => {
+        axios.post(`/data/registrations/${registration.id}/approve`)
+            .then(() => {
+                alert("Successfully approved registration.");
+                if (onRefresh) onRefresh();
+            })
+            .catch(error => {
+                console.error("Error approving registration:", error);
+                alert("Could not approve this registration. Please try again later.");
+            });
+    };
+    
+    const handleApproveNewOwner = (newOwnerName) => {
+        axios.post(`/data/registrations/${registration.id}/approve-new`, {customerName: newOwnerName})
+            .then(() => {
+                setShowAcceptNewOwnerModal(false);
+                alert("Successfully approved registration with new owner.");
+                if (onRefresh) onRefresh();
+            })
+            .catch(error => {
+                console.error("Error approving registration with new owner:", error);
+                alert("Could not approve this registration. Please try again later.");
+            });
+    };
+    
+    const handleReject = () => {
+        if (!rejectionReason) {
+            alert("Please select a rejection reason.");
+            return;
+        }
+        
+        axios.post(`/data/registrations/${registration.id}/reject`, {reason: rejectionReason})
+            .then(() => {
+                setShowRejectModal(false);
+                alert("Successfully rejected registration.");
+                if (onRefresh) onRefresh();
+            })
+            .catch(error => {
+                console.error("Error rejecting registration:", error);
+                alert("Could not reject this registration. Please try again later.");
+            });
+    };
+    
+    const rejectionReasons = [
+        "Contact does not match",
+        "Invalid authentication details",
+        "Duplicate registration",
+        "Customer request",
+        "Other"
+    ];
+    
     return (
         <div className={styles.buttonBar}>
             <DefaultButton icon="menu-left" label="forms.generic.back.button"
                            linkTo={`../${registration.billerActorId}`}/>
+            
+            {/* Approve/Reject buttons for pending registrations */}
+            {isPending && (
+                <div style={{display: 'flex', gap: '10px', marginTop: '10px'}}>
+                    {hasContactChanged ? (
+                        <DropdownButton
+                            bsStyle="success"
+                            title={<span><span className="glyphicon glyphicon-ok"></span> Approve this registration...</span>}
+                            id="approve-dropdown"
+                        >
+                            <MenuItem onClick={handleApprove}>
+                                Approve current owner
+                            </MenuItem>
+                            <MenuItem onClick={() => setShowAcceptNewOwnerModal(true)}>
+                                Approve new owner
+                            </MenuItem>
+                        </DropdownButton>
+                    ) : (
+                        <Button bsStyle="success" onClick={handleApprove}>
+                            <span className="glyphicon glyphicon-ok"></span> Approve this registration
+                        </Button>
+                    )}
+                    
+                    <Button bsStyle="danger" onClick={() => setShowRejectModal(true)}>
+                        Registration has failed, because...
+                    </Button>
+                </div>
+            )}
+            
             {canEdit(registration) && (
                 <div className={styles.deregisterContainer}>
                     <RegularText text="registration.view.deregister.bill.info"/>
-                    <DangerButton label="registration.view.deregister.button" onClick={() => setShowModal(true)}/>
+                    <DangerButton label="registration.view.deregister.button" onClick={() => setShowDeregisterModal(true)}/>
                 </div>
             )}
 
-            <DeregisterConfirmationModal show={showModal}
-                                         onCancel={() => setShowModal(false)}
+            <DeregisterConfirmationModal show={showDeregisterModal}
+                                         onCancel={() => setShowDeregisterModal(false)}
                                          registration={registration}/>
+            
+            <RegistrationAcceptNewOwnerModal
+                show={showAcceptNewOwnerModal}
+                onClose={() => setShowAcceptNewOwnerModal(false)}
+                onConfirm={handleApproveNewOwner}
+            />
+            
+            {/* Simple Reject Modal */}
+            {showRejectModal && (
+                <div className="modal fade in" style={{display: 'block'}} onClick={() => setShowRejectModal(false)}>
+                    <div className="modal-dialog" onClick={(e) => e.stopPropagation()}>
+                        <div className="modal-content">
+                            <div className="modal-header">
+                                <button type="button" className="close" onClick={() => setShowRejectModal(false)}>&times;</button>
+                                <h4 className="modal-title">Reject Registration</h4>
+                            </div>
+                            <div className="modal-body">
+                                <div className="form-group">
+                                    <label>Rejection Reason:</label>
+                                    <select className="form-control" value={rejectionReason} onChange={(e) => setRejectionReason(e.target.value)}>
+                                        <option value="">Select a reason...</option>
+                                        {rejectionReasons.map((reason, idx) => (
+                                            <option key={idx} value={reason}>{reason}</option>
+                                        ))}
+                                    </select>
+                                </div>
+                            </div>
+                            <div className="modal-footer">
+                                <Button onClick={() => setShowRejectModal(false)}>Cancel</Button>
+                                <Button bsStyle="danger" onClick={handleReject}>Reject</Button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
 
         </div>
     )
@@ -78,7 +205,7 @@ const RegistrationEmailsCard = ({registration, onResendVerificationEmail, intl})
     return (
         <Card heading="registration.view.registeredEmailsHeading">
             {registration.details.map(d => (
-                <div className={styles.registeredEmailsRow}>
+                <div key={d.id} className={styles.registeredEmailsRow}>
                     <LargeText>{d.registrationValue}</LargeText>
                     <LargeText><EmailLabel registration={registration} detail={d} intl={intl}/></LargeText>
                     {!d.isValid && resendResult.id !== d.id && canEdit(registration) && (
@@ -272,10 +399,10 @@ const BillCard = ({lastBill, intl}) => {
     );
 };
 
-const RegistrationView = ({registration, lastBill, autoPayment, payable, onResendVerificationEmail, intl}) => (
+const RegistrationView = ({registration, lastBill, autoPayment, payable, onResendVerificationEmail, onRefresh, intl}) => (
         <React.Fragment>
             <PageHeading text="registration.view.pageHeading" values={{accountNumber: registration.accountNumber}}/>
-            <ActionButtons registration={registration}/>
+            <ActionButtons registration={registration} onRefresh={onRefresh}/>
             <div className={styles.pageContainer}>
                 <div className={styles.registrationDetailsContainer}>
                     <RegistrationDetailsCard registration={registration} intl={intl}/>

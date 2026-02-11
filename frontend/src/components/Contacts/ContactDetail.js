@@ -72,7 +72,26 @@ const ContactDetail = ({match, history, intl, billerId}) => {
     };
 
     const handleSave = () => {
-        axios.put(`/data/contacts/${contactId}`, editedContact)
+        // Ember Data typically wraps the data in a root key
+        const updateData = {
+            contact: {
+                billerId: billerId,
+                name: editedContact.name,
+                contactId2: editedContact.contactId2,
+                contactId3: editedContact.contactId3,
+                businessIdentifier: editedContact.businessIdentifier,
+                address1: editedContact.address1,
+                address2: editedContact.address2,
+                municipality: editedContact.municipality,
+                province: editedContact.province,
+                postalCode: editedContact.postalCode,
+                country: editedContact.country
+            }
+        };
+
+        axios.put(`/data/contacts/${contactId}`, updateData, {
+            params: {billerId: billerId}
+        })
             .then(({data}) => {
                 setContact(data.contact);
                 setEditedContact(data.contact);

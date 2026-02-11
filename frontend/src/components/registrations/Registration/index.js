@@ -21,6 +21,11 @@ const resendVerificationEmail = (id, isResending, setResendResult) => {
 
 const Registration = ({match: {params: {registrationId}}}) => {
     const [response, setResponse] = useState();
+    
+    const handleRefresh = () => {
+        getRegistration(registrationId, setResponse);
+    };
+    
     useEffect(
         () => getRegistration(registrationId, setResponse),
         [registrationId, setResponse]
@@ -31,6 +36,7 @@ const Registration = ({match: {params: {registrationId}}}) => {
     if(response.registration.channelPartnerSystemId === "mybills") {
         return <PayreqRegistrationView registration={response.registration}
                                        lastBill={response.lastBill}
+                                       onRefresh={handleRefresh}
         />
     } else {
         return <RegistrationView registration={response.registration}
@@ -38,6 +44,7 @@ const Registration = ({match: {params: {registrationId}}}) => {
                                  autoPayment={response.autoPayment}
                                  payable={response.payable}
                                  onResendVerificationEmail={resendVerificationEmail}
+                                 onRefresh={handleRefresh}
         />
     };
 };

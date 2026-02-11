@@ -13,6 +13,7 @@ import EmailSubscriptionVerificationCancelled
     from "../components/EmailSubscriptionVerification/EmailSubscriptionVerificationCancelled";
 import EmailSubscriptionVerificationConfirmed
     from "../components/EmailSubscriptionVerification/EmailSubscriptionVerificationConfirmed";
+import AgentConsent from "../components/AgentConsent";
 
 const VerificationShell = ({match}) => {
     return (
@@ -29,6 +30,7 @@ const VerificationShell = ({match}) => {
                     <Route path={`${match.url}/email-verification/:code/:id`} component={EmailSubscriptionConfirmation}/>
                     <Route path={`${match.url}/email-verification-confirmation/cancelled`} component={EmailSubscriptionVerificationCancelled}/>
                     <Route path={`${match.url}/email-verification-confirmation/confirmed`} component={EmailSubscriptionVerificationConfirmed}/>
+                    <Route path={`${match.url}/agent-authorisation/:code/:id`} component={AgentConsent}/>
                     <Route component={PageNotFound}/>
                 </Switch>
             </div>

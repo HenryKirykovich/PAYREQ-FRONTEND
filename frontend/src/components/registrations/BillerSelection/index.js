@@ -8,11 +8,17 @@ import {useDebouncedEffect} from "../../../utils/form-utils";
 
 const getInitialBillers = (setIsLoading, payerId, setBillers, setCountry) => {
     setIsLoading(true);
-    axios.get(`/data/payer/registrations/${payerId}/selfservice-mailers/ /all`)
+    axios.get(`/data/payer/registrations/${payerId}/selfservice-mailers/all`)
         .then(({data}) => {
-            setBillers(data.mailers);
+            setBillers(data.mailers || []);
+            setCountry(data.country || 'all');
             setIsLoading(false);
-            setCountry(data.country)
+        })
+        .catch(error => {
+            console.error("Error fetching billers:", error);
+            setBillers([]);
+            setCountry('all');
+            setIsLoading(false);
         });
 };
 
@@ -20,12 +26,16 @@ let currentSearchTerm;
 
 const search = (payerId, setBillers, searchTerm, country) => {
     currentSearchTerm = searchTerm;
-    axios.get(`/data/payer/registrations/${payerId}/selfservice-mailers/${searchTerm || " "}/all`,
+    axios.get(`/data/payer/registrations/${payerId}/selfservice-mailers/${searchTerm || ""}/all`,
         {params: {country: country}})
         .then(({data}) => {
             if (data.searchTerm === currentSearchTerm) {
                 setBillers(data.mailers);
             }
+        })
+        .catch(error => {
+            console.error("Error searching billers:", error);
+            setBillers([]);
         });
 };
 
@@ -33,9 +43,13 @@ const BillerSelection = ({payerId}) => {
     const [billers, setBillers] = useState();
     const [searchTerm, setSearchTerm] = useState("");
     const [doSearch, setDoSearch] = useState(false);
-    const [country, setCountry] = useState();
+    const [country, setCountry] = useState('all');
     const [isLoading, setIsLoading] = useState(true);
-    useEffect(() => getInitialBillers(setIsLoading, payerId, setBillers, setCountry), [setIsLoading, payerId, setBillers, setCountry]);
+    
+    useEffect(() => {
+        getInitialBillers(setIsLoading, payerId, setBillers, setCountry);
+    }, [payerId]);
+    
     useDebouncedEffect(
         () => {
             if (!isLoading && doSearch) {

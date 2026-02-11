@@ -27,6 +27,10 @@ import BulkDownloadPreferencesEdit from "../components/BulkDownloadPreferences/B
 import BulkDownloadPreferencesSaved from "../components/BulkDownloadPreferences/BulkDownloadPreferencesSaved";
 import BulkDownloadPreferencesDeleted from "../components/BulkDownloadPreferences/BulkDownloadPreferencesDeleted";
 import BillerSettings from "../components/settings/biller/BillerSettings";
+import BillerChannelSettings from "../components/settings/biller/BillerChannelSettings";
+import BillerManualSettings from "../components/settings/biller/BillerManualSettings";
+import BillerQboPayrollSettings from "../components/settings/biller/BillerQboPayrollSettings";
+import BillerSaasuSettings from "../components/settings/biller/BillerSaasuSettings";
 import UsersManagement from "../components/settings/users/UsersManagement";
 import UserDetail from "../components/settings/users/UserDetail";
 import CreateUser from "../components/settings/users/CreateUser";
@@ -157,6 +161,18 @@ const SettingsShell = ({match, location}) => {
                 <SettingsTabs billerId={biller.id} activeTabName={activeTab} billerSettings={billerSettings}/>
                 <Switch>
                     {/* Biller Settings */}
+                    <Route path={`${match.url}/biller/channel/:channelId`} exact>
+                        <BillerChannelSettings billerId={biller.id}/>
+                    </Route>
+                    <Route path={`${match.url}/biller/manual`} exact>
+                        <BillerManualSettings billerId={biller.id}/>
+                    </Route>
+                    <Route path={`${match.url}/biller/qbo-payroll`} exact>
+                        <BillerQboPayrollSettings billerId={biller.id}/>
+                    </Route>
+                    <Route path={`${match.url}/biller/saasu`} exact>
+                        <BillerSaasuSettings billerId={biller.id}/>
+                    </Route>
                     <Route path={`${match.url}/biller`}>
                         <BillerSettings billerId={biller.id}/>
                     </Route>

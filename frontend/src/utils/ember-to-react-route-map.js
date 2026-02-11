@@ -24,6 +24,10 @@ export const emberToReactRouteMap = {
     // Settings
     "biller.settings": "/customer/biller/{billerId}/settings",
     "biller.settings.biller": "/customer/biller/{billerId}/settings/biller",
+    "biller.settings.biller.channel": "/customer/biller/{billerId}/settings/biller/channel/{channelId}",
+    "biller.settings.biller.manual": "/customer/biller/{billerId}/settings/biller/manual",
+    "biller.settings.biller.qbo-payroll": "/customer/biller/{billerId}/settings/biller/qbo-payroll",
+    "biller.settings.biller.saasu": "/customer/biller/{billerId}/settings/biller/saasu",
     "biller.settings.users": "/customer/biller/{billerId}/settings/users",
     "biller.settings.users.user": "/customer/biller/{billerId}/settings/users/{userId}",
     "biller.settings.users.create": "/customer/biller/{billerId}/settings/users/create",
@@ -41,6 +45,17 @@ export const emberToReactRouteMap = {
     "biller.registrationsinit": "/customer/biller/{billerId}/registrations/billers",
     "biller.registrations": "/customer/biller/{billerId}/registrations/billers",
     "biller.registration": "/customer/biller/{billerId}/registrations/billers/{registrationsForBillerId}/{registrationId}",
+    "biller.import": "/customer/biller/{billerId}/registrations/import",
+    "biller.import-from-text": "/customer/biller/{billerId}/registrations/import-from-text",
+    
+    // Incoming Registrations
+    "biller.incoming.registration": "/customer/biller/{billerId}/incoming/registration/{registrationId}",
+    "biller.incoming.myob": "/customer/biller/{billerId}/incoming/myob/{mailerId}",
+    "biller.incoming.reckon": "/customer/biller/{billerId}/incoming/reckon/{mailerId}",
+    "biller.incoming.email": "/customer/biller/{billerId}/incoming/email/{mailerId}",
+    
+    // Verification/Consent
+    "agent-authorisation": "/verify/agent-authorisation/{code}/{id}",
     
     // Inbox (already React)
     "biller.inbox": "/customer/biller/{billerId}/inbox",

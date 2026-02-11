@@ -13,29 +13,14 @@ const IncomingRegistrationsShell = () => {
 
     return (
         <Switch>
-            <Route path={`${match.url}/myob/:registrationId`} exact>
-                {({match}) => (
-                    <IncomingMyobRegistration 
-                        billerId={biller.id} 
-                        registrationId={match.params.registrationId}
-                    />
-                )}
+            <Route path={`${match.url}/myob/:mailerId`} exact>
+                <IncomingMyobRegistration billerId={biller.id} />
             </Route>
-            <Route path={`${match.url}/reckon/:registrationId`} exact>
-                {({match}) => (
-                    <IncomingReckonRegistration 
-                        billerId={biller.id} 
-                        registrationId={match.params.registrationId}
-                    />
-                )}
+            <Route path={`${match.url}/reckon/:mailerId`} exact>
+                <IncomingReckonRegistration billerId={biller.id} />
             </Route>
-            <Route path={`${match.url}/email/:registrationId`} exact>
-                {({match}) => (
-                    <IncomingEmailRegistration 
-                        billerId={biller.id} 
-                        registrationId={match.params.registrationId}
-                    />
-                )}
+            <Route path={`${match.url}/email/:mailerId`} exact>
+                <IncomingEmailRegistration billerId={biller.id} />
             </Route>
             <Route path={`${match.url}/registration/:registrationId`} exact>
                 {({match}) => (

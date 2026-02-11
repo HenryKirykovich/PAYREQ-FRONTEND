@@ -1,7 +1,8 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useState, useRef} from "react";
 import axios from "axios";
 import ContactsView from "./ContactsView";
 import {useAppState} from "../../state";
+import {ContactsImportModal} from "../modals";
 
 const PAGE_SIZE = 50;
 
@@ -24,8 +25,15 @@ const Contacts = ({billerId, match}) => {
         'contactId2', 
         'lastUpdated'
     ]);
+    const [showImportModal, setShowImportModal] = useState(false);
+    const cancelTokenRef = useRef(null);
 
     const fetchContacts = (params, setSubmitting, pageNumber = 1) => {
+        // Cancel any pending request
+        if (cancelTokenRef.current) {
+            cancelTokenRef.current.cancel('New request initiated');
+        }
+        
         setIsLoading(true);
         if (setSubmitting) setSubmitting(true);
 
@@ -45,18 +53,28 @@ const Contacts = ({billerId, match}) => {
             }
         });
 
-        axios.get("/data/contacts", { params: queryParams })
+        const source = axios.CancelToken.source();
+        cancelTokenRef.current = source;
+        
+        axios.get("/data/contacts", { 
+            params: queryParams,
+            cancelToken: source.token 
+        })
             .then(({data}) => {
                 setContacts(data.contacts || []);
                 setTotal(data.meta?.total || 0);
                 setSearchParams({...params, pageNumber});
                 setIsLoading(false);
                 if (setSubmitting) setSubmitting(false);
+                cancelTokenRef.current = null;
             })
             .catch(error => {
-                console.error("Error fetching contacts:", error);
-                setIsLoading(false);
-                if (setSubmitting) setSubmitting(false);
+                if (!axios.isCancel(error)) {
+                    console.error("Error fetching contacts:", error);
+                    setIsLoading(false);
+                    if (setSubmitting) setSubmitting(false);
+                }
+                cancelTokenRef.current = null;
             });
     };
 
@@ -83,6 +101,14 @@ const Contacts = ({billerId, match}) => {
                     console.error("Error fetching auth fields:", error);
                 });
         }
+        
+        // Cleanup function to cancel pending requests
+        return () => {
+            if (cancelTokenRef.current) {
+                cancelTokenRef.current.cancel('Component unmounted');
+                cancelTokenRef.current = null;
+            }
+        };
     }, [billerId]);
 
     const handleSearch = (values, setSubmitting, pageNumber) => {
@@ -90,8 +116,13 @@ const Contacts = ({billerId, match}) => {
     };
 
     const handleImportClick = () => {
-        // TODO: Implement import modal
-        alert("Import functionality to be implemented");
+        setShowImportModal(true);
+    };
+
+    const handleImportComplete = (data) => {
+        // Refresh the contacts list after successful import
+        fetchContacts(searchParams, null, searchParams.pageNumber);
+        alert(`Import completed successfully. ${data.imported || 0} contacts imported.`);
     };
 
     const handleDeleteContact = (contact) => {
@@ -118,20 +149,28 @@ const Contacts = ({billerId, match}) => {
     }
 
     return (
-        <ContactsView
-            contacts={contacts}
-            total={total}
-            showing={showing}
-            handleSearch={handleSearch}
-            searchParams={searchParams}
-            biller={biller}
-            canImportContacts={biller?.permissions?.canImportContacts}
-            canDeleteContact={biller?.permissions?.canDeleteContact}
-            onImportClick={handleImportClick}
-            onDeleteContact={handleDeleteContact}
-            visibleColumns={visibleColumns}
-            hasContactField3={visibleColumns.includes('contactId3')}
-        />
+        <>
+            <ContactsView
+                contacts={contacts}
+                total={total}
+                showing={showing}
+                handleSearch={handleSearch}
+                searchParams={searchParams}
+                biller={biller}
+                canImportContacts={biller?.permissions?.canImportContacts}
+                canDeleteContact={biller?.permissions?.canDeleteContact}
+                onImportClick={handleImportClick}
+                onDeleteContact={handleDeleteContact}
+                visibleColumns={visibleColumns}
+                hasContactField3={visibleColumns.includes('contactId3')}
+            />
+            <ContactsImportModal
+                show={showImportModal}
+                onClose={() => setShowImportModal(false)}
+                onImportComplete={handleImportComplete}
+                billerId={billerId}
+            />
+        </>
     );
 };
 
