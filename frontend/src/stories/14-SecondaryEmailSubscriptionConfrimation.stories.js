@@ -6,7 +6,7 @@ import {InviteConfirmation, NoInviteFound} from "../components/EmailSubscription
 
 
 export default {
-    title: 'Secondary Email Subscription Confirmation',
+    title: 'Secondary Email Connection Confirmation',
 };
 
 const invite = {

@@ -20,7 +20,7 @@ const EmailUnsubscribe = ({intl}) => {
             })
             .catch(error => {
                 console.error("Error loading email unsubscribe:", error);
-                setError("Failed to load unsubscribe information");
+                setError("Failed to load disconnect information");
                 setIsLoading(false);
             });
     }, [code, id]);
@@ -33,7 +33,7 @@ const EmailUnsubscribe = ({intl}) => {
             })
             .catch(error => {
                 console.error("Error unsubscribing:", error);
-                setError("Failed to unsubscribe. Please try again.");
+                setError("Failed to disconnect. Please try again.");
             });
     };
 
