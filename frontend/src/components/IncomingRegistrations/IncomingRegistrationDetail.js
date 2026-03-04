@@ -209,7 +209,7 @@ const IncomingRegistrationDetail = ({billerId, registrationId}) => {
         <div>
             <div className="row">
                 <div className="col-md-12">
-                    <h2>Subscription</h2>
+                    <h2>Connection</h2>
                 </div>
             </div>
 
@@ -228,7 +228,7 @@ const IncomingRegistrationDetail = ({billerId, registrationId}) => {
                         <div style={{display: 'flex', justifyContent: 'flex-end', alignItems: 'center'}}>
                             <span style={{marginRight: '1rem'}}>Don't want to receive this bill digitally?</span>
                             <Button bsStyle="danger" onClick={handleDeregisterClick}>
-                                Unsubscribe
+                                Disconnect
                             </Button>
                         </div>
                     )}

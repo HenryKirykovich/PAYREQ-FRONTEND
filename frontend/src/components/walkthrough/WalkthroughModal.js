@@ -35,7 +35,7 @@ const BillerRenameWalkthrough = injectIntl(({intl, setShow, walkthroughId}) => {
                 <img src={inboxImg} alt="Inbox"/>
                 <LargeText style={{marginTop: "2rem"}} text="walkthrough.modal.billerRename.subscriptions.title"/>
                 <RegularText text="walkthrough.modal.billerRename.subscriptions.description"/>
-                <img src={subscriptionImg} alt="Subscription"/>
+                <img src={subscriptionImg} alt="Connection"/>
             </Modal.Body>
             <Modal.Footer>
                 <PrimaryButton label={"walkthrough.modal.button.letsGo"}
