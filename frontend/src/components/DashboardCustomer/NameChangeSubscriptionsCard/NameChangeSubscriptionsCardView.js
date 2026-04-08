@@ -2,14 +2,14 @@ import React from "react";
 import { LargeText, PrimaryButton } from "../../common";
 import DashboardCard from "../../Dashboard/DashboardView/DashboardCard";
 
-const NameChangeSubscriptionsCardView = ({ billerId , count}) => (
-    <DashboardCard isBannerCard={true} panelHeading={"dashboard.nameChangeSubscriptions.heading"}>
-        <LargeText text={"dashboard.nameChangeSubscriptions.body"} values={{count: count}}/>
+const NameChangeConnectionsCardView = ({ billerId , count}) => (
+    <DashboardCard isBannerCard={true} panelHeading={"dashboard.nameChangeConnections.heading"}>
+        <LargeText text={"dashboard.nameChangeConnections.body"} values={{count: count}}/>
         <PrimaryButton
-            label={"dashboard.nameChangeSubscriptions.button"}
+            label={"dashboard.nameChangeConnections.button"}
             onClick={() => window.location.href = `/customer#/biller/${billerId}/registrations/contactChanged`}
         />
     </DashboardCard>
 );
 
-export default NameChangeSubscriptionsCardView;
+export default NameChangeConnectionsCardView;

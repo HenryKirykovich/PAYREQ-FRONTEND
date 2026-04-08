@@ -10,7 +10,7 @@ import axios from "axios";
 import Loading from "../Loading";
 import {LEGACY_POST_AXIOS_CONFIG} from "../../utils/form-utils";
 
-function getEmailSubscriptionVerification(code, id, setInvite, setIsLoading) {
+function getEmailConnectionVerification(code, id, setInvite, setIsLoading) {
     axios.get("/auth/email-verification",
         {
             params: {
@@ -23,7 +23,7 @@ function getEmailSubscriptionVerification(code, id, setInvite, setIsLoading) {
 }
 
 
-function cancelEmailSubscription(code, id, history, setShowError) {
+function cancelEmailConnection(code, id, history, setShowError) {
     setShowError(false);
 
     const params = new URLSearchParams();
@@ -40,7 +40,7 @@ function cancelEmailSubscription(code, id, history, setShowError) {
         })
 }
 
-function confirmEmailSubscription(code, id, history, setShowError) {
+function confirmEmailConnection(code, id, history, setShowError) {
     setShowError(false);
 
     const params = new URLSearchParams();
@@ -59,11 +59,11 @@ function confirmEmailSubscription(code, id, history, setShowError) {
 
 export const NoInviteFound = () => {
     return (
-        <LoginCard heading="emailSubscriptionVerification.heading">
+        <LoginCard heading="emailConnectionVerification.heading">
             {/*eslint-disable-next-line*/}
-            <LargeText text="emailSubscriptionVerification.noInvite.message"/>
+            <LargeText text="emailConnectionVerification.noInvite.message"/>
             <div className={styles.buttons}>
-                <DefaultButton label="emailSubscriptionVerification.noInvite.button"
+                <DefaultButton label="emailConnectionVerification.noInvite.button"
                                linkTo="/portal/customer/login" />
             </div>
         </LoginCard>
@@ -72,27 +72,27 @@ export const NoInviteFound = () => {
 
 export const InviteConfirmation = ({invite, showError, submitConfirmation, submitCancellation}) => {
     return (
-        <LoginCard heading="emailSubscriptionVerification.heading">
+        <LoginCard heading="emailConnectionVerification.heading">
             {/*eslint-disable-next-line*/}
-            <LargeText text="emailSubscriptionVerification.message" values={{billerName: invite.billerName}}/>
+            <LargeText text="emailConnectionVerification.message" values={{billerName: invite.billerName}}/>
             <div className={styles.buttons}>
-                <DefaultButton label="emailSubscriptionVerification.button.cancel"
+                <DefaultButton label="emailConnectionVerification.button.cancel"
                                onClick={submitCancellation}/>
-                <PrimaryButton label="emailSubscriptionVerification.button.confirm"
+                <PrimaryButton label="emailConnectionVerification.button.confirm"
                                onClick={submitConfirmation}/>
             </div>
-            {showError && <div className={styles.error}><AlertDanger value="emailSubscriptionVerification.error"/> </div>}
+            {showError && <div className={styles.error}><AlertDanger value="emailConnectionVerification.error"/> </div>}
         </LoginCard>
     )
 }
 
-const EmailSubscriptionVerification = ({ match: { params: { code, id} }, intl, history}) => {
+const EmailConnectionVerification = ({ match: { params: { code, id} }, intl, history}) => {
     const [isLoading, setIsLoading] = useState(true);
     const [invite, setInvite] = useState();
     const [showError, setShowError] = useState(false);
 
     useEffect(
-        () => getEmailSubscriptionVerification(code, id, setInvite, setIsLoading),
+        () => getEmailConnectionVerification(code, id, setInvite, setIsLoading),
         [code, id]
     );
 
@@ -105,8 +105,8 @@ const EmailSubscriptionVerification = ({ match: { params: { code, id} }, intl, h
                     <PayreqLogo intl={intl}/>
                     {invite ? <InviteConfirmation invite={invite}
                                                   showError={showError}
-                                                  submitCancellation={() => cancelEmailSubscription(code, id, history, setShowError)}
-                                                  submitConfirmation={() => confirmEmailSubscription(code, id, history, setShowError)}/>
+                                                  submitCancellation={() => cancelEmailConnection(code, id, history, setShowError)}
+                                                  submitConfirmation={() => confirmEmailConnection(code, id, history, setShowError)}/>
                             : <NoInviteFound/>}
                 </div>
             </div>
@@ -115,4 +115,4 @@ const EmailSubscriptionVerification = ({ match: { params: { code, id} }, intl, h
     )
 }
 
-export default injectIntl(withRouter(EmailSubscriptionVerification));
+export default injectIntl(withRouter(EmailConnectionVerification));
