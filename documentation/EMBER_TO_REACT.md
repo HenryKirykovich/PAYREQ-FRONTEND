@@ -1,6 +1,6 @@
 # EmberJS to React Migration Status
 
-> **Last Updated:** 2026-02-04
+> **Last Updated:** 2026-04-08
 
 This document tracks all screens/routes still using EmberJS (`frontend-ember`) that need to be migrated to React (`frontend`).
 
@@ -34,9 +34,9 @@ This document tracks all screens/routes still using EmberJS (`frontend-ember`) t
 
 | Category | Total Screens | In EmberJS | Migrated to React | Progress |
 |----------|--------------|------------|-------------------|----------|
-| Mailbox | 27 | 16 | 11 | 41% ✅ |
-| Delivery | 36 | 25 | 11 | 31% ✅ |
-| **Overall** | **63** | **41** | **22** | **35%** ✅ |
+| Mailbox | 27 | 3 | 24 | 89% ✅ |
+| Delivery | 39 | 25 | 14 | 36% ✅ |
+| **Overall** | **66** | **28** | **38** | **58%** ✅ |
 
 ---
 
@@ -48,9 +48,10 @@ When migrating a screen from EmberJS to React, you'll need to update the routing
 
 EmberJS and React use different routing patterns:
 
-#### EmberJS Routes (Nested Structure)
+#### EmberJS Routes (Hash-based, Nested Structure)
 ```javascript
 // frontend-ember/src/js/application.js
+// URL format: /customer#/biller/:id/...
 App.Router.map(function () {
     this.route("biller", {path: "/biller/:id"}, function () {
         this.route("bills");
@@ -63,13 +64,14 @@ App.Router.map(function () {
 ```
 
 Routes are **nested** under `/biller/:id/`, creating paths like:
-- `/biller/:id/bills`
-- `/biller/:id/bill/:billId`
-- `/biller/:id/contacts`
+- `customer#/biller/:id/bills`
+- `customer#/biller/:id/bill/:billId`
+- `customer#/biller/:id/contacts`
 
 #### React Routes (Flat Structure with Full Paths)
 ```javascript
-// frontend/src/routes/UserShell.js or similar
+// frontend/src/routes/BillerShell.js or similar
+// URL format: /portal/customer/biller/:billerId/...
 <Route
   path="/portal/customer/biller/:billerId/inbox"
   component={Inbox}
@@ -185,7 +187,7 @@ const MyComponent = () => {
 
 **EmberJS Route:**
 ```javascript
-// Path: /biller/:id/bills
+// Path: customer#/biller/:id/bills
 this.route("biller", {path: "/biller/:id"}, function () {
     this.route("bills");
 });
@@ -215,7 +217,7 @@ history.push(`/portal/customer/biller/${billerId}/bills`);
 
 **EmberJS Route:**
 ```javascript
-// Path: /biller/:id/contact/:contactId
+// Path: customer#/biller/:id/contact/:contactId
 this.route("biller", {path: "/biller/:id"}, function () {
     this.route("contact", {path: "/contact/:contactId"});
 });
@@ -249,7 +251,7 @@ const { billerId, contactId } = useParams();
 
 **EmberJS Nested Routes:**
 ```javascript
-// Path: /biller/:id/settings/users
+// Path: customer#/biller/:id/settings/users
 this.route("biller", {path: "/biller/:id"}, function () {
     this.route("settings", function () {
         this.route("users");
@@ -286,7 +288,7 @@ When migrating a screen, update the following:
 
 - [ ] **Route Definition**
   - [ ] Add new React route in `AppRouter.js` or appropriate route file
-  - [ ] Change path from `/biller/:id/...` to `/portal/customer/biller/:billerId/...`
+  - [ ] Change path from `customer#/biller/:id/...` to `/portal/customer/biller/:billerId/...`
   - [ ] Update parameter name from `:id` to `:billerId`
 
 - [ ] **Component Navigation**
@@ -317,7 +319,7 @@ When migrating a screen, update the following:
 ### Common Pitfalls
 
 1. **Forgetting to add `/portal/customer` prefix**
-   - EmberJS: `/biller/:id/bills`
+   - EmberJS: `customer#/biller/:id/bills`
    - React: `/portal/customer/biller/:billerId/bills` ✅
 
 2. **Using `:id` instead of `:billerId`**
@@ -345,503 +347,50 @@ Users in this role receive bills from billers and manage their incoming invoices
 
 ### Mailbox Screens - Still in EmberJS
 
-#### 1. Invoices List (MyBills/Inbox)
+There are **3 screens** still in EmberJS for Mailbox users:
 
-**Routes:**
-- `/biller/:id/invoices`
-- `/biller/:id/invoices/:type` (filtered by type: all/pending/paid/etc)
+| # | Screen | Route | Access |
+|---|--------|-------|--------|
+| 1 | Connections | `customer#/biller/:id/settings/connections` | Settings tab → Connections |
+| 2 | Users/Permissions | `customer#/biller/:id/settings/users` | Settings tab → Users |
+| 3 | Consents | `customer#/biller/:id/settings/consents` | Settings tab → Consents |
 
-**Files:**
-- Template: Dynamically generated in `frontend-ember/src/js/invoices.js` (no separate HTML file)
-- Controller: `frontend-ember/src/js/invoices.js` (line 13+)
+#### 1. Connections (Integrations)
 
-**Description:** View all incoming bills/invoices received from billers. Filter by status (pending, paid, overdue). This is the main inbox for recipients to see bills they need to pay.
+**Route:** `customer#/biller/:id/settings/connections`
 
----
-
-#### 2. Invoice Detail
-
-**Route:** `/biller/:id/invoice/:invoiceId`
-
-**Files:**
-- Template: Dynamically generated in `frontend-ember/src/js/invoices.js`
-- Controller: `frontend-ember/src/js/invoices.js`
-
-**Description:** View details of a specific invoice including amount, due date, biller details, and payment options. Allows recipient to pay or save the invoice.
-
----
-
-#### 3. Invoice Forwarding
-
-**Route:** `/biller/:id/invoiceForward/:invoiceId`
-
-**Files:**
-- Template: Dynamically generated in `frontend-ember/src/js/invoices.js`
-- Controller: `frontend-ember/src/js/invoices.js`
-
-**Description:** Forward an invoice to another email address or contact. Useful when recipient needs someone else to handle payment.
-
----
-
-#### 4. Invoice Biller Management
-
-**Route:** `/biller/:id/invoiceBiller/:invoiceBillerId`
-
-**Files:**
-- Template: `frontend-ember/src/js/templates/invoice-biller.html`
-- Controller: `frontend-ember/src/js/invoices.js`
-
-**Description:** View and manage details of a specific biller/mailer that sends invoices. Update the biller's display name and view their email.
-
----
-
-#### 5. Incoming Email Management
-
-**Route:** `/biller/:id/incomingEmail`
-
-**Files:**
-- Template: `frontend-ember/src/js/templates/incoming-email.html`
-- Controller: `frontend-ember/src/js/invoices.js`
-
-**Description:** Manage incoming email forwarding settings. Configure how emails from billers are processed and imported into the mailbox.
-
----
-
-#### 6. Incoming Registrations (Subscriptions List)
-
-**Route:** `/biller/:id/incoming/registrations/:type`
-
-**Files:**
-- Template: Dynamically generated in `frontend-ember/src/js/incoming-registrations.js`
-- Controller: `frontend-ember/src/js/incoming-registrations.js`
-
-**Description:** View and manage subscriptions to billers. See all billers that the user is registered with to receive bills electronically.
-
----
-
-#### 7. Incoming Registration Detail
-
-**Route:** `/biller/:id/incoming/registration/:registrationId`
-
-**Files:**
-- Template: `frontend-ember/src/js/templates/incoming-registration.html`
-- Controller: `frontend-ember/src/js/incoming-registrations.js` (line 1251)
-
-**Description:** View and edit a specific subscription to a biller. Update account numbers, authentication details, or unsubscribe from receiving bills.
-
----
-
-#### 8. Incoming Mailer Configuration
-
-**Route:** `/biller/:id/incoming/mailer`
-
-**Files:**
-- Template: Dynamically generated in `frontend-ember/src/js/incoming-registrations.js`
-- Controller: `frontend-ember/src/js/incoming-registrations.js`
-
-**Description:** Configure how incoming bills are received and processed from various channels (email, accounting software integrations).
-
----
-
-#### 9. Xero Connect (Recipient)
-
-**Route:** `/biller/:id/incoming/xeroconnect/:mailerId`
-
-**Files:**
-- Template: Dynamically generated in `frontend-ember/src/js/incoming-registrations.js`
-- Controller: `frontend-ember/src/js/incoming-registrations.js`
-
-**Description:** Connect Xero accounting software to automatically import bills into Xero as they arrive in the mailbox.
-
----
-
-#### 10. Email Registration (Recipient)
-
-**Route:** `/biller/:id/incoming/emailrego/:mailerId`
-
-**Files:**
-- Template: Dynamically generated in `frontend-ember/src/js/incoming-registrations.js`
-- Controller: `frontend-ember/src/js/incoming-registrations.js`
-
-**Description:** Register to receive bills via email forwarding. Set up email addresses that will forward bills into the mailbox.
-
----
-
-#### 11. MYOB Integration (Recipient)
-
-**Route:** `/biller/:id/incoming/myob/:mailerId`
-
-**Files:**
-- Template: `frontend-ember/src/js/templates/incoming-myob.html`
-- Controller: `frontend-ember/src/js/incoming-registrations.js`
-
-**Description:** Connect MYOB accounting software to automatically import received bills into MYOB.
-
----
-
-#### 12. Reckon Integration (Recipient)
-
-**Route:** `/biller/:id/incoming/reckon/:mailerId`
-
-**Files:**
-- Template: `frontend-ember/src/js/templates/incoming-reckon.html`
-- Controller: `frontend-ember/src/js/incoming-registrations.js`
-
-**Description:** Connect Reckon accounting software to automatically import received bills into Reckon.
-
----
-
-#### 13. MyBills Agent (Recipient)
-
-**Route:** `/biller/:id/incoming/mybillsagent/:mailerId`
-
-**Files:**
-- Template: `frontend-ember/src/js/templates/mybillsagent-import-modal.html`
-- Controller: `frontend-ember/src/js/incoming-registrations.js` (line 175)
-
-**Description:** Configure MyBills Agent to bulk import subscriptions on behalf of the recipient (used by authorized agents/accountants).
-
----
-
-#### 14. Import from Text (Recipient)
-
-**Route:** `/biller/:id/incoming/importfromtext/:mailerId`
-
-**Files:**
-- Template: `frontend-ember/src/js/templates/import-from-text.html`
-- Controller: `frontend-ember/src/js/incoming-registrations.js` (line 986)
-
-**Description:** Import subscription details from text/CSV format to bulk register with multiple billers at once.
-
----
-
-#### 15. MyBills Configuration (Recipient)
-
-**Route:** `/biller/:id/incoming/mybills/:mailerId`
-
-**Files:**
-- Template: Dynamically generated in `frontend-ember/src/js/incoming-registrations.js`
-- Controller: `frontend-ember/src/js/incoming-registrations.js`
-
-**Description:** Configure general MyBills settings for receiving bills including notification preferences and delivery options.
-
----
-
-#### 16. Incoming Channels (Recipient)
-
-**Route:** `/biller/:id/incoming/channels/:mailerId`
-
-**Files:**
-- Template: Dynamically generated in `frontend-ember/src/js/incoming-registrations.js`
-- Controller: `frontend-ember/src/js/incoming-registrations.js`
-
-**Description:** Manage different channels through which bills can be received (email, integrations, API).
-
----
-
-### Mailbox Screens - Migrated to React
-
-✅ The following mailbox screens have been successfully migrated to React:
-
-1. **Inbox** - Main recipient view (`frontend/src/components/Inbox/`)
-2. **Payment Flow** - Payment processing (`frontend/src/components/Pay/`)
-3. **BPay Batch** - Batch payment creation
-4. **Registrations - Billers List** - Browse billers
-5. **Registrations - Biller Detail** - View subscriptions
-6. **Registration Detail** - Manage subscription
-7. **Create Registration** - Subscribe to billers
-8. **Admin Subscription Creation** - Bulk subscription admin
-9. **Auto Payments** - Automated payment setup (`frontend/src/components/AutoPayments/`)
-10. **Payment History** - View payment history (`frontend/src/components/paymentHistory/`)
-11. **Saved Cards** - Manage payment cards (`frontend/src/components/cards/`)
-
----
-
-## Part 2: Delivery Screens (Biller/Mailer Role)
-
-Users in this role send bills to recipients/payers and manage their customer contacts, bill distribution, and incoming registrations.
-
-### Delivery Screens - Still in EmberJS
-
-#### Core Billing Operations
-
-##### 1. Bills List (Outgoing Bills)
-
-**Routes:**
-- `/biller/:id/bills`
-- `/biller/:id/bills/:type` (filtered by type)
-
-**Files:**
-- Template: `frontend-ember/src/js/templates/bills.html`
-- Controller: `frontend-ember/src/js/billers.js`
-
-**Description:** View and manage all outgoing bills sent to customers. Filter by status (draft, sent, paid, overdue). Upload new bills, approve/reject bills, and download payment files. This is the main dashboard for billers to manage their accounts receivable.
-
----
-
-##### 2. Bill Detail
-
-**Route:** `/biller/:id/bill/:billId`
-
-**Files:**
-- Template: `frontend-ember/src/js/templates/bill.html`
-- Controller: `frontend-ember/src/js/billers.js`
-
-**Description:** View and edit a specific bill including customer details, amounts, due dates, and payment status. Track when bill was sent, viewed, and paid.
-
----
-
-##### 3. Contacts Management
-
-**Route:** `/biller/:id/contacts`
-
-**Files:**
-- Template: `frontend-ember/src/js/templates/contacts.html`
-- Controller: `frontend-ember/src/js/billers.js`
-
-**Description:** Manage customer contact database. View, add, edit, and import contacts. Search by name, email, account number, or custom fields. Export contact lists.
-
----
-
-##### 4. Contact Detail
-
-**Route:** `/biller/:id/contact/:contactId`
-
-**Files:**
-- Template: `frontend-ember/src/js/templates/contact.html`
-- Controller: `frontend-ember/src/js/billers.js`
-
-**Description:** View and edit individual contact details including name, email, address, account numbers, and custom fields. View bill history for the contact.
-
----
-
-##### 5. Import Bills & Contacts
-
-**Route:** `/biller/:id/import`
-
-**Files:**
-- Template: `frontend-ember/src/js/templates/import.html`
-- Controller: `frontend-ember/src/js/billers.js`
-
-**Description:** Bulk import bills and contacts from CSV/Excel files or accounting software. Map columns, validate data, and import in batches. Import deregistration requests.
-
----
-
-#### Reports
-
-##### 6. Reports Dashboard
-
-**Route:** `/biller/:id/reports`
-
-**Files:**
-- Template: `frontend-ember/src/js/templates/reports.html`
-- Controller: `frontend-ember/src/js/billers.js`
-
-**Description:** Main reports dashboard showing available reports and recently generated reports. Access all billing and operational reports.
-
----
-
-##### 7. Generic Report Viewer
-
-**Route:** `/biller/:id/report/:reportId`
-
-**Files:**
-- Template: `frontend-ember/src/js/templates/report.html`
-- Controller: `frontend-ember/src/js/billers.js`
-
-**Description:** View and export generated reports including data tables and charts.
-
----
-
-##### 8. Billing Summary Report
-
-**Route:** `/biller/:id/reportbillingsummary/:reportId`
-
-**Files:**
-- Template: `frontend-ember/src/js/templates/reportbillingsummary.html`
-- Controller: `frontend-ember/src/js/billers.js`
-
-**Description:** Summary report of billing activity including total bills sent, payment rates, outstanding amounts, and revenue by period.
-
----
-
-##### 9. Billing Detail Report
-
-**Route:** `/biller/:id/reportbillingdetail/:reportId`
-
-**Files:**
-- Template: `frontend-ember/src/js/templates/reportbillingdetail.html`
-- Controller: `frontend-ember/src/js/billers.js`
-
-**Description:** Detailed line-by-line report of all bills with customer names, amounts, dates, and payment status.
-
----
-
-##### 10. BI Mail Overview
-
-**Route:** `/biller/:id/reportsbi/mail/overview`
-
-**Files:**
-- Template: `frontend-ember/src/js/templates/reportsbi-mail-overview.html`
-- Controller: `frontend-ember/src/js/billers.js`
-
-**Description:** Business intelligence report showing mail delivery statistics, open rates, and engagement metrics.
-
----
-
-##### 11. BI Email Activity
-
-**Route:** `/biller/:id/reportsbi/email/activity`
-
-**Files:**
-- Template: `frontend-ember/src/js/templates/reportsbi-email-activity.html`
-- Controller: `frontend-ember/src/js/billers.js`
-
-**Description:** Detailed email activity report showing which customers opened bills, when, and from what devices/locations.
-
----
-
-#### Settings
-
-##### 12. Biller Settings
-
-**Route:** `/biller/:id/settings/biller`
-
-**Files:**
-- Template: `frontend-ember/src/js/templates/settings-biller.html`
-- Controller: `frontend-ember/src/js/settings-biller.js`
-
-**Description:** Configure main biller account settings including business name, contact details, branding, bill delivery preferences, and payment options.
-
----
-
-##### 13. Channel Partner Settings
-
-**Route:** `/biller/:id/settings/biller/channel/:channelPartnerSystemId`
-
-**Files:**
-- Template: `frontend-ember/src/js/templates/settings-biller-channel.html`
-- Controller: `frontend-ember/src/js/settings-biller.js`
-
-**Description:** Configure channel partner-specific settings and integrations for white-label deployments.
-
----
-
-##### 14. User Management
-
-**Route:** `/biller/:id/settings/users`
-
-**Files:**
-- Template: `frontend-ember/src/js/templates/settings-users.html`
-- Controller: `frontend-ember/src/js/settings-users.js`
-
-**Description:** Manage users who have access to the biller account. View list of all users with their roles and permissions.
-
----
-
-##### 15. User Detail/Edit
-
-**Route:** `/biller/:id/settings/users/user/:userId`
-
-**Files:**
-- Template: `frontend-ember/src/js/templates/settings-users-user.html`
-- Controller: `frontend-ember/src/js/settings-users.js`
-
-**Description:** Edit user details including name, email, role, and granular permissions (view bills, upload bills, manage contacts, etc).
-
----
-
-##### 16. Create User
-
-**Route:** `/biller/:id/settings/users/create`
-
-**Files:**
-- Template: `frontend-ember/src/js/templates/settings-users-create.html`
-- Controller: `frontend-ember/src/js/settings-users.js`
-
-**Description:** Add new user to the biller account by entering email and assigning role/permissions.
-
----
-
-##### 17. User Notifications
-
-**Route:** `/biller/:id/settings/users/notification/:userId`
-
-**Files:**
-- Template: `frontend-ember/src/js/templates/user-settings-notifications.html`
-- Controller: `frontend-ember/src/js/settings-users.js`
-
-**Description:** Configure email notification preferences for a user (daily summaries, payment notifications, etc).
-
----
-
-##### 18. Accounting Settings
-
-**Route:** `/biller/:id/settings/accounting`
-
-**Files:**
-- Template: `frontend-ember/src/js/templates/settings-accounting.html`
-- Template: `frontend-ember/src/js/templates/settings-accounting-summary.html`
-- Controller: `frontend-ember/src/js/settings-accounting.js`
-
-**Description:** Manage billing plan subscription, view usage, add credits, and configure billing preferences for the biller account.
-
----
-
-##### 19. Accounting Catalog
-
-**Route:** `/biller/:id/settings/accounting/catalog`
-
-**Files:**
-- Template: `frontend-ember/src/js/templates/settings-accounting-catalog.html`
-- Controller: `frontend-ember/src/js/settings-accounting.js`
-
-**Description:** Browse available subscription plans and add-ons. Compare features and pricing tiers.
-
----
-
-##### 20. Accounting Checkout
-
-**Routes:**
-- `/biller/:id/settings/accounting/catalog/checkout`
-- `/biller/:id/settings/accounting/catalog/checkout/payment`
-
-**Files:**
-- Template: `frontend-ember/src/js/templates/settings-accounting-checkout.html`
-- Template: `frontend-ember/src/js/templates/settings-accounting-payment.html`
-- Controller: `frontend-ember/src/js/settings-accounting.js`
-
-**Description:** Complete checkout process for plan upgrades or add-ons including payment method entry and confirmation.
-
----
-
-##### 21. Bill Templates
-
-**Route:** `/biller/:id/settings/billTemplates`
-
-**Files:**
-- Template: `frontend-ember/src/js/templates/settings-bill-templates.html`
-- Controller: `frontend-ember/src/js/settings-bill-templates.js`
-
-**Description:** Upload and manage bill PDF templates with custom branding, logos, and layouts. Set default template for automatic bill generation.
-
----
-
-##### 22. Connections (Integrations)
-
-**Route:** `/biller/:id/settings/connections`
+**Access:** Settings tab → Connections
 
 **Files:**
 - Template: `frontend-ember/src/js/templates/settings-connections.html`
 - Controller: `frontend-ember/src/js/settings-connections.js`
 
-**Description:** Connect accounting software (Xero, MYOB, Reckon, PropertyMe) to automatically sync bills, contacts, and payments.
+**Description:** Connect accounting software (Xero, MYOB, Reckon) to automatically sync received bills. Manage OAuth connections and integration settings.
 
 ---
 
-##### 23. Consents (Agent Authorizations)
+#### 2. Users/Permissions
 
-**Route:** `/biller/:id/settings/consents`
+**Route:** `customer#/biller/:id/settings/users`
+
+**Access:** Settings tab → Users
+
+**Files:**
+- Template: `frontend-ember/src/js/templates/settings-users.html`
+- Controller: `frontend-ember/src/js/settings-users.js`
+
+**Description:** Manage users who have access to the mailbox account. View list of all users with their roles and permissions. Includes sub-routes:
+- User Detail: `customer#/biller/:id/settings/users/user/:userId`
+- Create User: `customer#/biller/:id/settings/users/create`
+- User Notifications: `customer#/biller/:id/settings/users/notification/:userId`
+
+---
+
+#### 3. Consents (Agent Authorizations)
+
+**Route:** `customer#/biller/:id/settings/consents`
+
+**Access:** Settings tab → Consents
 
 **Files:**
 - Template: `frontend-ember/src/js/templates/settings-consent.html`
@@ -851,29 +400,91 @@ Users in this role send bills to recipients/payers and manage their customer con
 
 ---
 
-##### 24. Payment Settings
+### Mailbox Screens - Migrated to React
 
-**Route:** `/biller/:id/settings/payments`
+✅ The following mailbox screens have been successfully migrated to React:
 
-**Files:**
-- Template: `frontend-ember/src/js/templates/settings-payments.html`
-- Controller: `frontend-ember/src/js/settings-payments.js`
-
-**Description:** Configure payment gateway integrations (Stripe, PayPal, bank accounts) to accept online payments from customers.
+| # | Screen | React Route | Component |
+|---|--------|-------------|-----------|
+| 1 | Inbox (List) | `/portal/customer/biller/:billerId/inbox` | `frontend/src/components/Inbox/` |
+| 2 | Invoice Detail | `/portal/customer/biller/:billerId/inbox/:invoiceId` | `frontend/src/components/documents/` |
+| 3 | Payment Flow | `/portal/customer/biller/:billerId/inbox/:invoiceId/pay` | `frontend/src/components/payments/` |
+| 4 | Payment Confirmation | `/portal/customer/biller/:billerId/inbox/:invoiceId/payment-confirmation` | `frontend/src/components/payments/` |
+| 5 | Payment Result | `/portal/customer/biller/:billerId/inbox/:invoiceId/payment-result` | `frontend/src/components/payments/` |
+| 6 | Invoice Forwarding Result | `/portal/customer/biller/:billerId/inbox/:invoiceId/forwarding-result` | `frontend/src/components/documents/` |
+| 7 | BPay Batch | `/portal/customer/biller/:billerId/inbox/bpb` | `frontend/src/components/BPayBatchForm/` |
+| 8 | Registrations - Billers List | `/portal/customer/biller/:billerId/registrations/billers` | `frontend/src/components/registrations/Billers/` |
+| 9 | Registrations - Biller Detail | `/portal/customer/biller/:billerId/registrations/billers/:registrationsForBillerId` | `frontend/src/components/registrations/BillerRegistrations/` |
+| 10 | Registration Detail | `/portal/customer/biller/:billerId/registrations/billers/:registrationsForBillerId/:registrationId` | `frontend/src/components/registrations/Registration/` |
+| 11 | Create Registration - Biller Selection | `/portal/customer/biller/:billerId/registrations/create` | `frontend/src/components/registrations/BillerSelection/` |
+| 12 | Create Registration - Channel Selection | `/portal/customer/biller/:billerId/registrations/create/:registeringForbillerId` | `frontend/src/components/registrations/ChannelSelection/` |
+| 13 | Create Email Registration | `/portal/customer/biller/:billerId/registrations/create/:registeringForbillerId/email` | `frontend/src/components/registrations/email/` |
+| 14 | Create Xero Registration | `/portal/customer/biller/:billerId/registrations/create/:registeringForbillerId/xero` | `frontend/src/components/registrations/xero/` |
+| 15 | Create MYOB Registration | `/portal/customer/biller/:billerId/registrations/create/:registeringForbillerId/myob` | `frontend/src/components/registrations/myob/` |
+| 16 | Create Reckon Registration | `/portal/customer/biller/:billerId/registrations/create/:registeringForbillerId/reckon` | `frontend/src/components/registrations/reckon/` |
+| 17 | Create MyBillsAgent Registration | `/portal/customer/biller/:billerId/registrations/create/:registeringForbillerId/mybillsagent` | `frontend/src/components/registrations/mybillsagent/` |
+| 18 | Create Payreq Registration | `/portal/customer/biller/:billerId/registrations/create/:registeringForbillerId/payreq` | `frontend/src/components/registrations/payreq/` |
+| 19 | Admin Subscription Creation | `/portal/customer/biller/:billerId/registrations/admin/create` | `frontend/src/components/registrations/AdminCreate/` |
+| 20 | Auto Payments | `/portal/customer/biller/:billerId/auto-payments` | `frontend/src/components/AutoPayments/` |
+| 21 | Payment History | `/portal/customer/biller/:billerId/payments` | `frontend/src/components/paymentHistory/` |
+| 22 | Saved Cards | `/portal/customer/biller/:billerId/cards` | `frontend/src/components/cards/` |
+| 23 | Settings - Forwarding Rules | `/portal/customer/biller/:billerId/settings/forwardingRules/view` | `frontend/src/components/settings/biller/` |
+| 24 | Settings - API Details | `/portal/customer/biller/:billerId/settings/apiDetails/view` | `frontend/src/components/settings/biller/` |
 
 ---
 
-#### Error Views
+## Part 2: Delivery Screens (Biller/Mailer Role)
 
-##### 25. Channel Errors
+Users in this role send bills to recipients/payers and manage their customer contacts, bill distribution, and incoming registrations.
 
-**Route:** `/biller/:id/errors/:channel`
+### Delivery Screens - Still in EmberJS
 
-**Files:**
-- Template: `frontend-ember/src/js/templates/connection-error.html`
-- Controller: `frontend-ember/src/js/errors.js` (line 16-17)
+There are **25 screens** still in EmberJS for Delivery users:
 
-**Description:** View and troubleshoot errors that occurred during bill processing, delivery, or payment collection for specific channels.
+#### Settings
+
+| # | Screen | Route | Access |
+|---|--------|-------|--------|
+| 1 | Biller Settings | `customer#/biller/:id/settings/biller` | Settings tab |
+| 2 | Users (list) | `customer#/biller/:id/settings/users` | Settings tab |
+| 3 | User Detail | `customer#/biller/:id/settings/users/user/:userId` | Click from Users list |
+| 4 | Create User | `customer#/biller/:id/settings/users/create` | Button from Users list |
+| 5 | User Notifications | `customer#/biller/:id/settings/users/notification/:userId` | From User Detail |
+| 6 | Bill Templates | `customer#/biller/:id/settings/billTemplates` | Settings tab |
+| 7 | Accounting | `customer#/biller/:id/settings/accounting` | Settings tab |
+| 8 | Accounting Catalog | `customer#/biller/:id/settings/accounting/catalog` | From Accounting |
+| 9 | Accounting Checkout | `customer#/biller/:id/settings/accounting/catalog/checkout` | From Catalog |
+| 10 | Accounting Payment | `customer#/biller/:id/settings/accounting/catalog/checkout/payment` | From Checkout |
+| 11 | Payments | `customer#/biller/:id/settings/payments` | Settings tab |
+| 12 | Consents | `customer#/biller/:id/settings/consents` | Settings tab (if hasAgent) |
+| 13 | Channel Partner Settings | `customer#/biller/:id/settings/biller/channel/:channelPartnerSystemId` | From Biller Settings |
+
+#### Core Billing
+
+| # | Screen | Route | Access |
+|---|--------|-------|--------|
+| 14 | Bills List | `customer#/biller/:id/bills/:type` | Main menu |
+| 15 | Bill Detail | `customer#/biller/:id/bill/:billId` | Click from Bills list, also linked from React (`MailTable.js`, `AutoPaymentReportTable.js`) |
+| 16 | Import | `customer#/biller/:id/import` | Main menu or link |
+| 17 | Registrations (Biller) | `customer#/biller/:id/registrations/:type` | Main menu, also linked from React (`AdminCreate`, `DashboardCustomer`) |
+| 18 | Registration Detail (Biller) | `customer#/biller/:id/registration/:registrationId` | Click from Registrations list |
+
+#### Reports
+
+| # | Screen | Route | Access |
+|---|--------|-------|--------|
+| 19 | Reports Dashboard | `customer#/biller/:id/reports` | Main menu |
+| 20 | Generic Report | `customer#/biller/:id/report/:reportId` | From Reports Dashboard |
+| 21 | Billing Summary Report | `customer#/biller/:id/reportbillingsummary/:reportId` | From Reports Dashboard |
+| 22 | Billing Detail Report | `customer#/biller/:id/reportbillingdetail/:reportId` | From Reports Dashboard |
+| 23 | BI Mail Overview | `customer#/biller/:id/reportsbi/mail/overview` | From Reports Dashboard |
+| 24 | BI Email Activity | `customer#/biller/:id/reportsbi/email/activity` | From Reports Dashboard |
+
+#### Errors
+
+| # | Screen | Route | Access |
+|---|--------|-------|--------|
+| 25 | Channel Errors | `customer#/biller/:id/errors/:channel` | From connection error links |
 
 ---
 
@@ -881,23 +492,22 @@ Users in this role send bills to recipients/payers and manage their customer con
 
 ✅ The following delivery screens have been successfully migrated to React:
 
-1. **Dashboard** - Main biller dashboard (`frontend/src/components/Dashboard/`)
-2. **Admin Dashboard** - Enhanced admin view (`frontend/src/components/DashboardCustomer/`)
-3. **Mail (Outgoing)** - Physical mail management (`frontend/src/components/Mail/`)
-4. **Reports (Partial)** - Several specific reports:
-   - Bill payments report
-   - Archived bills report
-   - Auto payment report
-   - Printed bills report
-   - Registration summary
-   - Agents downloads report
-5. **Download History** - File downloads and exports (`frontend/src/components/Jobs/`)
-6. **Settings - Contact Details** - Update biller contact info
-7. **Settings - Forwarding Rules** - Configure bill forwarding
-8. **Settings - API Details** - API keys and documentation
-9. **Settings - Bulk Download Preferences** - Configure bulk downloads
-10. **Settings - Payment Gateway View** - View payment gateways
-11. **Settings - Create Payment Gateway** - Add new gateway
+| # | Screen | React Route | Component |
+|---|--------|-------------|-----------|
+| 1 | Dashboard | `/portal/customer/biller/:billerId/dashboard` | `frontend/src/components/Dashboard/` |
+| 2 | Admin Dashboard | `/portal/customer/biller/:billerId/admin-dashboard` | `frontend/src/components/DashboardCustomer/` |
+| 3 | Contacts | `/portal/customer/biller/:billerId/contacts` | `frontend/src/components/Contacts/` |
+| 4 | Mail (Outgoing) | `/portal/customer/biller/:billerId/mail` | `frontend/src/components/Mail/` |
+| 5 | Download History | `/portal/customer/biller/:billerId/jobs` | `frontend/src/components/Jobs/` |
+| 6 | Job View | `/portal/customer/biller/:billerId/job/:jobId` | `frontend/src/components/Jobs/JobView` |
+| 7 | Bill Payments Report | `/portal/customer/biller/:billerId/reports/billpayments` | `frontend/src/components/payments/BillPaymentsReport` |
+| 8 | Archived Bills Report | `/portal/customer/biller/:billerId/reports/archivedbills` | `frontend/src/components/archive/ArchivedBillsReport` |
+| 9 | Auto Payment Report | `/portal/customer/biller/:billerId/reports/autopayment` | `frontend/src/components/AutoPayments/AutoPaymentReport` |
+| 10 | Printed Bills Report | `/portal/customer/biller/:billerId/reports/print` | `frontend/src/components/print/PrintedBillsReport` |
+| 11 | Registration Summary | `/portal/customer/biller/:billerId/reports/registrationsummary` | `frontend/src/components/RegistrationSummary/` |
+| 12 | Agents Downloads Report | `/portal/customer/biller/:billerId/reports/agentsdownloads` | `frontend/src/components/AgentsDownloadsReport` |
+| 13 | Settings - Contact Details | `/portal/customer/biller/:billerId/settings/contactDetails/view` | `frontend/src/components/settings/biller/` |
+| 14 | Settings - API Details | `/portal/customer/biller/:billerId/settings/apiDetails/view` | `frontend/src/components/settings/biller/ApiDetails` |
 
 ---
 
@@ -928,47 +538,49 @@ The following screens are used by both mailbox and delivery users and have been 
 ### Overall Progress
 
 ```
-Total Screens: 63
-├── Still in EmberJS: 41 (65%)
-└── Migrated to React: 22 (35%)
+Total Screens: 66
+├── Still in EmberJS: 28 (42%)
+└── Migrated to React: 38 (58%)
 ```
 
 ### Breakdown by Role
 
 #### Mailbox (Recipient/Payer) Screens
 - **Total:** 27 screens
-- **EmberJS:** 16 screens (59%)
-- **React:** 11 screens (41%)
+- **EmberJS:** 3 screens (11%)
+- **React:** 24 screens (89%)
 
 #### Delivery (Biller/Mailer) Screens
-- **Total:** 36 screens
-- **EmberJS:** 25 screens (69%)
-- **React:** 11 screens (31%)
+- **Total:** 39 screens
+- **EmberJS:** 25 screens (64%)
+- **React:** 14 screens (36%)
 
 ### Migration Complexity Assessment
 
 #### 🔴 Highest Complexity (Heavy Business Logic)
 1. **Bills Management** - Complex filtering, status management, payment tracking
-2. **Contacts Management** - Import/export, validation, deduplication
-3. **User Management** - Permission system, role management, notifications
-4. **Accounting Integrations** - Xero/MYOB/Reckon OAuth flows and sync
+2. **User Management** - Permission system, role management, notifications
+3. **Accounting Settings** - Plan management, checkout flow, payment processing
 
 #### 🟡 Medium Complexity
-5. **Reports** - Data display with complex filtering and exports
-6. **Bill Templates** - File upload, validation, rendering
-7. **Payment Settings** - Gateway configuration, credential management
-8. **Import Functionality** - File parsing, validation, batch processing
+4. **Reports Dashboard** - Multiple report types, data visualization
+5. **Bill Templates** - File upload, validation, rendering
+6. **Payment Settings** - Gateway configuration, credential management
+7. **Import Functionality** - File parsing, validation, batch processing
+8. **Registrations (Biller)** - Status management, filtering
 
 #### 🟢 Lower Complexity
 9. **Biller Settings** - Form-based configuration
 10. **Consents** - CRUD operations for agent authorizations
-11. **Channels** - Configuration management
+11. **Channel Errors** - Error display
+12. **Connections (Mailbox)** - OAuth integrations (partially shared with existing React code)
 
 ### Key Observations
 
-- ✅ React has primarily covered **payer-facing features** (inbox, payments, auto-payments)
-- ⚠️ EmberJS still handles the majority of **biller management functionality** (bills, contacts, settings)
-- 🎯 Core biller operations and advanced settings remain the primary migration targets
+- ✅ **Mailbox migration nearly complete** - Only 3 settings screens remain in Ember
+- ⚠️ **Delivery screens need significant work** - 25 screens still in Ember (64%)
+- 🎯 **Priority targets**: Bills List/Detail, Reports Dashboard, Settings screens
+- 🔗 **Cross-linking exists**: Some React screens link to Ember screens (e.g., `MailTable.js` → Bill Detail)
 
 ---
 
