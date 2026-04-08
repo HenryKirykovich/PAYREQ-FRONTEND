@@ -57,7 +57,7 @@ const PayreqNavItem = ({intl, action, billerId, history, onSelect}) => {
     const {iconClass, label, link: emberLink, isReactLink} = action;
     const href = buildHref(emberLink, billerId, isReactLink);
     const [{biller}] = useAppState();
-    const navText = label === "registrations" && isMyPayer(biller) ? intl.formatMessage({id: "navbar.subscriptions"}) : intl.formatMessage({id: "navbar." + label});
+    const navText = label === "registrations" && isMyPayer(biller) ? intl.formatMessage({id: "navbar.connections"}) : intl.formatMessage({id: "navbar." + label});
     const navIconComponent = <Glyphicon aria-hidden="true" glyph={iconClass}/>;
     const isReact = isReactLink || isConvertedToReact(emberLink);
     

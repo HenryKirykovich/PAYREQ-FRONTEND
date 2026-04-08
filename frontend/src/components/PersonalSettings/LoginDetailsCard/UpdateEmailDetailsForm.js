@@ -87,8 +87,8 @@ function UpdateEmailDetailsForm({setServerMsg, setIsUpdateComplete, onCancel, in
 
                         <Select name="updateSubscriptionEmail"
                                 hint="personalSettings.email.update.notification"
-                                label="personalSettings.email.update.subscription"
-                                placeholder="personalSettings.email.update.subscription"
+                                label="personalSettings.email.update.connection"
+                                placeholder="personalSettings.email.update.connection"
                                 options={UPDATE_DROPDOWN_VALUES}
                                 value={values.updateSubscriptionEmail}
                                 onChange={handleChange}

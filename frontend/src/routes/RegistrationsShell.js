@@ -94,7 +94,7 @@ const RegistrationsShell = ({match, location}) => {
                 />
             </Route>
 
-            {/*admin subscription creation screen*/}
+            {/*admin connection creation screen*/}
             <Route path={`${match.url}/admin/create`} exact>
                 <AdminCreate billerId={biller.id}/>
             </Route>
