@@ -22,6 +22,7 @@ import AdhocPaymentForm from "../components/settings/payments/AdhocPaymentForm"
 import AdhocPaymentConfirmation from "../components/settings/payments/AdhocPaymentConfirmation";
 import AdhocPaymentResult from "../components/settings/payments/AdhocPaymentResult";
 import ApiDetails from "../components/settings/biller/ApiDetails";
+import ConsentsSettings from "../components/settings/biller/ConsentsSettings";
 import BulkDownloadPreferences from "../components/BulkDownloadPreferences";
 import BulkDownloadPreferencesEdit from "../components/BulkDownloadPreferences/BulkDownloadPreferencesEdit";
 import BulkDownloadPreferencesSaved from "../components/BulkDownloadPreferences/BulkDownloadPreferencesSaved";
@@ -35,7 +36,7 @@ const getBillerSettingsTabs = (billerId, billerSettings) => [
     {isEmber: true, linkTo: "biller.settings.billTemplates", name: "billTemplates"},
     {isEmber: true, linkTo: "biller.settings.accounting", name: "accounting"},
     {isEmber: true, linkTo: "biller.settings.payments", name: "payments"},
-    {isEmber: true, linkTo: "biller.settings.consents", name: "consents", hidden: !hasAgent(billerSettings)},
+    {linkTo: "/portal/customer/biller/" + billerId + "/settings/consents/view", name: "consents", hidden: !hasAgent(billerSettings)},
     {linkTo: "/portal/customer/biller/" + billerId + "/settings/contactDetails/view", name: "contactDetails"},
     {linkTo: "/portal/customer/biller/" + billerId + "/settings/apiDetails/view", name: "apiDetails"}
 ];
@@ -43,7 +44,7 @@ const getBillerSettingsTabs = (billerId, billerSettings) => [
 const getMyBillsSettingsTabs = (billerId, billerSettings) => [
     {isEmber: true, linkTo: "biller.settings.connections", name: "connections"},
     {isEmber: true, linkTo: "biller.settings.users", name: "users"},
-    {isEmber: true, linkTo: "biller.settings.consents", name: "consents"},
+    {linkTo: "/portal/customer/biller/" + billerId + "/settings/consents/view", name: "consents"},
     {linkTo: "/portal/customer/biller/" + billerId + "/settings/forwardingRules/view", name: "forwardingRules"},
     {linkTo: "/portal/customer/biller/" + billerId + "/settings/apiDetails/view", name: "apiDetails", hidden: !billerSettings.showApi},
     {linkTo: "/portal/customer/biller/" + billerId + "/settings/bulkDownloadPreference/view", name: "bulkDownloadPreference", hidden: !billerSettings.isCompany},
@@ -167,6 +168,10 @@ const SettingsShell = ({match, location}) => {
 
                     <Route path={`${match.url}/apiDetails/view`}>
                         <ApiDetails billerId={biller.id}/>
+                    </Route>
+
+                    <Route path={`${match.url}/consents/view`}>
+                        <ConsentsSettings billerId={biller.id}/>
                     </Route>
 
                     {/*for some reason need to build this from a list rather than a React.Fragment like PaymentSettingRoutes*/}
