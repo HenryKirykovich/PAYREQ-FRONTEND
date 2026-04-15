@@ -344,6 +344,16 @@
   "settings.tab.title.bulkDownloadPreference": "Bulk Download Preferences",
   "settings.tab.title.connections": "Connections",
 
+  "connections.heading.sme": "Accounting Software Connections",
+  "connections.heading.agents": "Property Management Software Connections",
+  "connections.status.connected": "Connected",
+  "connections.status.reconnect": "Reconnection required",
+  "connections.status.disconnected": "Disconnected",
+  "connections.disconnect": "Disconnect",
+  "connections.cancel": "Cancel",
+  "connections.or": "OR",
+  "connections.connectionDate": "Connected Since",
+
   "settings.contactDetails.heading": "Contact Details",
   "settings.contactDetails.info": "These details will be used in registration notification emails sent to payers",
   "settings.contactDetails.name": "Name",

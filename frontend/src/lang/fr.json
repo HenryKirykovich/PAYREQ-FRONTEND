@@ -387,7 +387,6 @@
   "settings.users.permissions.bills": "Permission de courrier",
   "settings.users.permissions.billerSettings": "Permission des paramètres de facturation",
   "settings.users.permissions.noAccess": "Aucun accès",
-
   "connections.heading.sme": "Connexions aux logiciels comptables",
   "connections.heading.agents": "Logiciels de gestion immobilière",
   "connections.status.connected": "Connecté",
