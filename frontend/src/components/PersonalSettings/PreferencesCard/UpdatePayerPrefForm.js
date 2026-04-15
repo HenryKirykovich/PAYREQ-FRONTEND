@@ -48,6 +48,7 @@ function UpdatePayerPrefForm({preferences, onCancel, setIsSubmitted, setHasLangu
                                 label="personalSettings.preferences.language"
                                 placeholder="personalSettings.preferences.language"
                                 options={LANGUAGE_DROPDOWN_VALUES}
+                                internationalisedOptions={false}
                                 value={values.language}
                                 onChange={handleChange}
                                 error={errors.language}

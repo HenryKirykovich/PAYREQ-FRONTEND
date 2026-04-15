@@ -10,7 +10,7 @@ const MyobError = () => {
         <div className={styles.centerDiv}>
             <LoginCard heading="myobError.error.heading" headingContainerStyles={styles.headingContainer} >
                 <LargeText text="myobError.error.text" className={styles.errorMessage}/>
-                <DefaultButton label="myobError.error.backButton" onClick={() => window.location.href = `/customer#/biller/${biller.id}/settings/connections`}/>
+                <DefaultButton label="myobError.error.backButton" onClick={() => window.location.href = `/portal/customer/biller/${biller.id}/settings/connections`}/>
             </LoginCard>
         </div>
     </div>;

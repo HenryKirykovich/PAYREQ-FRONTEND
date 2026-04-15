@@ -15,9 +15,7 @@ const PayerPreferences = ({intl, preferences}) => {
             <FieldGroup className={styles.detailsGroup} fields={[
                 {
                     label: "personalSettings.preferences.language",
-                    value: intl.formatMessage({
-                        id: LANG_LABELS[preferences.language]
-                    })
+                    value: LANG_LABELS[preferences.language] || preferences.language
                 },
                 {
                     label: "personalSettings.preferences.paymentReminder",
@@ -32,9 +30,7 @@ const PayerPreferences = ({intl, preferences}) => {
             <FieldGroup fields={[
                 {
                     label: "personalSettings.preferences.language",
-                    value: intl.formatMessage({
-                        id: LANG_LABELS[preferences.language]
-                    })
+                    value: LANG_LABELS[preferences.language] || preferences.language
                 }
             ]}/>
         )
@@ -51,9 +47,7 @@ const BillerPreferences = ({preferences, intl}) => (
         },
         {
             label: "personalSettings.preferences.language",
-            value: intl.formatMessage({
-                id: LANG_LABELS[preferences.language]
-            })
+            value: LANG_LABELS[preferences.language] || preferences.language
         },
 
     ]}/>

@@ -1,3 +1,4 @@
+export {default as Button} from "./buttons/Button";
 export {default as PrimaryButton} from "./buttons/_PrimaryButton";
 export {default as SubmitButton} from "./buttons/_SubmitButton";
 export {default as DefaultButton} from "./buttons/_DefaultButton";

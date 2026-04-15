@@ -171,14 +171,15 @@ const SearchSummaryAndDownload = ({showing, total, handleDownload}) => (
     </div>
 );
 
-const BillerRegistrationsView = ({payerId, registrations, biller, total, showing, intl, handleSearch, handleDownload, searchParams}) => {
+const BillerRegistrationsView = ({payerId, registrations, biller, total, showing, intl, handleSearch, handleDownload, searchParams, onImportClick}) => {
     const [pageNumber, setPageNumber] = useState(searchParams.pageNumber ||  1);
     const [isPaging, setIsPaging] = useState(false);
     return (
         <React.Fragment>
             <PageHeading text="registrations.pageHeading" values={{tagName: biller.mybillsDisplayName}}/>
             <div className={styles.buttonContainer}>
-                <PrimaryButton linkTo={`../create/${biller.id}`} label="registrations.addAccount.button" icon="plus"/>
+                <PrimaryButton linkTo={{pathname: `../create/${biller.id}`}} label="registrations.addAccount.button" icon="plus"/>
+                {onImportClick && <LinkButton icon="upload" onClick={onImportClick} style={{marginLeft: "10px"}}>Import Deregistrations</LinkButton>}
             </div>
             <Formik
                 initialValues={{searchTerm: "", status: "all", fromDate: "", toDate: "", ...searchParams}}

@@ -5,7 +5,7 @@ import {Modal} from "react-bootstrap";
 import {injectIntl} from "react-intl";
 import {Icon, LargeText, PrimaryButton, RegularText} from "../common";
 import inboxImg from "../../resources/images/walkthrough/inbox.png";
-import subscriptionImg from "../../resources/images/walkthrough/subscriptions.png";
+import connectionImg from "../../resources/images/walkthrough/subscriptions.png";
 
 const getCurrentWalkthrough = (setWalkthrough, setShow, billerId) => {
     axios.get(`/data/walkthrough/biller/${billerId}`)
@@ -33,9 +33,9 @@ const BillerRenameWalkthrough = injectIntl(({intl, setShow, walkthroughId}) => {
                 <LargeText style={{marginTop: "2rem"}} text="walkthrough.modal.billerRename.inbox.title"/>
                 <RegularText text="walkthrough.modal.billerRename.inbox.description"/>
                 <img src={inboxImg} alt="Inbox"/>
-                <LargeText style={{marginTop: "2rem"}} text="walkthrough.modal.billerRename.subscriptions.title"/>
-                <RegularText text="walkthrough.modal.billerRename.subscriptions.description"/>
-                <img src={subscriptionImg} alt="Subscription"/>
+                <LargeText style={{marginTop: "2rem"}} text="walkthrough.modal.billerRename.connections.title"/>
+                <RegularText text="walkthrough.modal.billerRename.connections.description"/>
+                <img src={connectionImg} alt="Connection"/>
             </Modal.Body>
             <Modal.Footer>
                 <PrimaryButton label={"walkthrough.modal.button.letsGo"}

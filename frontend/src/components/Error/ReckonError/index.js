@@ -10,7 +10,7 @@ const ReckonError = () => {
         <div className={styles.centerDiv}>
             <LoginCard heading="reckonError.error.heading" headingContainerStyles={styles.headingContainer} >
                 <LargeText text="reckonError.error.text" className={styles.errorMessage}/>
-                <DefaultButton label="reckonError.error.backButton" onClick={() => window.location.href = `/customer#/biller/${biller.id}/settings/connections`}/>
+                <DefaultButton label="reckonError.error.backButton" onClick={() => window.location.href = `/portal/customer/biller/${biller.id}/settings/connections`}/>
             </LoginCard>
         </div>
     </div>;

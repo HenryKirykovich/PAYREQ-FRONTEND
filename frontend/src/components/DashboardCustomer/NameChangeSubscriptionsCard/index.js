@@ -1,31 +1,31 @@
 import React, {useEffect, useState} from "react";
 import axios from "axios";
 
-import NameChangeSubscriptionsCardView from "./NameChangeSubscriptionsCardView";
+import NameChangeConnectionsCardView from "./NameChangeSubscriptionsCardView";
 
-const getRegistrations = (setIsLoading, setHasNameChangeSubscriptions, setCount, billerId) => {
+const getRegistrations = (setIsLoading, setHasNameChangeConnections, setCount, billerId) => {
     axios.get("/data/registrations/counts", {params: {billerId: billerId}})
         .then(({data}) => {
             if (data.counts){
-                const relevantSubscriptions = (data.counts.contactChanged || 0);
-                setHasNameChangeSubscriptions(relevantSubscriptions > 0);
-                setCount(relevantSubscriptions);
+                const relevantConnections = (data.counts.contactChanged || 0);
+                setHasNameChangeConnections(relevantConnections > 0);
+                setCount(relevantConnections);
             }
             setIsLoading(false);
         });
 };
 
-const NameChangeSubscriptionsCard = ({billerId, setIsLoading}) => {
-    const [hasNameChangeSubscriptions, setHasNameChangeSubscriptions] = useState(false);
+const NameChangeConnectionsCard = ({billerId, setIsLoading}) => {
+    const [hasNameChangeConnections, setHasNameChangeConnections] = useState(false);
     const [count, setCount] = useState();
 
     useEffect(() => {
-        getRegistrations(setIsLoading, setHasNameChangeSubscriptions, setCount, billerId);
-    }, [setIsLoading, setHasNameChangeSubscriptions, setCount, billerId]);
+        getRegistrations(setIsLoading, setHasNameChangeConnections, setCount, billerId);
+    }, [setIsLoading, setHasNameChangeConnections, setCount, billerId]);
 
-    if (hasNameChangeSubscriptions) return <NameChangeSubscriptionsCardView billerId={billerId} count={count}/>;
+    if (hasNameChangeConnections) return <NameChangeConnectionsCardView billerId={billerId} count={count}/>;
 
     return null;
 };
 
-export default NameChangeSubscriptionsCard;
+export default NameChangeConnectionsCard;

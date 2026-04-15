@@ -3,14 +3,15 @@ import {Accordion, DateInput, Select} from "../common";
 import styles from "./MailView.module.scss";
 import {changeAndSubmit, changeAndSubmitOnDate} from "../../utils/form-utils";
 import {BILL_FORMAT_ALL, CONSUMER_COMMUNICATION_MAIL_TEMPLATE} from "./mail-constants";
+import {injectIntl} from "react-intl";
 
 const isStatusFilterOn = status => status !== BILL_FORMAT_ALL
 
-const optionsBillFormats = (billFormats) => {
+const optionsBillFormats = (billFormats, intl) => {
     const billFormatLabels = billFormats.map(({id, displayName}) => ({value: id, label: displayName}))
                                         .filter(billFormat => !(billFormat.value === CONSUMER_COMMUNICATION_MAIL_TEMPLATE))
                                         .sort((a,b) => (a.label > b.label) ? 1 : ((b.label > a.label) ? -1 : 0))
-    return [{value: BILL_FORMAT_ALL, label: "generic.all"}].concat(billFormatLabels)
+    return [{value: BILL_FORMAT_ALL, label: intl.formatMessage({id: "generic.all"})}].concat(billFormatLabels)
 };
 
 const getDefaultExpanded = ({   billFormat,
@@ -20,8 +21,8 @@ const getDefaultExpanded = ({   billFormat,
     return !!(isStatusFilterOn(billFormat) || fromDate || toDate)
 };
 
-const AdvancedSearch = ({values, searchParams, handleChange, handleSubmit, errors, touched, billFormats}) => {
-    const optionsForBillFormats = useMemo(() => optionsBillFormats(billFormats), [billFormats]);
+const AdvancedSearch = ({values, searchParams, handleChange, handleSubmit, errors, touched, billFormats, intl}) => {
+    const optionsForBillFormats = useMemo(() => optionsBillFormats(billFormats, intl), [billFormats, intl]);
     return(
         <div className={styles.advancedSearch}>
             <Accordion title="generic.advancedSearch" defaultExpanded={getDefaultExpanded(values)}>
@@ -33,6 +34,7 @@ const AdvancedSearch = ({values, searchParams, handleChange, handleSubmit, error
                             options={optionsForBillFormats}
                             value={values.billFormat}
                             isControlled={true}
+                            internationalisedOptions={false}
                             onChange={e => changeAndSubmit(handleChange, handleSubmit, e, errors.type)}
                             error={errors.billFormat}
                             touched={touched.billFormat}
@@ -57,4 +59,4 @@ const AdvancedSearch = ({values, searchParams, handleChange, handleSubmit, error
     )
 };
 
-export default AdvancedSearch;
+export default injectIntl(AdvancedSearch);

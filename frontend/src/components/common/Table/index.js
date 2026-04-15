@@ -11,9 +11,9 @@ const TableContent = ({headerLabels, headerLabelValues, rows, footer, intl}) => 
         </tr>
         </thead>
         <tbody>
-        {rows.map((cells, idx) =>
-            <tr key={idx}>
-                {cells.map(cell => <td key={cell}>{cell}</td>)}
+        {rows.map((cells, rowIdx) =>
+            <tr key={rowIdx}>
+                {cells.map((cell, cellIdx) => <td key={`${rowIdx}-${cellIdx}`}>{cell}</td>)}
             </tr>)}
         </tbody>
 

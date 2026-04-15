@@ -1,12 +1,12 @@
 import React from 'react';
-import EmailSubscriptionVerificationCancelled from "../components/EmailSubscriptionVerification/EmailSubscriptionVerificationCancelled";
-import EmailSubscriptionVerificationConfirmed
+import EmailConnectionVerificationCancelled from "../components/EmailSubscriptionVerification/EmailSubscriptionVerificationCancelled";
+import EmailConnectionVerificationConfirmed
     from "../components/EmailSubscriptionVerification/EmailSubscriptionVerificationConfirmed";
 import {InviteConfirmation, NoInviteFound} from "../components/EmailSubscriptionVerification/index";
 
 
 export default {
-    title: 'Secondary Email Subscription Confirmation',
+    title: 'Secondary Email Connection Confirmation',
 };
 
 const invite = {
@@ -23,22 +23,22 @@ const invite = {
     "activatedTime": null
 }
 
-export const emailSubscriptionVerification = () => {
+export const emailConnectionVerification = () => {
     return <InviteConfirmation invite={invite} showError={false}/>
 }
 
-export const emailSubscriptionVerificationWithError = () => {
+export const emailConnectionVerificationWithError = () => {
     return <InviteConfirmation invite={invite} showError={true}/>
 }
 
-export const emailSubscriptionVerificationNoInvite = () => {
+export const emailConnectionVerificationNoInvite = () => {
     return <NoInviteFound/>
 }
 
-export const emailSubscriptionVerificationCancelled = () => {
-    return <EmailSubscriptionVerificationCancelled/>
+export const emailConnectionVerificationCancelled = () => {
+    return <EmailConnectionVerificationCancelled/>
 }
 
-export const emailSubscriptionVerificationConfirmed = () => {
-    return <EmailSubscriptionVerificationConfirmed/>
+export const emailConnectionVerificationConfirmed = () => {
+    return <EmailConnectionVerificationConfirmed/>
 }
