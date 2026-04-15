@@ -8,9 +8,20 @@ import {convertEmberRouteToReact, isConvertedToReact} from "../../utils/ember-to
 
 const isRootLevel = action => action.link;
 
+// Routes that have been migrated to React and should use history.push
+const reactRoutes = new Set(["biller.registrationsinit", "biller.registrations"]);
+
 const buildBillerHref = (emberLink, billerId) => {
     const path = emberLink.replace("biller.", "").replace(/\./g, "/");
     return `/customer/biller/${billerId}/${path}`
+};
+
+const buildReactBillerHref = (emberLink, billerId) => {
+    if (emberLink === "biller.registrationsinit" || emberLink === "biller.registrations") {
+        return `/portal/customer/biller/${billerId}/registrations/billers`;
+    }
+    const path = emberLink.replace("biller.", "").replace(/\./g, "/");
+    return `/portal/customer/biller/${billerId}/${path}`;
 };
 
 const buildHref = (link, billerId, isReactLink) => {

@@ -1,6 +1,6 @@
 import React, {useState} from "react";
-import {Nav, Navbar} from 'react-bootstrap';
-import {Link} from "react-router-dom";
+import {Nav, Navbar, NavItem, Glyphicon} from 'react-bootstrap';
+import {Link, useLocation, useHistory} from "react-router-dom";
 
 import "./navbar.scss"
 
@@ -39,7 +39,13 @@ const PayreqLogo = ({biller, intl}) => {
 const Navber = ({biller = {}, user, intl}) => {
     const {id: billerId, availableActions} = biller;
     const canSwitchBillers = user.totalLinkedBillers > 1;
-    const [isExpanded, setIsExpanded] = useState(false)
+    const [isExpanded, setIsExpanded] = useState(false);
+    const location = useLocation();
+    const history = useHistory();
+    const isInConnectionsFlow = billerId && location.pathname.includes(`/biller/${billerId}/registrations`);
+    const connectionsPath = `/portal/customer/biller/${billerId}/registrations/billers`;
+    const closeNav = () => setIsExpanded(false);
+
     return (
         <React.Fragment>
             <Navbar inverse fixedTop role="navigation" aria-label="Main menu" expanded={isExpanded} onToggle={() => setIsExpanded(b => !b)}>
@@ -50,10 +56,22 @@ const Navber = ({biller = {}, user, intl}) => {
                     <Navbar.Toggle/>
                 </Navbar.Header>
                 <Navbar.Collapse>
-                    <Nav>
-                        {billerId && availableActions.map(action => <PayreqNavItem key={action.iconClass} action={action}
-                                                                       billerId={billerId} onSelect={() => setIsExpanded(false)}/>)}
-                    </Nav>
+                    {isInConnectionsFlow ? (
+                        <Nav>
+                            <NavItem onClick={() => { closeNav(); history.goBack(); }}>
+                                <Glyphicon glyph="chevron-left" style={{marginRight: "5px"}}/>
+                                {intl.formatMessage({id: "subNavbar.back"})}
+                            </NavItem>
+                            <NavItem onClick={() => { closeNav(); history.push(connectionsPath); }}>
+                                {intl.formatMessage({id: "subNavbar.connections"})}
+                            </NavItem>
+                        </Nav>
+                    ) : (
+                        <Nav>
+                            {billerId && availableActions.map(action => <PayreqNavItem key={action.iconClass} action={action}
+                                                                           billerId={billerId} onSelect={closeNav}/>)}
+                        </Nav>
+                    )}
 
                     <div>
                         <ul className="nav navbar-nav navbar-right">
