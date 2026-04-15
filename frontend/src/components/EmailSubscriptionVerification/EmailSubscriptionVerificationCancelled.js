@@ -7,17 +7,17 @@ import {injectIntl} from "react-intl";
 import styles from "./EmailSubscriptionVerification.module.scss"
 
 
-const EmailSubscriptionVerificationCancelled = ({intl}) => {
+const EmailConnectionVerificationCancelled = ({intl}) => {
     return  (
         <React.Fragment>
             <div className={styles.container}>
                 <div className={styles.centerDiv}>
                     <PayreqLogo intl={intl}/>
-                    <LoginCard heading="emailSubscriptionCancelled.heading">
+                    <LoginCard heading="emailConnectionCancelled.heading">
                         {/*eslint-disable-next-line*/}
-                        <LargeText text="emailSubscriptionCancelled.message"/>
+                        <LargeText text="emailConnectionCancelled.message"/>
                         <div className={styles.buttons}>
-                            <DefaultButton label="emailSubscriptionVerification.noInvite.button"
+                            <DefaultButton label="emailConnectionVerification.noInvite.button"
                                             onClick={() => window.location.href = `/`}/>
 
                         </div>
@@ -29,4 +29,4 @@ const EmailSubscriptionVerificationCancelled = ({intl}) => {
     )
 }
 
-export default injectIntl(EmailSubscriptionVerificationCancelled);
+export default injectIntl(EmailConnectionVerificationCancelled);

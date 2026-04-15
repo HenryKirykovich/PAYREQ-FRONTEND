@@ -8,11 +8,12 @@ import {BlueTrim} from "../components/Navbar/BlueTrim";
 import VerifyAccountConfirmation from "../components/VerifyAccountConfirmation";
 import VerifyAccount from "../components/VerifyAccount";
 import EmailUpdateConfirmation from "../components/EmailUpdateConfirmation";
-import EmailSubscriptionConfirmation from "../components/EmailSubscriptionVerification";
-import EmailSubscriptionVerificationCancelled
+import EmailConnectionConfirmation from "../components/EmailSubscriptionVerification";
+import EmailConnectionVerificationCancelled
     from "../components/EmailSubscriptionVerification/EmailSubscriptionVerificationCancelled";
-import EmailSubscriptionVerificationConfirmed
+import EmailConnectionVerificationConfirmed
     from "../components/EmailSubscriptionVerification/EmailSubscriptionVerificationConfirmed";
+import AgentConsent from "../components/AgentConsent";
 
 const VerificationShell = ({match}) => {
     return (
@@ -26,9 +27,10 @@ const VerificationShell = ({match}) => {
                     <Route path={`${match.url}/verify-account`}  render={() => <VerifyAccount/>}/>
                     <Route path={`${match.url}/verify-account-confirmation/:code/:id`} component={VerifyAccountConfirmation}/>
                     <Route path={`${match.url}/email-update-confirmation`} component={EmailUpdateConfirmation}/>
-                    <Route path={`${match.url}/email-verification/:code/:id`} component={EmailSubscriptionConfirmation}/>
-                    <Route path={`${match.url}/email-verification-confirmation/cancelled`} component={EmailSubscriptionVerificationCancelled}/>
-                    <Route path={`${match.url}/email-verification-confirmation/confirmed`} component={EmailSubscriptionVerificationConfirmed}/>
+                    <Route path={`${match.url}/email-verification/:code/:id`} component={EmailConnectionConfirmation}/>
+                    <Route path={`${match.url}/email-verification-confirmation/cancelled`} component={EmailConnectionVerificationCancelled}/>
+                    <Route path={`${match.url}/email-verification-confirmation/confirmed`} component={EmailConnectionVerificationConfirmed}/>
+                    <Route path={`${match.url}/agent-authorisation/:code/:id`} component={AgentConsent}/>
                     <Route component={PageNotFound}/>
                 </Switch>
             </div>

@@ -16,7 +16,7 @@ const CardsView = ({cards, intl}) => {
                 <PrimaryButton data-testid="add-card-button"
                                label="cards.listScreen.addButtonLabel"
                                icon="plus"
-                               linkTo="./cards/create"
+                               linkTo={{pathname: "./cards/create"}}
                                disabled={false}
                 />
             </div>

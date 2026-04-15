@@ -7,7 +7,7 @@ const XeroWelcomeCardView = ({ billerId }) => (
         <LargeText text={"dashboard.xeroWelcomeCard.body"} />
         <PrimaryButton
             label={"dashboard.xeroWelcomeCard.button"}
-            linkTo={`/portal/customer/biller/${billerId}/registrations/create`}
+            linkTo={`/customer/biller/${billerId}/registrations/create`}
             icon="plus"
         />
     </DashboardCard>

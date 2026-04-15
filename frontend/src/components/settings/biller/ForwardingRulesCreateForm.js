@@ -54,7 +54,7 @@ const ForwardingRulesCreateForm = ({billerId, history}) => {
             : <div>
                     <LargeText text="settings.forwardingRules.createForm.no.connection.heading" />
                     <SecondaryButton label="settings.forwardingRules.createForm.no.connection.button"
-                                onClick={() => window.location.href = `/customer#/biller/${billerId}/settings/connections`}/>
+                                onClick={() => window.location.href = `/portal/customer/biller/${billerId}/settings/connections`}/>
 
               </div>}
         </VerticalLayout>)
