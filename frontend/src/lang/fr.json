@@ -993,6 +993,7 @@
 
   "registrations.channelSelection.pageHeading": "Mode de livraison",
   "registrations.channelSelection.directive": "Sélectionnez la manière dont vous souhaitez recevoir votre courrier de {billerName}",
+  "registrations.channelSelection.noChannels": "Aucune méthode de livraison n'est actuellement disponible pour {billerName}. Ce fournisseur n'a pas encore activé les connexions en libre-service.",
   "registrations.channelSelection.email.link": "S'inscrire aux courriels",
   "registrations.channelSelection.email.description": "Recevez vos factures par courriel",
   "registrations.channelSelection.agent.label": "Agent Payreq MyBills",

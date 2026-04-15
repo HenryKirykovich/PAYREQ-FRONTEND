@@ -171,7 +171,9 @@ const PayreqBillsChannel = ({payerId, registeringForbillerId, channel, intl}) =>
     )
 };
 
+const KNOWN_CHANNELS = ["email", "mybillsagent", "myob", "reckon", "xeroconnect", "mybills", "mybills-bills", "bpv"];
 const getChannel = (channels, channelPartnerSystemId) => channels.find(c => c.channelPartnerSystemId === channelPartnerSystemId);
+const hasKnownChannels = (channels) => channels.some(c => KNOWN_CHANNELS.includes(c.channelPartnerSystemId));
 
 const ChannelSelectionView = ({payerId, registeringForbillerId, logoPath, channels, billerName, intl}) => (
     (
@@ -181,27 +183,33 @@ const ChannelSelectionView = ({payerId, registeringForbillerId, logoPath, channe
             <PageHeading text="registrations.channelSelection.pageHeading"/>
             <LargeText text="registrations.channelSelection.directive" values={{billerName: billerName}}/>
 
-            <div className={styles.channelsContainer}>
-                <div className={styles.links}>
-                    <EmailChannel registeringForbillerId={registeringForbillerId} channel={getChannel(channels, "email")}
-                                  intl={intl}/>
-                    <AgentsChannel payerId={payerId}
-                                   registeringForbillerId={registeringForbillerId}
-                                   channel={getChannel(channels, "mybillsagent")} intl={intl}/>
-                    <MyobChannel payerId={payerId}
-                                 registeringForbillerId={registeringForbillerId}
-                                 channel={getChannel(channels, "myob")} intl={intl}/>
-                    <ReckonChannel registeringForbillerId={registeringForbillerId}
-                                   channel={getChannel(channels, "reckon")} intl={intl}/>
-                    <XeroChannel registeringForbillerId={registeringForbillerId}
-                                 channel={getChannel(channels, "xeroconnect")} intl={intl}/>
-                    <PayreqChannel registeringForbillerId={registeringForbillerId}
-                                 channel={getChannel(channels, "mybills")} intl={intl}/>
-                    <PayreqBillsChannel registeringForbillerId={registeringForbillerId}
-                                        channel={getChannel(channels, "mybills-bills")} intl={intl}/>
+            {!hasKnownChannels(channels) ? (
+                <div className={styles.channelsContainer}>
+                    <LargeText text="registrations.channelSelection.noChannels" values={{billerName: billerName}}/>
                 </div>
-                <BpayViewChannel channel={getChannel(channels, "bpv")} intl={intl}/>
-            </div>
+            ) : (
+                <div className={styles.channelsContainer}>
+                    <div className={styles.links}>
+                        <EmailChannel registeringForbillerId={registeringForbillerId} channel={getChannel(channels, "email")}
+                                      intl={intl}/>
+                        <AgentsChannel payerId={payerId}
+                                       registeringForbillerId={registeringForbillerId}
+                                       channel={getChannel(channels, "mybillsagent")} intl={intl}/>
+                        <MyobChannel payerId={payerId}
+                                     registeringForbillerId={registeringForbillerId}
+                                     channel={getChannel(channels, "myob")} intl={intl}/>
+                        <ReckonChannel registeringForbillerId={registeringForbillerId}
+                                       channel={getChannel(channels, "reckon")} intl={intl}/>
+                        <XeroChannel registeringForbillerId={registeringForbillerId}
+                                     channel={getChannel(channels, "xeroconnect")} intl={intl}/>
+                        <PayreqChannel registeringForbillerId={registeringForbillerId}
+                                     channel={getChannel(channels, "mybills")} intl={intl}/>
+                        <PayreqBillsChannel registeringForbillerId={registeringForbillerId}
+                                            channel={getChannel(channels, "mybills-bills")} intl={intl}/>
+                    </div>
+                    <BpayViewChannel channel={getChannel(channels, "bpv")} intl={intl}/>
+                </div>
+            )}
         </React.Fragment>
 
     )

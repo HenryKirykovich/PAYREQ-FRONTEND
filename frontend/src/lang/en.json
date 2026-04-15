@@ -876,6 +876,7 @@
 
   "registrations.channelSelection.pageHeading": "Delivery method",
   "registrations.channelSelection.directive": "Select how you would like to receive future mail from {billerName}",
+  "registrations.channelSelection.noChannels": "No delivery methods are currently available for {billerName}. This mailer has not yet enabled self-service connections.",
   "registrations.channelSelection.email.link": "Register for email",
   "registrations.channelSelection.email.description": "Receive your bills by email",
   "registrations.channelSelection.agent.label": "Payreq MyBills Agent",
