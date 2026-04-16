@@ -5,9 +5,10 @@ import Loading from "../../Loading";
 import ConnectionsView from "./ConnectionsView";
 
 export const getConnections = (billerId, setIsLoading, setConnections) => {
-    axios.get("/connections", {params: {billerId}, localErrorHandling: true})
+    axios.get("/data/connections", {params: {billerId}, localErrorHandling: true})
         .then(({data}) => {
-            setConnections(data);
+            const connection = data.connections ? data.connections[0] : data;
+            setConnections(connection || {});
             setIsLoading(false);
         })
         .catch(() => {

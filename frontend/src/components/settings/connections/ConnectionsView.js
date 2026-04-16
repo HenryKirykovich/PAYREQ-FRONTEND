@@ -1,6 +1,11 @@
 import React from "react";
 import {FormattedMessage} from "react-intl";
 
+import XeroConnection from "./XeroConnection";
+import MyobConnection from "./MyobConnection";
+import ReckonConnection from "./ReckonConnection";
+import PropertyMeConnection from "./PropertyMeConnection";
+
 const ConnectionsView = ({connections, billerSettings, billerId, onReload}) => {
     const myobEnabled = billerSettings.myobEnabled || (connections && connections.myobEnabled);
 
@@ -10,31 +15,19 @@ const ConnectionsView = ({connections, billerSettings, billerId, onReload}) => {
                 <FormattedMessage id="connections.heading.sme"/>
             </h2>
 
-            <div className="panel panel-default">
-                <div className="panel-heading">Xero</div>
-                <div className="panel-body">Xero connection placeholder — PR 2</div>
-            </div>
+            <XeroConnection connections={connections} billerId={billerId} onReload={onReload}/>
 
             {myobEnabled && (
-                <div className="panel panel-default">
-                    <div className="panel-heading">MYOB</div>
-                    <div className="panel-body">MYOB connection placeholder — PR 3</div>
-                </div>
+                <MyobConnection connections={connections} billerId={billerId} onReload={onReload}/>
             )}
 
-            <div className="panel panel-default">
-                <div className="panel-heading">Reckon Accounts Hosted</div>
-                <div className="panel-body">Reckon connection placeholder — PR 4</div>
-            </div>
+            <ReckonConnection connections={connections} billerId={billerId} onReload={onReload}/>
 
-            <h2>
+            <h2 style={{marginTop: "3rem"}}>
                 <FormattedMessage id="connections.heading.agents"/>
             </h2>
 
-            <div className="panel panel-default">
-                <div className="panel-heading">PropertyMe</div>
-                <div className="panel-body">PropertyMe connection placeholder — PR 5</div>
-            </div>
+            <PropertyMeConnection connections={connections} billerId={billerId} onReload={onReload}/>
         </React.Fragment>
     );
 };
