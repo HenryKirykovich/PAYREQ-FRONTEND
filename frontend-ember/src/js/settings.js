@@ -133,7 +133,7 @@ define(['i18n!nls/settings',
 
             if(App.billerSettings.systemId === "incoming-invoice" && App.BillerSettingsController.childTabs.length === 0){
                 App.BillerSettingsController.childTabs.push(App.SettingsTab.create({
-                    linkTo: "biller.settings.connections",
+                    href: "/portal/customer/biller/" + this.billerId + "/settings/connections/view",
                     name: "connections",
                     idx: 0
                 }));
