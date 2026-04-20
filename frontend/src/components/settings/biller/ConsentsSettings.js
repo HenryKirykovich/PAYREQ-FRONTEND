@@ -4,6 +4,7 @@ import {injectIntl} from "react-intl";
 import {Button} from "react-bootstrap";
 import Loading from "../../Loading";
 import {getDateAsUTCFormatted} from "../../../utils/date-utils";
+import {Modal, DangerButton} from "../../common";
 import styles from "./ConsentsSettings.module.scss";
 
 export const isActive = (status) => status === "authorised" || status === "pending";
@@ -28,6 +29,9 @@ const ConsentsSettings = ({billerId, biller, intl}) => {
     const [agentMyBillsEmail, setAgentMyBillsEmail] = useState("");
     const [noticeId, setNoticeId] = useState("");
     const [requestError, setRequestError] = useState("");
+    const [confirmUnauthorise, setConfirmUnauthorise] = useState(null);
+    const [tableError, setTableError] = useState("");
+    const [editingId] = useState(null);
 
     const fetchConsents = (search = "") => {
         setIsLoading(true);
@@ -60,6 +64,19 @@ const ConsentsSettings = ({billerId, biller, intl}) => {
                 const errorCode = error?.response?.data?.error;
                 const i18nKey = REQUEST_ERROR_KEYS[errorCode] || "settings.consents.setConsentError";
                 setRequestError(intl.formatMessage({id: i18nKey}));
+            });
+    };
+
+    const handleRemove = (consent) => {
+        setTableError("");
+        axios.delete(`/data/consents/${consent.id}`, {params: {billerId}})
+            .then(() => {
+                setConfirmUnauthorise(null);
+                fetchConsents(searchTerm);
+            })
+            .catch(() => {
+                setTableError(intl.formatMessage({id: "settings.consents.removeAuthError"}));
+                setConfirmUnauthorise(null);
             });
     };
 
@@ -138,6 +155,11 @@ const ConsentsSettings = ({billerId, biller, intl}) => {
                     </div>
                     <div className="panel-body">
                         <div className="col-md-12">
+                            {tableError && (
+                                <div className="alert alert-danger">
+                                    {tableError}
+                                </div>
+                            )}
                             <form className="form-horizontal" role="form" onSubmit={handleSearch}>
                                 <div className="form-group">
                                     <div className="input-group padding-left-right">
@@ -205,7 +227,22 @@ const ConsentsSettings = ({billerId, biller, intl}) => {
                                                             {consent.unauthorisedOn ? getDateAsUTCFormatted(consent.unauthorisedOn) : "-"}
                                                         </td>
                                                         <td className={styles.consentcells}>
-                                                            {/* action buttons added in PR 6+ */}
+                                                            <div style={{display: "inline-table"}}>
+                                                                <div className="actions-row">
+                                                                    <div className="actions btn-group col-xs-12">
+                                                                        {isActive(consent.status) && editingId !== consent.id && (
+                                                                            <Button
+                                                                                bsStyle="danger"
+                                                                                onClick={() => setConfirmUnauthorise(consent)}
+                                                                                style={{marginRight: "5px"}}
+                                                                            >
+                                                                                <span className="glyphicon glyphicon-remove"></span>
+                                                                                &nbsp;{intl.formatMessage({id: "settings.consents.removeAuth"})}
+                                                                            </Button>
+                                                                        )}
+                                                                    </div>
+                                                                </div>
+                                                            </div>
                                                         </td>
                                                     </tr>
                                                 ))
@@ -218,6 +255,22 @@ const ConsentsSettings = ({billerId, biller, intl}) => {
                     </div>
                 </div>
             </div>
+
+            <Modal
+                show={!!confirmUnauthorise}
+                title="settings.consents.unauthoriseModalHeading"
+                onCancel={() => setConfirmUnauthorise(null)}
+                onPrimaryAction={() => handleRemove(confirmUnauthorise)}
+                PrimaryButtonComponent={DangerButton}
+                buttonLabel="settings.consents.ok"
+            >
+                <p>
+                    {intl.formatMessage(
+                        {id: "settings.consents.unauthoriseModalText"},
+                        {email: <strong key="e">{confirmUnauthorise?.uid}</strong>}
+                    )}
+                </p>
+            </Modal>
         </div>
     );
 };
