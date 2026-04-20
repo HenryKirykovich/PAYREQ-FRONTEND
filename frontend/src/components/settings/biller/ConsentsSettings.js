@@ -17,6 +17,9 @@ export const getResendErrorKey = (error) =>
         ? "settings.consents.resendErrors.maxResends"
         : "settings.consents.resendErrorMessage";
 
+export const shouldShowEditButton = (isBiller, status, allowAgentRegistrationsFromContacts, editingId, consentId) =>
+    isBiller && isActive(status) && allowAgentRegistrationsFromContacts && editingId !== consentId;
+
 export const REQUEST_ERROR_KEYS = {
     "invalid.email": "settings.consents.errors.invalidEmail",
     "max.retries":   "settings.consents.errors.maxRetries",
@@ -36,7 +39,8 @@ const ConsentsSettings = ({billerId, biller, intl}) => {
     const [requestError, setRequestError] = useState("");
     const [confirmUnauthorise, setConfirmUnauthorise] = useState(null);
     const [tableError, setTableError] = useState("");
-    const [editingId] = useState(null);
+    const [editingId, setEditingId] = useState(null);
+    const [editingNoticeId, setEditingNoticeId] = useState("");
 
     const fetchConsents = (search = "") => {
         setIsLoading(true);
@@ -85,6 +89,24 @@ const ConsentsSettings = ({billerId, biller, intl}) => {
                     ? intl.formatMessage({id: i18nKey}, {uid: consent.uid})
                     : intl.formatMessage({id: i18nKey});
                 setTableError(message);
+            });
+    };
+
+    const handleCancelEdit = () => {
+        setEditingId(null);
+        setEditingNoticeId("");
+    };
+
+    const handleSave = (consent) => {
+        setTableError("");
+        axios.patch(`/data/consents/${consent.id}`, {noticeId: editingNoticeId, billerId})
+            .then(() => {
+                setEditingId(null);
+                fetchConsents(searchTerm);
+            })
+            .catch(() => {
+                setTableError(intl.formatMessage({id: "settings.consents.authUpdateError"}));
+                setEditingId(null);
             });
     };
 
@@ -239,7 +261,17 @@ const ConsentsSettings = ({billerId, biller, intl}) => {
                                                         <td className={styles.consentcells}>{consent.statusDescription}</td>
                                                         <td className={styles.consentcells}>{consent.tagName}</td>
                                                         {allowAgentRegistrationsFromContacts && (
-                                                            <td className={styles.consentcells}>{consent.noticeId}</td>
+                                                            <td className={styles.consentcells}>
+                                                                {editingId === consent.id ? (
+                                                                    <input
+                                                                        className="form-control"
+                                                                        value={editingNoticeId}
+                                                                        onChange={(e) => setEditingNoticeId(e.target.value)}
+                                                                    />
+                                                                ) : (
+                                                                    consent.noticeId
+                                                                )}
+                                                            </td>
                                                         )}
                                                         <td className={styles.consentcells}>
                                                             {consent.authorisedOn ? getDateAsUTCFormatted(consent.authorisedOn) : "-"}
@@ -269,6 +301,31 @@ const ConsentsSettings = ({billerId, biller, intl}) => {
                                                                                 <span className="glyphicon glyphicon-repeat"></span>
                                                                                 &nbsp;{intl.formatMessage({id: "settings.consents.resendButton"})}
                                                                             </Button>
+                                                                        )}
+                                                                        {shouldShowEditButton(isBiller, consent.status, allowAgentRegistrationsFromContacts, editingId, consent.id) && (
+                                                                            <Button
+                                                                                onClick={() => { setEditingId(consent.id); setEditingNoticeId(consent.noticeId || ""); }}
+                                                                                style={{marginRight: "5px"}}
+                                                                            >
+                                                                                <span className="glyphicon glyphicon-pencil"></span>
+                                                                            </Button>
+                                                                        )}
+                                                                        {isBiller && isActive(consent.status) && allowAgentRegistrationsFromContacts && editingId === consent.id && (
+                                                                            <React.Fragment>
+                                                                                <Button
+                                                                                    bsStyle="success"
+                                                                                    onClick={() => handleSave(consent)}
+                                                                                    style={{marginRight: "5px"}}
+                                                                                >
+                                                                                    <span className="glyphicon glyphicon-ok"></span>
+                                                                                </Button>
+                                                                                <Button
+                                                                                    bsStyle="danger"
+                                                                                    onClick={handleCancelEdit}
+                                                                                >
+                                                                                    <span className="glyphicon glyphicon-ban-circle"></span>
+                                                                                </Button>
+                                                                            </React.Fragment>
                                                                         )}
                                                                     </div>
                                                                 </div>

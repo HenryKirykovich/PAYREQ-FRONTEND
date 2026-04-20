@@ -1,4 +1,4 @@
-import ConsentsSettings, {isActive, isPending, getColSpan, REQUEST_ERROR_KEYS, getResendErrorKey} from "./ConsentsSettings";
+import ConsentsSettings, {isActive, isPending, getColSpan, REQUEST_ERROR_KEYS, getResendErrorKey, shouldShowEditButton} from "./ConsentsSettings";
 
 it("ConsentsSettings is a function", () => {
     expect(typeof ConsentsSettings).toBe("function");
@@ -26,6 +26,14 @@ it("getResendErrorKey returns specific key for max.resends", () => {
     expect(getResendErrorKey("max.resends")).toBe("settings.consents.resendErrors.maxResends");
     expect(getResendErrorKey("other")).toBe("settings.consents.resendErrorMessage");
     expect(getResendErrorKey(undefined)).toBe("settings.consents.resendErrorMessage");
+});
+
+it("shouldShowEditButton returns false when editing that row or conditions not met", () => {
+    expect(shouldShowEditButton(true, "authorised", true, null, "1")).toBe(true);
+    expect(shouldShowEditButton(true, "authorised", true, "1", "1")).toBe(false);
+    expect(shouldShowEditButton(false, "authorised", true, null, "1")).toBe(false);
+    expect(shouldShowEditButton(true, "deactivated", true, null, "1")).toBe(false);
+    expect(shouldShowEditButton(true, "authorised", false, null, "1")).toBe(false);
 });
 
 it("REQUEST_ERROR_KEYS maps all four error codes", () => {
