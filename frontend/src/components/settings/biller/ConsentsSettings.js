@@ -16,6 +16,7 @@ const ConsentsSettings = ({billerId, biller, intl}) => {
 
     const [consents, setConsents] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [searchTerm, setSearchTerm] = useState("");
 
     const fetchConsents = (search = "") => {
         setIsLoading(true);
@@ -25,6 +26,11 @@ const ConsentsSettings = ({billerId, biller, intl}) => {
                 setIsLoading(false);
             })
             .catch(() => setIsLoading(false));
+    };
+
+    const handleSearch = (e) => {
+        e.preventDefault();
+        fetchConsents(searchTerm);
     };
 
     useEffect(() => {
@@ -44,6 +50,29 @@ const ConsentsSettings = ({billerId, biller, intl}) => {
                     </div>
                     <div className="panel-body">
                         <div className="col-md-12">
+                            <form className="form-horizontal" role="form" onSubmit={handleSearch}>
+                                <div className="form-group">
+                                    <div className="input-group padding-left-right">
+                                        <input
+                                            className="form-control"
+                                            placeholder={intl.formatMessage({id: "settings.consents.searchPlaceholder"})}
+                                            id="searchTerm"
+                                            value={searchTerm}
+                                            onChange={(e) => setSearchTerm(e.target.value)}
+                                        />
+                                        <span className="input-group-btn">
+                                            <button
+                                                title="Search"
+                                                id="mailersearch"
+                                                type="submit"
+                                                className="btn btn-default"
+                                            >
+                                                <span className="glyphicon glyphicon-search"></span>
+                                            </button>
+                                        </span>
+                                    </div>
+                                </div>
+                            </form>
                             <div className="row">
                                 <div className="col-md-12">
                                     <table className="table table-striped">
