@@ -12,6 +12,11 @@ export const isPending = (status) => status === "pending";
 export const getColSpan = (allowAgentRegistrationsFromContacts) =>
     allowAgentRegistrationsFromContacts ? 7 : 6;
 
+export const getResendErrorKey = (error) =>
+    error === "max.resends"
+        ? "settings.consents.resendErrors.maxResends"
+        : "settings.consents.resendErrorMessage";
+
 export const REQUEST_ERROR_KEYS = {
     "invalid.email": "settings.consents.errors.invalidEmail",
     "max.retries":   "settings.consents.errors.maxRetries",
@@ -64,6 +69,22 @@ const ConsentsSettings = ({billerId, biller, intl}) => {
                 const errorCode = error?.response?.data?.error;
                 const i18nKey = REQUEST_ERROR_KEYS[errorCode] || "settings.consents.setConsentError";
                 setRequestError(intl.formatMessage({id: i18nKey}));
+            });
+    };
+
+    const handleResend = (consent) => {
+        setTableError("");
+        axios.post(`/data/consents/${consent.id}/resend`, {billerId})
+            .then(() => {
+                fetchConsents(searchTerm);
+            })
+            .catch(error => {
+                const errorCode = error?.response?.data?.error;
+                const i18nKey = getResendErrorKey(errorCode);
+                const message = i18nKey === "settings.consents.resendErrors.maxResends"
+                    ? intl.formatMessage({id: i18nKey}, {uid: consent.uid})
+                    : intl.formatMessage({id: i18nKey});
+                setTableError(message);
             });
     };
 
@@ -238,6 +259,15 @@ const ConsentsSettings = ({billerId, biller, intl}) => {
                                                                             >
                                                                                 <span className="glyphicon glyphicon-remove"></span>
                                                                                 &nbsp;{intl.formatMessage({id: "settings.consents.removeAuth"})}
+                                                                            </Button>
+                                                                        )}
+                                                                        {isBiller && isPending(consent.status) && editingId !== consent.id && (
+                                                                            <Button
+                                                                                onClick={() => handleResend(consent)}
+                                                                                style={{marginRight: "5px"}}
+                                                                            >
+                                                                                <span className="glyphicon glyphicon-repeat"></span>
+                                                                                &nbsp;{intl.formatMessage({id: "settings.consents.resendButton"})}
                                                                             </Button>
                                                                         )}
                                                                     </div>
