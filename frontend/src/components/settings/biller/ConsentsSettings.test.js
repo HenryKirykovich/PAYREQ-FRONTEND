@@ -1,4 +1,4 @@
-import ConsentsSettings, {isActive, isPending, getColSpan} from "./ConsentsSettings";
+import ConsentsSettings, {isActive, isPending, getColSpan, REQUEST_ERROR_KEYS} from "./ConsentsSettings";
 
 it("ConsentsSettings is a function", () => {
     expect(typeof ConsentsSettings).toBe("function");
@@ -20,4 +20,11 @@ it("getColSpan returns 7 when allowAgentRegistrationsFromContacts", () => {
     expect(getColSpan(true)).toBe(7);
     expect(getColSpan(false)).toBe(6);
     expect(getColSpan(undefined)).toBe(6);
+});
+
+it("REQUEST_ERROR_KEYS maps all four error codes", () => {
+    expect(REQUEST_ERROR_KEYS["invalid.email"]).toBe("settings.consents.errors.invalidEmail");
+    expect(REQUEST_ERROR_KEYS["max.retries"]).toBe("settings.consents.errors.maxRetries");
+    expect(REQUEST_ERROR_KEYS["no.user"]).toBe("settings.consents.errors.noUser");
+    expect(REQUEST_ERROR_KEYS["pending.rego"]).toBe("settings.consents.errors.pendingRego");
 });

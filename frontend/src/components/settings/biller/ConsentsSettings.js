@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from "react";
 import axios from "axios";
 import {injectIntl} from "react-intl";
+import {Button} from "react-bootstrap";
 import Loading from "../../Loading";
 import {getDateAsUTCFormatted} from "../../../utils/date-utils";
 import styles from "./ConsentsSettings.module.scss";
@@ -10,6 +11,13 @@ export const isPending = (status) => status === "pending";
 export const getColSpan = (allowAgentRegistrationsFromContacts) =>
     allowAgentRegistrationsFromContacts ? 7 : 6;
 
+export const REQUEST_ERROR_KEYS = {
+    "invalid.email": "settings.consents.errors.invalidEmail",
+    "max.retries":   "settings.consents.errors.maxRetries",
+    "no.user":       "settings.consents.errors.noUser",
+    "pending.rego":  "settings.consents.errors.pendingRego",
+};
+
 const ConsentsSettings = ({billerId, biller, intl}) => {
     const isBiller = biller?.systemId !== "incoming-invoice";
     const allowAgentRegistrationsFromContacts = biller?.allowAgentRegistrationsFromContacts;
@@ -17,6 +25,9 @@ const ConsentsSettings = ({billerId, biller, intl}) => {
     const [consents, setConsents] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState("");
+    const [agentMyBillsEmail, setAgentMyBillsEmail] = useState("");
+    const [noticeId, setNoticeId] = useState("");
+    const [requestError, setRequestError] = useState("");
 
     const fetchConsents = (search = "") => {
         setIsLoading(true);
@@ -33,6 +44,25 @@ const ConsentsSettings = ({billerId, biller, intl}) => {
         fetchConsents(searchTerm);
     };
 
+    const handleRequestConsent = () => {
+        setRequestError("");
+        axios.post("/data/consents/request", {
+            billerId,
+            agentMyBillsEmail,
+            noticeId: allowAgentRegistrationsFromContacts ? noticeId : null
+        })
+            .then(() => {
+                setAgentMyBillsEmail("");
+                setNoticeId("");
+                fetchConsents(searchTerm);
+            })
+            .catch(error => {
+                const errorCode = error?.response?.data?.error;
+                const i18nKey = REQUEST_ERROR_KEYS[errorCode] || "settings.consents.setConsentError";
+                setRequestError(intl.formatMessage({id: i18nKey}));
+            });
+    };
+
     useEffect(() => {
         if (billerId) fetchConsents();
     }, [billerId]);
@@ -41,6 +71,64 @@ const ConsentsSettings = ({billerId, biller, intl}) => {
 
     return (
         <div className="row">
+            {isBiller && (
+                <div>
+                    <div className="panel panel-default">
+                        <div className="panel-heading">
+                            <h4 className="panel-title">
+                                {intl.formatMessage({id: "settings.consents.billerHeading"})}
+                            </h4>
+                        </div>
+                        <div className="panel-body">
+                            <div className="alert alert-info">
+                                {intl.formatMessage({id: "settings.consents.billerText"})}
+                            </div>
+                            <form className="form-login form" id="consent-form">
+                                {requestError && (
+                                    <div className="alert alert-danger">
+                                        {requestError}
+                                    </div>
+                                )}
+                                <div className="form-group col-md-12">
+                                    <label htmlFor="agentMyBillsEmail" className="control-label col-md-2">
+                                        {intl.formatMessage({id: "settings.consents.billerAgentEmail"})}
+                                    </label>
+                                    <div className="col-md-10">
+                                        <input
+                                            className="form-control"
+                                            value={agentMyBillsEmail}
+                                            onChange={(e) => setAgentMyBillsEmail(e.target.value)}
+                                            id="agentMyBillsEmail"
+                                        />
+                                    </div>
+                                </div>
+                                {allowAgentRegistrationsFromContacts && (
+                                    <div className="form-group col-md-12">
+                                        <label htmlFor="noticeId" className="control-label col-md-2">
+                                            {intl.formatMessage({id: "settings.consents.noticeIdLabel"})}
+                                        </label>
+                                        <div className="col-md-10">
+                                            <input
+                                                className="form-control"
+                                                value={noticeId}
+                                                onChange={(e) => setNoticeId(e.target.value)}
+                                                id="noticeId"
+                                            />
+                                        </div>
+                                    </div>
+                                )}
+                                <div className="col-xs-12 center-items">
+                                    <Button bsStyle="primary" type="button" onClick={handleRequestConsent}>
+                                        <span className="glyphicon glyphicon-send"></span>
+                                        &nbsp;&nbsp;{intl.formatMessage({id: "settings.consents.requestButton"})}
+                                    </Button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            )}
+
             <div>
                 <div className="panel panel-default">
                     <div className="panel-heading">
