@@ -34,7 +34,10 @@ const getBillerSettingsTabs = (billerId, billerSettings) => [
     {isEmber: true, linkTo: "biller.settings.users", name: "users"},
     {isEmber: true, linkTo: "biller.settings.billTemplates", name: "billTemplates"},
     {isEmber: true, linkTo: "biller.settings.accounting", name: "accounting"},
-    {isEmber: true, linkTo: "biller.settings.payments", name: "payments"},
+    {isEmber: false,
+    linkTo: "/portal/customer/biller/" + billerId + "/settings/payments/view",
+    name: "payments"
+},
     {isEmber: true, linkTo: "biller.settings.consents", name: "consents", hidden: !hasAgent(billerSettings)},
     {linkTo: "/portal/customer/biller/" + billerId + "/settings/contactDetails/view", name: "contactDetails"},
     {linkTo: "/portal/customer/biller/" + billerId + "/settings/apiDetails/view", name: "apiDetails"}
