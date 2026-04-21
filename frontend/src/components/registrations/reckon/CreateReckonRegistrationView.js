@@ -165,7 +165,7 @@ const CreateReckonRegistrationView = ({config, payerId, registeringForbillerId, 
                 <React.Fragment>
                     <PageHeading text="registrations.createReckon.connectionError.heading"/>
                     <LargeText text="registrations.createReckon.connectionError.msg" className={styles.errorMessage}/>
-                    <DefaultButton label="registrations.createReckon.connectionError.button" onClick={() => window.location.href = `/customer#/biller/${payerId}/settings/connections`}/>
+                    <DefaultButton label="registrations.createReckon.connectionError.button" onClick={() => window.location.href = `/portal/customer/biller/${payerId}/settings/connections`}/>
                 </React.Fragment>
             )}
             {!connection && connectToReckon === false &&

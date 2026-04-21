@@ -7,7 +7,7 @@ const WelcomeCardView = ({ billerId }) => (
         <LargeText text={"dashboard.welcomeCard.body"} />
         <PrimaryButton
             label={"dashboard.welcomeCard.button"}
-            linkTo={{pathname: `/portal/customer/biller/${billerId}/registrations/create`}}
+            linkTo={{pathname: `/customer/biller/${billerId}/registrations/create`}}
             icon="plus"
         />
     </DashboardCard>

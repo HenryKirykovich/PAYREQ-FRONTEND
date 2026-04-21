@@ -8,7 +8,7 @@ import styles from "./DashboardView.module.scss";
 const CardRow = ({cards: cardPair}) => {
     return (
         <div className={styles.cardRow}>
-            {cardPair.map(CardComponent => <CardComponent key={CardComponent}/>)}
+            {cardPair.map((CardComponent, idx) => <CardComponent key={idx}/>)}
         </div>
     )
 };

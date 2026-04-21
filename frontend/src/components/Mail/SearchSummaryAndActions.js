@@ -13,7 +13,7 @@ import DownloadInProgressModal from "../Inbox/DownloadInProgressModal";
 import UploadMailModal from "./UploadMailModal";
 import {hasPermission, PERMISSIONS} from "../../utils/permission-utils";
 import {ACCOUNT_FEATURES, hasFeature} from "../../utils/account-utils"
-import UploadSubscriptionsToActionModal from "./UploadSubscriptionsToActionModal";
+import UploadConnectionsToActionModal from "./UploadSubscriptionsToActionModal";
 
 const hasMailForApproval = (type, approvalCount) => (type === MAIL_STATUS_REVIEW || (type === MAIL_STATUS_ALL && approvalCount > 0));
 const shouldDisplayUploadButton = (billFormats, biller) => (billFormats.length > 0 ||  hasFeature(biller, ACCOUNT_FEATURES.customerCommunications));
@@ -61,9 +61,9 @@ const RejectAction = ({intl, onClick, disabled}) => (
     </MenuItem>
 );
 
-const handleUploadMailClick = (possibleDeregistrations, setShowUploadModal, setShowUploadSubscriptionToActionModal) => {
+const handleUploadMailClick = (possibleDeregistrations, setShowUploadModal, setShowUploadConnectionToActionModal) => {
     if (possibleDeregistrations > 0) {
-        setShowUploadSubscriptionToActionModal(true);
+        setShowUploadConnectionToActionModal(true);
     } else {
         setShowUploadModal(true);
     }
@@ -88,7 +88,7 @@ const SearchSummaryAndActions = ({showing, total, searchParams, billFormats, app
     const [mailUploadDetails, setMailUploadDetails] = useState(null);
     const [showDownloadModal, setShowDownloadModal] = useState(false);
     const [showUploadModal, setShowUploadModal] = useState(false);
-    const [showUploadSubscriptionToActionModal, setShowUploadSubscriptionToActionModal] = useState(false);
+    const [showUploadConnectionToActionModal, setShowUploadConnectionToActionModal] = useState(false);
     const [showApproveMailModal, setShowApproveMailModal] = useState(false);
     const [showRejectMailModal, setShowRejectMailModal] = useState(false);
     const [showInProgressModal, setShowInProgressModal] = useState(false)
@@ -137,10 +137,10 @@ const SearchSummaryAndActions = ({showing, total, searchParams, billFormats, app
                 searchParams={searchParams}
                 total={approvalCount}
             />
-            <UploadSubscriptionsToActionModal
+            <UploadConnectionsToActionModal
                 billerId={biller.id}
-                show={showUploadSubscriptionToActionModal}
-                setShowUploadSubscriptionToActionModal={setShowUploadSubscriptionToActionModal}
+                show={showUploadConnectionToActionModal}
+                setShowUploadConnectionToActionModal={setShowUploadConnectionToActionModal}
             />
             <DownloadInProgressModal show={showInProgressModal}
                                      job={job}
@@ -159,7 +159,7 @@ const SearchSummaryAndActions = ({showing, total, searchParams, billFormats, app
                     {shouldDisplayUploadButton(billFormats, biller) && hasPermission(biller, PERMISSIONS.mailUpload) &&
                         <DefaultButton label="mail.searchResultActions.uploadBtn" icon="upload" className={styles.actionButton}
                                        disabled={!mailUploadDetails}
-                                       onClick={() => handleUploadMailClick(possibleDeregistrations, setShowUploadModal, setShowUploadSubscriptionToActionModal)}/>}
+                                       onClick={() => handleUploadMailClick(possibleDeregistrations, setShowUploadModal, setShowUploadConnectionToActionModal)}/>}
                     <DefaultButton label="mail.searchResultActions.downloadBtn" icon="download" className={styles.actionButton}
                                 onClick={() => actionDownload(biller.id, setShowDownloadModal, setShowInProgressModal, setJob)}/>
                     {/*todo: PREQ-1967 move to common so component doesn't directly reference bootstrap*/}
@@ -175,7 +175,7 @@ const SearchSummaryAndActions = ({showing, total, searchParams, billFormats, app
                             {intl.formatMessage({id: "mail.searchResultActions.helpBtn"})}
                         </MenuItem>
                         <DownloadAction intl={intl} onClick={() => actionDownload(biller.id, setShowDownloadModal, setShowInProgressModal, setJob)}/>
-                        {hasPermission(biller, PERMISSIONS.mailUpload) && <UploadAction intl={intl} onClick={() => handleUploadMailClick(possibleDeregistrations, setShowUploadModal, setShowUploadSubscriptionToActionModal)}
+                        {hasPermission(biller, PERMISSIONS.mailUpload) && <UploadAction intl={intl} onClick={() => handleUploadMailClick(possibleDeregistrations, setShowUploadModal, setShowUploadConnectionToActionModal)}
                                                                                         disabled={shouldDisableUploadButton}/>}
                         {hasPermission(biller, PERMISSIONS.mailApprove) && <ApproveAction intl={intl} onClick={() => setShowApproveMailModal(true)} disabled={!hasMailForApproval(type, approvalCount)}/>}
                         {hasPermission(biller, PERMISSIONS.mailReject) && <RejectAction intl={intl} onClick={() => setShowRejectMailModal(true)} disabled={!hasMailForApproval(type, approvalCount)}/>}

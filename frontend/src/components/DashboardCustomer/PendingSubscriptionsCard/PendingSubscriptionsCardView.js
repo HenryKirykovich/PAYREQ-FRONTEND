@@ -2,14 +2,14 @@ import React from "react";
 import { LargeText, PrimaryButton } from "../../common";
 import DashboardCard from "../../Dashboard/DashboardView/DashboardCard";
 
-const PendingSubscriptionsCardView = ({ billerId , count}) => (
-    <DashboardCard isBannerCard={true} panelHeading={"dashboard.pendingSubscriptions.heading"}>
-        <LargeText text={"dashboard.pendingSubscriptions.body"} values={{count: count}}/>
+const PendingConnectionsCardView = ({ billerId , count}) => (
+    <DashboardCard isBannerCard={true} panelHeading={"dashboard.pendingConnections.heading"}>
+        <LargeText text={"dashboard.pendingConnections.body"} values={{count: count}}/>
         <PrimaryButton
-            label={"dashboard.pendingSubscriptions.button"}
+            label={"dashboard.pendingConnections.button"}
             onClick={() => window.location.href = `/customer#/biller/${billerId}/registrations/pendingFailed`}
         />
     </DashboardCard>
 );
 
-export default PendingSubscriptionsCardView;
+export default PendingConnectionsCardView;

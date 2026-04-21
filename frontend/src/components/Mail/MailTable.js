@@ -263,7 +263,7 @@ const TableRows = ({row, accountType, mailStatus, getTdClass, intl}) => {
     return <TableRowsPayroll row={row} mailStatus={mailStatus} getTdClass={getTdClass} intl={intl}/>;
 }
 
-const MailTable = ({rows, biller, onColumnClick, searchParams, sortDirection, sortOrder, intl}) => {
+const MailTable = ({rows, biller, onColumnClick, searchParams, sortDirection, sortOrder, intl, history}) => {
     const {accountType} = biller;
     const {type} = searchParams;
 
@@ -303,7 +303,14 @@ const MailTable = ({rows, biller, onColumnClick, searchParams, sortDirection, so
             {rows.map((row, idx) => (
                 <tr key={idx}
                     style={{cursor: "pointer"}}
-                    onClick={event => window.open(`/customer#/biller/${row.billerActorId}/bill/${row.id}`, (event.metaKey || event.ctrlKey) ? "_blank" : "_self")}
+                    onClick={event => {
+                        const url = `/customer/biller/${row.billerActorId}/bill/${row.id}`;
+                        if (event.metaKey || event.ctrlKey) {
+                            window.open(url, "_blank");
+                        } else {
+                            history.push(url);
+                        }
+                    }}
                     aria-label={row.billerCustomerNumber}
                 >
                     <TableRows row={row} getTdClass={getTdClass} accountType={accountType} mailStatus={type} intl={intl}/>

@@ -57,7 +57,7 @@ export default function BillersView({
             </MobileAppUI>
             <BrowserUI>
                 <div className={styles.buttonContainer}>
-                    <PrimaryButton linkTo="./create" label="registrations.billers.addBiller.button" icon="plus" />
+                    <PrimaryButton linkTo={{pathname: "./create"}} label="registrations.billers.addBiller.button" icon="plus" />
                 </div>
             </BrowserUI>
             <div className={styles.links}>

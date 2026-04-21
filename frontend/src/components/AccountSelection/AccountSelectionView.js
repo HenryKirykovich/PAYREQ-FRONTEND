@@ -26,7 +26,7 @@ const PayreqAccessingAccount = ({account}) => {
                         <img src={payreqSymbol} className={styles.logoAccessing} alt={tagName}/>
                     </div>
                     <div className={styles.accountDetailsWrapper}>
-                        <LargeText text={tagName} className={styles.accountName}/>
+                        <LargeText className={styles.accountName}>{tagName}</LargeText>
                         <RegularText text="accountSelection.accessingAccount" className={styles.accountDetails}/>
                     </div>
                 </div>
@@ -47,7 +47,7 @@ const PayreqSharingAccount = ({account}) => {
                         <img src={getLogoPath(logoPath)} className={styles.logoSharing} alt={tagName}/>
                     </div>
                     <div className={styles.accountDetailsWrapper}>
-                        <LargeText text={tagName} className={styles.accountName}/>
+                        <LargeText className={styles.accountName}>{tagName}</LargeText>
                         {mailhouseName ? <RegularText text="accountSelection.sharingAccount.text1a" values={{accountID: extBillerId, integrator: mailhouseName}} className={styles.accountDetails}/>
                             : <RegularText text="accountSelection.sharingAccount.text1b" values={{accountID: extBillerId}} className={styles.accountDetails}/>}
                         {isBillingAccount(accountType) ? <RegularText text="accountSelection.sharingAccount.billing"/>

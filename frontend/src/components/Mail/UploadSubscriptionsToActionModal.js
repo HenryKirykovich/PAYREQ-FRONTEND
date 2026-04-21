@@ -3,18 +3,18 @@ import {Modal, PrimaryButton, RegularText} from "../common";
 import React from "react";
 
 
-const UploadSubscriptionsToActionModal = ({billerId, show, setShowUploadSubscriptionToActionModal}) => {
+const UploadConnectionsToActionModal = ({billerId, show, setShowUploadConnectionToActionModal}) => {
         return (
             <Modal show={show}
-                   title="mail.uploadMail.subscriptionsToActionModal.heading"
+                   title="mail.uploadMail.connectionsToActionModal.heading"
                    buttonLabel="forms.generic.view"
-                   onCancel={() => setShowUploadSubscriptionToActionModal(false)}
+                   onCancel={() => setShowUploadConnectionToActionModal(false)}
                    onPrimaryAction={() => window.location.href = `/customer#/biller/${billerId}/registrations/contactChanged`}
                    PrimaryButtonComponent={PrimaryButton}
             >
-                <RegularText text="mail.uploadMail.subscriptionsToActionModal.message"/>
+                <RegularText text="mail.uploadMail.connectionsToActionModal.message"/>
             </Modal>
         )
     };
 
-export default withRouter(UploadSubscriptionsToActionModal);
+export default withRouter(UploadConnectionsToActionModal);

@@ -19,6 +19,10 @@ import {getQueryParams} from "./utils/route-utils";
 import ResetPasswordShell from "./routes/ResetPasswordShell";
 import SamlShell from "./routes/SamlShell";
 import ErrorShell from "./routes/ErrorShell";
+import PayerError from "./components/Error/PayerError";
+import QuickBooksError from "./components/Error/QuickBooksError";
+import EmailUnsubscribe from "./components/EmailUnsubscribe";
+import AccountEmailUpdateConfirmation from "./components/AccountEmailUpdate";
 
 const errorResponseHandler = (dispatch, error) => {
     const isUsingLocalErrorHandling = error.config.hasOwnProperty("localErrorHandling") && error.config.localErrorHandling === true;
@@ -76,9 +80,16 @@ const RESTRICTED_ROUTE_PATH = "/portal/customer";
 const LOGIN_PATH= `${RESTRICTED_ROUTE_PATH}/login`;
 const RESTRICTED_ACCOUNT_PATH = `${RESTRICTED_ROUTE_PATH}/biller`;
 
-const isRestrictedPath = () => window.location.pathname.startsWith(RESTRICTED_ROUTE_PATH);
-const isLoginPath = () => window.location.pathname.startsWith(LOGIN_PATH);
-const isRestrictedAccountPath = () =>  window.location.pathname.startsWith(RESTRICTED_ACCOUNT_PATH);
+// Support both /portal/customer and /customer paths
+const isRestrictedPath = () => 
+    window.location.pathname.startsWith(RESTRICTED_ROUTE_PATH) || 
+    window.location.pathname.startsWith("/customer");
+const isLoginPath = () => 
+    window.location.pathname.startsWith(LOGIN_PATH) || 
+    window.location.pathname.startsWith("/customer/login");
+const isRestrictedAccountPath = () =>  
+    window.location.pathname.startsWith(RESTRICTED_ACCOUNT_PATH) ||
+    window.location.pathname.startsWith("/customer/biller");
 
 const doAuthChecks = (dispatch, setAuthChecksComplete) => {
     axios.get("/auth/login-session", {headers: {"Cache-Control": "no-store"}})
@@ -122,7 +133,9 @@ const AppRouter = () => {
                 <Route path="/" exact>
                     <Redirect to={LOGIN_PATH}/>
                 </Route>
-                <Route path={RESTRICTED_ROUTE_PATH} component={UserShell}/>
+                {/* Support both /portal/customer and /customer paths for React */}
+                <Route path="/portal/customer" component={UserShell}/>
+                <Route path="/customer" component={UserShell}/>
                 <Route path="/portal/sign-up" component={SignUpShell}/>
                 <Route path="/portal/reset" component={ResetPasswordShell}/>
                 <Route path="/fastform" component={FastFormShell}/>
@@ -132,6 +145,12 @@ const AppRouter = () => {
                 <Route path="/verify" component={VerificationShell}/>
                 <Route path="/sso/saml" component={SamlShell}/>
                 <Route path="/error" component={ErrorShell}/>
+                {/* Error screens */}
+                <Route path="/payer-error" component={PayerError}/>
+                <Route path="/quickbooks-error" component={QuickBooksError}/>
+                {/* Misc screens */}
+                <Route path="/email-unsubscribe/:code/:id" component={EmailUnsubscribe}/>
+                <Route path="/account-email-update/:code/:id" component={AccountEmailUpdateConfirmation}/>
                 <Route component={PageNotFound}/>
             </Switch>
         </Router>

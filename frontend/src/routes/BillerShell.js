@@ -24,6 +24,11 @@ import PaymentHistoryShell from "./PaymentHistoryShell";
 import MailShell from "./MailShell";
 import {resetSessionStateEmberToReact} from "../utils/session-storage-utils";
 import JobView from "../components/Jobs/JobView";
+import BillsShell from "./BillsShell";
+import ContactsShell from "./ContactsShell";
+import BillDetail from "../components/Bills/BillDetail";
+import InvoicesShell from "./InvoicesShell";
+import IncomingRegistrationsShell from "./IncomingRegistrationsShell";
 
 const getBiller = (dispatch, billerId) => {
 
@@ -61,6 +66,13 @@ const BillerShell = ({match}) => {
                             <Route path={`${match.url}/dashboard`} component={Dashboard}/>
                             <Route path={`${match.url}/admin-dashboard`} component={DashboardCustomer}/>
                             <Route path={`${match.url}/inbox`} component={InboxShell}/>
+                            <Route path={`${match.url}/bills`} component={BillsShell}/>
+                            <Route path={`${match.url}/bill/:billId`} 
+                                   render={(props) => <BillDetail {...props} billerId={biller.id}/>}
+                            />
+                            <Route path={`${match.url}/contacts`} component={ContactsShell}/>
+                            <Route path={`${match.url}/invoices`} component={InvoicesShell}/>
+                            <Route path={`${match.url}/incoming`} component={IncomingRegistrationsShell}/>
                             <Route path={`${match.url}/settings`} component={SettingsShell}/>
                             <Route path={`${match.url}/auto-payments`} component={AutoPaymentsShell}/>
                             <Route path={`${match.url}/payments`} component={PaymentHistoryShell}/>

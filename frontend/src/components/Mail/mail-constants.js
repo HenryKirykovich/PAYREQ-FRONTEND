@@ -9,7 +9,7 @@ export const MAIL_STATUS_SENT = "dispatched";
 export const MAIL_STATUS_NOT_DELIVERED = "undelivered";
 export const MAIL_STATUS_NOT_DELIVERED_ACTIONED = "undelivered-actioned";
 export const MAIL_STATUS_ARCHIVED = "ready-for-dispatch-archived";
-export const MAIL_STATUS_PENDING_SUBSCRIPTION = "pending-registration";
+export const MAIL_STATUS_PENDING_CONNECTION = "pending-registration";
 export const MAIL_STATUS_IGNORED = "ignored";
 
 export const MAIL_STATUS_OPTIONS = [
@@ -19,7 +19,7 @@ export const MAIL_STATUS_OPTIONS = [
     {value: MAIL_STATUS_REVIEW, label: "mail.view.mailStatus.status.awaitingReview"},
     {value: MAIL_STATUS_ERROR, label: "mail.view.mailStatus.status.error"},
     {value: MAIL_STATUS_CONTACT_CHANGED, label: "mail.view.mailStatus.status.contactChanged"},
-    {value: MAIL_STATUS_PENDING_SUBSCRIPTION, label: "mail.view.mailStatus.status.pendingRegistration"},
+    {value: MAIL_STATUS_PENDING_CONNECTION, label: "mail.view.mailStatus.status.pendingRegistration"},
     {value: MAIL_STATUS_QUEUED, label: "mail.view.mailStatus.status.readyForDispatch"},
     {value: MAIL_STATUS_SENT, label: "mail.view.mailStatus.status.sent"},
     {value: MAIL_STATUS_NOT_DELIVERED, label: "mail.view.mailStatus.status.undelivered"},

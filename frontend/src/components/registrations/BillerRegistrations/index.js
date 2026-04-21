@@ -6,6 +6,7 @@ import Loading from "../../Loading";
 import BillerRegistrationsView from "./BillerRegistrationsView";
 import {SET_REGISTRATION_SEARCH_PARAMS} from "../../../state/reducers/registrationsReducer";
 import {useAppState} from "../../../state";
+import {DeregistrationsImportModal} from "../../modals";
 
 const getInitialPageNumber = pageNumber => pageNumber || 1;
 
@@ -64,6 +65,7 @@ const BillerRegistrations = ({payerId, match: {params: {registrationsForBillerId
     const [results, setResults] = useState();
     const [appState, dispatch] = useAppState();
     const [isInitialSearch, setIsInitialSearch] = useState(true);
+    const [showImportModal, setShowImportModal] = useState(false);
     const {searchTerm, fromDate, toDate, status, pageNumber} = appState.registrations.searchParams;
     useEffect(
         () => {
@@ -77,18 +79,36 @@ const BillerRegistrations = ({payerId, match: {params: {registrationsForBillerId
         [payerId, registrationsForBillerId, setResults, searchTerm, fromDate, toDate, status, pageNumber, isInitialSearch]
     );
 
+    const handleImportComplete = (data) => {
+        // Refresh the registrations list after import
+        getRegistrationsForBiller(payerId, {searchTerm, fromDate, toDate, status}, null,
+            registrationsForBillerId, pageNumber || 1, setResults, dispatch);
+        alert(`Import completed. ${data.matched || 0} deregistrations processed.`);
+    };
+
     if (!results) return <Loading/>;
-    return <BillerRegistrationsView registrations={results.registrations}
-                                    searchParams={appState.registrations.searchParams}
-                                    payerId={payerId}
-                                    biller={results.biller}
-                                    total={results.total}
-                                    showing={results.showing}
-                                    handleDownload={values => downloadRegistrations(payerId, results.biller.tagName, values, registrationsForBillerId)}
-                                    handleSearch={(values, setSubmitting, pageNumber) => {
-                                        setIsInitialSearch(false);
-                                        getRegistrationsForBiller(payerId, values, setSubmitting, registrationsForBillerId, pageNumber, setResults, dispatch)}}
-    />
+    return (
+        <>
+            <BillerRegistrationsView registrations={results.registrations}
+                                        searchParams={appState.registrations.searchParams}
+                                        payerId={payerId}
+                                        biller={results.biller}
+                                        total={results.total}
+                                        showing={results.showing}
+                                        handleDownload={values => downloadRegistrations(payerId, results.biller.tagName, values, registrationsForBillerId)}
+                                        handleSearch={(values, setSubmitting, pageNumber) => {
+                                            setIsInitialSearch(false);
+                                            getRegistrationsForBiller(payerId, values, setSubmitting, registrationsForBillerId, pageNumber, setResults, dispatch)}}
+                                        onImportClick={() => setShowImportModal(true)}
+            />
+            <DeregistrationsImportModal
+                show={showImportModal}
+                onClose={() => setShowImportModal(false)}
+                onImportComplete={handleImportComplete}
+                billerId={payerId}
+            />
+        </>
+    );
 };
 
 export default withRouter(BillerRegistrations);

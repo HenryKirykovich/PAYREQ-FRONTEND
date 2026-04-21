@@ -49,6 +49,13 @@ export const getDateTimeAsFormatted = (dateStr, format = { month: '2-digit', day
 
 export const getDateTimeAsUTCFormatted = (dateStr, format) => getDateTimeAsFormatted(dateStr, {...format, timeZone: 'UTC'});
 
+export const getDateWithMonthYear = (dateStr) => {
+    if (!dateStr) return "";
+    const date = new Date(dateStr);
+    const format = { month: 'short', year: 'numeric', timeZone: 'UTC' };
+    return date.toLocaleDateString(defaultEnglish(getLang()), format);
+};
+
 export const getPayreqDateAsFormatted = (dateStr) => {
     const dayMonthFormat = {
         month: "short",

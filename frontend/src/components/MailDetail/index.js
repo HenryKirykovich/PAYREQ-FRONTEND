@@ -1,9 +1,7 @@
 import React from "react";
-import {PageHeading} from "../common";
+import BillDetail from "../Bills/BillDetail";
 
-export default function MailDetail({match: {params: {billId}}}) {
-
-    return <React.Fragment>
-        <PageHeading text="mail.pageHeading"/>
-    </React.Fragment>
+// Mail detail is the same as Bill detail
+export default function MailDetail(props) {
+    return <BillDetail {...props} />;
 };
