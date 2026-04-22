@@ -1905,7 +1905,7 @@
   "settings.users.activateMfaButton": "Activate MFA",
 
   "settings.notifications.title": "Your Notifications Settings",
-  "settings.notifications.intro": "Notifications can be sent at three different frequencies:",
+  "settings.notifications.intro": "Notification emails can be sent to your registered email address when specific events occur in the Payreq system. Each notification can be sent at a particular frequency.",
   "settings.notifications.method": "Method",
   "settings.notifications.frequency": "Frequency",
   "settings.notifications.update": "Update",

@@ -75,7 +75,7 @@ const UserNotifications = ({intl}) => {
                         <div className="panel-body">
                             <div className="well well-sm">
                                 {intl.formatMessage({id: "settings.notifications.intro"})}
-                                <ul>
+                                <ul style={{listStyle: "disc", paddingLeft: "20px"}}>
                                     <li>
                                         <strong>{intl.formatMessage({id: "settings.notifications.frequency.immediate"})}: </strong>
                                         {intl.formatMessage({id: "settings.notifications.frequency.immediateDescription"})}
@@ -103,7 +103,7 @@ const UserNotifications = ({intl}) => {
                             {settings.map((setting, idx) => (
                                 <div className="form-group" key={setting.name || idx}>
                                     <label className="col-sm-6 control-label">
-                                        {setting.displayDescription}
+                                        {setting.description}
                                     </label>
                                     <div className="col-sm-2">
                                         <select className="form-control"

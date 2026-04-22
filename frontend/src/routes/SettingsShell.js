@@ -33,7 +33,6 @@ import BillerQboPayrollSettings from "../components/settings/biller/BillerQboPay
 import BillerSaasuSettings from "../components/settings/biller/BillerSaasuSettings";
 import UsersManagement from "../components/settings/users/UsersManagement";
 import UserDetail from "../components/settings/users/UserDetail";
-import UserNotifications from "../components/settings/users/UserNotifications";
 import CreateUser from "../components/settings/users/CreateUser";
 import BillTemplates from "../components/settings/templates/BillTemplates";
 import AccountingSettings from "../components/settings/accounting/AccountingSettings";
@@ -184,12 +183,6 @@ const SettingsShell = ({match, location}) => {
                             <CreateUser billerId={biller.id}/>
                         </UsersManagement>
                     </Route>
-                    <Route path={`${match.url}/users/notifications/:userId`}
-                           render={(props) => (
-                               <UsersManagement billerId={biller.id}>
-                                   <UserNotifications userId={props.match.params.userId} billerId={biller.id}/>
-                               </UsersManagement>
-                           )}/>
                     <Route path={`${match.url}/users/:userId`}
                            render={(props) => (
                                <UsersManagement billerId={biller.id}>
