@@ -5,13 +5,14 @@ import XeroConnection from "./XeroConnection";
 import MyobConnection from "./MyobConnection";
 import ReckonConnection from "./ReckonConnection";
 import PropertyMeConnection from "./PropertyMeConnection";
+import styles from "./ConnectionsView.module.scss";
 
 const ConnectionsView = ({connections, billerSettings, billerId, onReload}) => {
     const myobEnabled = billerSettings.myobEnabled || (connections && connections.myobEnabled);
 
     return (
-        <React.Fragment>
-            <h2>
+        <div className={styles.connectionsContainer}>
+            <h2 className={styles.sectionHeading}>
                 <FormattedMessage id="connections.heading.sme"/>
             </h2>
 
@@ -23,12 +24,12 @@ const ConnectionsView = ({connections, billerSettings, billerId, onReload}) => {
 
             <ReckonConnection connections={connections} billerId={billerId} onReload={onReload}/>
 
-            <h2 style={{marginTop: "3rem"}}>
+            <h2 className={styles.sectionHeading} style={{marginTop: "3rem"}}>
                 <FormattedMessage id="connections.heading.agents"/>
             </h2>
 
             <PropertyMeConnection connections={connections} billerId={billerId} onReload={onReload}/>
-        </React.Fragment>
+        </div>
     );
 };
 

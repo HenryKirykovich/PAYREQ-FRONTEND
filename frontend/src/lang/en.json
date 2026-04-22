@@ -341,7 +341,7 @@
   "settings.tab.title.contactDetails": "Contact Details",
   "settings.tab.title.forwardingRules": "Forwarding Rules",
   "settings.tab.title.apiDetails": "Payreq API",
-  "settings.tab.title.bulkDownloadPreference": "Bulk Download Preferences",
+  "settings.tab.title.bulkDownloadPreference": "Bulk Download Preference",
   "settings.tab.title.connections": "Connections",
 
   "connections.heading.sme": "Accounting Software Connections",
