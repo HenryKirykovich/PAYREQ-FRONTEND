@@ -28,10 +28,10 @@ export const REQUEST_ERROR_KEYS = {
 };
 
 const ConsentsSettings = ({billerId, biller, intl}) => {
-    const isBiller = biller?.systemId !== "incoming-invoice";
     const allowAgentRegistrationsFromContacts = biller?.allowAgentRegistrationsFromContacts;
 
     const [consents, setConsents] = useState([]);
+    const [isBiller, setIsBiller] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState("");
     const [agentMyBillsEmail, setAgentMyBillsEmail] = useState("");
@@ -47,6 +47,7 @@ const ConsentsSettings = ({billerId, biller, intl}) => {
         axios.get("/data/consents", {params: {billerId, searchTerm: search || null}})
             .then(({data}) => {
                 setConsents(data.consents || []);
+                setIsBiller(data.meta?.isBiller ?? false);
                 setIsLoading(false);
             })
             .catch(() => setIsLoading(false));
@@ -59,9 +60,9 @@ const ConsentsSettings = ({billerId, biller, intl}) => {
 
     const handleRequestConsent = () => {
         setRequestError("");
-        axios.post("/data/consents/request", {
+        axios.post("/data/settings/consent", {
             billerId,
-            agentMyBillsEmail,
+            mybillsagentemail: agentMyBillsEmail,
             noticeId: allowAgentRegistrationsFromContacts ? noticeId : null
         })
             .then(() => {
@@ -78,7 +79,7 @@ const ConsentsSettings = ({billerId, biller, intl}) => {
 
     const handleResend = (consent) => {
         setTableError("");
-        axios.post(`/data/consents/${consent.id}/resend`, {billerId})
+        axios.post("/data/settings/consent/resend", {id: consent.id, billerId})
             .then(() => {
                 fetchConsents(searchTerm);
             })
@@ -112,7 +113,7 @@ const ConsentsSettings = ({billerId, biller, intl}) => {
 
     const handleRemove = (consent) => {
         setTableError("");
-        axios.delete(`/data/consents/${consent.id}`, {params: {billerId}})
+        axios.post("/data/settings/consent/unauthorise", {id: consent.id, billerId})
             .then(() => {
                 setConfirmUnauthorise(null);
                 fetchConsents(searchTerm);
