@@ -7,7 +7,7 @@ import ReckonConnection from "./ReckonConnection";
 import PropertyMeConnection from "./PropertyMeConnection";
 import styles from "./ConnectionsView.module.scss";
 
-const ConnectionsView = ({connections, billerSettings, billerId, onReload}) => {
+const ConnectionsView = ({connections, billerSettings = {}, billerId, onReload}) => {
     const myobEnabled = billerSettings.myobEnabled || (connections && connections.myobEnabled);
 
     return (

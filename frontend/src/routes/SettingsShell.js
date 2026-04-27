@@ -217,7 +217,7 @@ const SettingsShell = ({match, location}) => {
 
                     {/* Connections */}
                     <Route path={`${match.url}/connections`}>
-                        <ConnectionsSettings billerId={biller.id}/>
+                        <ConnectionsSettings billerId={biller.id} billerSettings={billerSettings}/>
                     </Route>
 
                     {/* Consents */}
