@@ -70,7 +70,6 @@ const PayreqNavItem = ({intl, action, billerId, history, onSelect}) => {
     const [{biller}] = useAppState();
     const navText = label === "registrations" && isMyPayer(biller) ? intl.formatMessage({id: "navbar.connections"}) : intl.formatMessage({id: "navbar." + label});
     const navIconComponent = <Glyphicon aria-hidden="true" glyph={iconClass}/>;
-    const isReact = isReactLink || isConvertedToReact(emberLink);
     
     if (isRootLevel(action)) {
         // All routes now use React routing

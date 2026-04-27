@@ -62,7 +62,7 @@ const XeroConnection = ({connections, billerId, onReload, intl}) => {
 
     return (
         <div className="panel panel-default">
-            <a onClick={() => setIsOpen(!isOpen)} style={{cursor: "pointer"}}>
+            <button onClick={() => setIsOpen(!isOpen)} style={{cursor: "pointer", background: "none", border: "none", width: "100%", padding: 0, textAlign: "left"}}>
                 <div className="panel-heading search-panel-heading">
                     <h4 className="panel-title search-panel-title">
                         <span style={{marginLeft: "15px"}}>
@@ -76,7 +76,7 @@ const XeroConnection = ({connections, billerId, onReload, intl}) => {
                         </span>
                     </h4>
                 </div>
-            </a>
+            </button>
             {isOpen && (
                 <div className="panel-body">
                     <div className="panel-body">
