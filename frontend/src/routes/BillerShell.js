@@ -29,6 +29,7 @@ import ContactsShell from "./ContactsShell";
 import BillDetail from "../components/Bills/BillDetail";
 import InvoicesShell from "./InvoicesShell";
 import IncomingRegistrationsShell from "./IncomingRegistrationsShell";
+import ChannelError from "../components/Error/ChannelError";
 
 const getBiller = (dispatch, billerId) => {
 
@@ -83,6 +84,7 @@ const BillerShell = ({match}) => {
                             <Route path={`${match.url}/jobs`} component={DownloadHistoryShell}/>
                             <Route path={`${match.url}/personal`} component={PersonalSettingsShell}/>
                             <Route path={`${match.url}/error`} component={AuthorisedErrorShell}/>
+                            <Route path={`${match.url}/errors/:channel`} component={ChannelError}/>
                             <Route path={`${match.url}/mail`} component={MailShell}/>
                             <Route component={PageNotFound}/>
                         </Switch>
