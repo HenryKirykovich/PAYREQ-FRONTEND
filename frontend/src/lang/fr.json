@@ -1770,5 +1770,8 @@
   "pay.validation.accountNumber.empty": "Le {accountNumber} est vide",
   "pay.validation.accountNumber.invalid": "Le {accountNumber} contient des caractères invalides.",
   "pay.validation.error.invalidAccountNumber": "{accountNumber} invalide.",
-  "pay.validation.error.checkoutFail": "L'autorisation de la carte a échoué. Veuillez vérifier les détails de la carte, essayer avec un autre mode de paiement ou contacter l'émetteur de votre carte ."
+  "pay.validation.error.checkoutFail": "L'autorisation de la carte a échoué. Veuillez vérifier les détails de la carte, essayer avec un autre mode de paiement ou contacter l'émetteur de votre carte .",
+  "errors.connection.title": "{channel} Problème de connexion",
+  "errors.connection.text": "Malheureusement, un problème est survenu lors de la tentative de connexion à votre compte {channel}. Veuillez réessayer plus tard ou contacter le support Payreq.",
+  "errors.connection.buttonLabel": "Retour aux connexions"
 }
