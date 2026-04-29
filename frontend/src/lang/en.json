@@ -1949,7 +1949,7 @@
   "settings.templates.genericError": "Unable to create mail template. Please contact Payreq Support.",
   "settings.templates.genericFail": "An error occurred while uploading mail template for this mailer. Please try again later.",
   "settings.templates.downloadSuccess": "Successful downloaded email template.",
-  "settings.templates.downloadFail": "An error occurred downloading an email template. Please try again later."
+  "settings.templates.downloadFail": "An error occurred downloading an email template. Please try again later.",
 
   "settings.accounting.heading": "Accounting Settings",
   "settings.accounting.description": "Manage your accounting and billing information",
