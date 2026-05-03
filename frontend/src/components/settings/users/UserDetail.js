@@ -2,6 +2,7 @@ import React, {useEffect, useState} from "react";
 import axios from "axios";
 import {injectIntl} from "react-intl";
 import {useHistory} from "react-router-dom";
+import moment from "moment";
 import Loading from "../../Loading";
 
 const ROLE_GROUPINGS = [
@@ -25,12 +26,15 @@ const UserDetail = ({userId, billerId, intl}) => {
     useEffect(() => {
         if (!userId) return;
 
+        const EVENT_TYPE_LABELS = {
+            "reset-password": intl.formatMessage({id: "settings.users.passwordEvents.resetPassword"}),
+            "request-reset-password": intl.formatMessage({id: "settings.users.passwordEvents.requestResetPassword"}),
+        };
+
         Promise.all([
             axios.get(`/data/users/${userId}`, {params: {billerId}, localErrorHandling: true}),
             axios.get(`/data/roles`, {params: {billerId}, localErrorHandling: true}),
-            axios.get(`/data/users/${userId}/passwordEvents`, {params: {billerId}, localErrorHandling: true})
-                .catch(() => ({data: {passwordEvents: []}}))
-        ]).then(([userResp, rolesResp, eventsResp]) => {
+        ]).then(([userResp, rolesResp]) => {
             const u = userResp.data.user;
             setUser(u);
             setName(u.name || "");
@@ -46,7 +50,13 @@ const UserDetail = ({userId, billerId, intl}) => {
                 initSelected[key] = userRole ? String(userRole.id) : "";
             });
             setSelectedRoles(initSelected);
-            setPasswordEvents(eventsResp.data.passwordEvents || []);
+
+            // passwordEvents come from the same /data/users/:id response
+            const events = (userResp.data.passwordEvents || []).map(event => ({
+                ...event,
+                eventTypeDescription: EVENT_TYPE_LABELS[event.eventType] || event.eventType,
+            }));
+            setPasswordEvents(events);
             setIsLoading(false);
         }).catch(() => setIsLoading(false));
     }, [userId, billerId]);
@@ -294,12 +304,12 @@ const UserDetail = ({userId, billerId, intl}) => {
                                             passwordEvents.map((event, idx) => (
                                                 <tr key={idx}>
                                                     <td>{event.eventTypeDescription}</td>
-                                                    <td>{event.eventTime}</td>
+                                                    <td>{event.eventTime ? moment(event.eventTime).format("DD MMM YYYY HH:mm") : ""}</td>
                                                 </tr>
                                             ))
                                         ) : (
                                             <tr>
-                                                <td colSpan="2">{intl.formatMessage({id: "settings.users.noPasswordEvents"})}</td>
+                                                <td colSpan="2">{intl.formatMessage({id: "settings.users.passwordEvents.noEventsFound"})}</td>
                                             </tr>
                                         )}
                                     </tbody>
