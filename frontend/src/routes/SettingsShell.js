@@ -58,8 +58,8 @@ const getBillerSettingsTabs = (billerId, billerSettings) => [
 const getMyBillsSettingsTabs = (billerId, billerSettings) => [
     {linkTo: "/portal/customer/biller/" + billerId + "/settings/connections", name: "connections"},
     {linkTo: "/portal/customer/biller/" + billerId + "/settings/users", name: "users"},
-    {linkTo: "/portal/customer/biller/" + billerId + "/settings/consents/view", name: "consents"},
-    {linkTo: "/portal/customer/biller/" + billerId + "/settings/forwardingRules/view", name: "forwardingRules"},
+    {linkTo: "/portal/customer/biller/" + billerId + "/settings/consents", name: "consents", hidden: !billerSettings.isCompany},
+    {linkTo: "/portal/customer/biller/" + billerId + "/settings/forwardingRules/view", name: "forwardingRules", hidden: !billerSettings.isCompany},
     {linkTo: "/portal/customer/biller/" + billerId + "/settings/apiDetails/view", name: "apiDetails", hidden: !billerSettings.showApi},
     {linkTo: "/portal/customer/biller/" + billerId + "/settings/bulkDownloadPreference/view", name: "bulkDownloadPreference", hidden: !billerSettings.isCompany},
 ];
