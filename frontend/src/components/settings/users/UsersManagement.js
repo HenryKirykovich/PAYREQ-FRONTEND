@@ -1,16 +1,14 @@
 import React, {useEffect, useState} from "react";
 import axios from "axios";
 import {injectIntl} from "react-intl";
-import {Link, useHistory, useRouteMatch} from "react-router-dom";
-import {DefaultButton} from "../../common";
+import {Link} from "react-router-dom";
 import Loading from "../../Loading";
 
 const UsersManagement = ({billerId, intl, children}) => {
     const [users, setUsers] = useState([]);
     const [biller, setBiller] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
-    const history = useHistory();
-    const match = useRouteMatch();
+    const usersBaseUrl = `/portal/customer/biller/${billerId}/settings/users`;
 
     useEffect(() => {
         if (billerId) {
@@ -74,7 +72,7 @@ const UsersManagement = ({billerId, intl, children}) => {
                                 <ul className="nav nav-pills nav-stacked">
                                     {users.map(user => (
                                         <li key={user.id} className={user.active ? "active" : ""}>
-                                            <Link to={`${match.url}/${user.id}`} className="user-list-item">
+                                            <Link to={`${usersBaseUrl}/${user.id}`} className="user-list-item">
                                                 {user.isPending && (
                                                     <>
                                                         <span className="glyphicon glyphicon-envelope glyphicon-user-list"></span>
@@ -100,7 +98,7 @@ const UsersManagement = ({billerId, intl, children}) => {
                             </div>
                             {canUpdateUser && isNotQboBiller && billerDoesNotHaveSsoSamlEnabled && (
                                 <div className="panel-footer panel-footer-user-list">
-                                    <Link to={`${match.url}/create`} className="pull-right" title="Create/Invite a new user">
+                                    <Link to={`${usersBaseUrl}/create`} className="pull-right" title="Create/Invite a new user">
                                         <span className="glyphicon glyphicon-plus glyphicon-user-list"></span>
                                         {intl.formatMessage({id: "settings.users.inviteNewUser"})}
                                     </Link>
