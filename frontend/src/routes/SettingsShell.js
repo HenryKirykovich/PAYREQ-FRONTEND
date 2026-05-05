@@ -39,6 +39,7 @@ import BillTemplates from "../components/settings/templates/BillTemplates";
 import AccountingSettings from "../components/settings/accounting/AccountingSettings";
 import AccountingCatalog from "../components/Accounting/AccountingCatalog";
 import AccountingCheckout from "../components/Accounting/AccountingCheckout";
+import AccountingPayment from "../components/Accounting/AccountingPayment";
 import ConnectionsSettings from "../components/settings/connections/ConnectionsSettings";
 import PaymentsSettings from "../components/settings/payments/PaymentsSettings";
 
@@ -205,6 +206,9 @@ const SettingsShell = ({match, location}) => {
                     </Route>
 
                     {/* Accounting */}
+                    <Route path={`${match.url}/accounting/catalog/checkout/payment`} exact>
+                        <AccountingPayment billerId={biller.id}/>
+                    </Route>
                     <Route path={`${match.url}/accounting/catalog`} exact>
                         <AccountingCatalog billerId={biller.id}/>
                     </Route>

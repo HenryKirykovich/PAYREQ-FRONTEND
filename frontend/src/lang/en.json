@@ -1945,6 +1945,10 @@
   "settings.accounting.purchaseCredits": "Purchase Credits",
   "settings.accounting.notAvailable": "Accounting settings not available",
 
+  "settings.accountingPlan.backButton": "Back",
+  "settings.accountingPlan.totalPayable": "Total payable",
+  "settings.accountingPlan.subTotal": "Sub total",
+
   "settings.connections.headingSme": "Connection Settings",
   "settings.connections.connected": "Connected",
   "settings.connections.disconnected": "Not Connected",
