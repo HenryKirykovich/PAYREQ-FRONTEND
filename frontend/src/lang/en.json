@@ -1944,6 +1944,10 @@
   "settings.accounting.creditBalance": "Credit Balance",
   "settings.accounting.purchaseCredits": "Purchase Credits",
   "settings.accounting.notAvailable": "Accounting settings not available",
+  "settings.accounting.catalog.heading": "Credit Catalog",
+  "settings.accounting.catalog.info": "Purchase credits to enable advanced accounting features and integrations.",
+  "settings.accounting.catalog.noProducts": "No products available",
+  "settings.accounting.catalog.purchase": "Purchase",
 
   "settings.accountingPlan.backButton": "Back",
   "settings.accountingPlan.totalPayable": "Total payable",

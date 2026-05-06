@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import axios from "axios";
 import {injectIntl} from "react-intl";
 import {useHistory} from "react-router-dom";
-import {PageHeading, Table, Button, Alert} from "../common";
+import {Table, Button, Alert} from "../common";
 import Loading from "../Loading";
 
 const AccountingCatalog = ({billerId, intl}) => {
@@ -46,7 +46,7 @@ const AccountingCatalog = ({billerId, intl}) => {
             label: "",
             render: (row) => (
                 <Button variant="primary" size="sm" onClick={() => handlePurchase(row.id)}>
-                    Purchase
+                    {intl.formatMessage({id: "settings.accounting.catalog.purchase"})}
                 </Button>
             )
         }
@@ -54,16 +54,18 @@ const AccountingCatalog = ({billerId, intl}) => {
 
     return (
         <div>
-            <PageHeading>Credit Catalog</PageHeading>
+            <h2 className="page-heading">
+                {intl.formatMessage({id: "settings.accounting.catalog.heading"})}
+            </h2>
 
             <Alert variant="info">
-                Purchase credits to enable advanced accounting features and integrations.
+                {intl.formatMessage({id: "settings.accounting.catalog.info"})}
             </Alert>
 
             <Table
                 columns={columns}
                 data={products}
-                emptyMessage="No products available"
+                emptyMessage={intl.formatMessage({id: "settings.accounting.catalog.noProducts"})}
             />
         </div>
     );
