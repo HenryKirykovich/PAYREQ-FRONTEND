@@ -45,7 +45,7 @@ const BillTemplateUploadModal = ({show, onClose, onUploadComplete, billerId, int
                 if (data.message) {
                     setError(UPLOAD_ERROR_KEYS[data.message] || "settings.templates.genericFail");
                 } else {
-                    setUploadedInfo(data);
+                    setUploadedInfo(data.response);
                 }
                 setIsUploading(false);
             })
@@ -59,7 +59,7 @@ const BillTemplateUploadModal = ({show, onClose, onUploadComplete, billerId, int
         if (!uploadedInfo || !templateName.trim()) return;
 
         axios.post("/data/billTemplates/create", {
-            billerId,
+            billerId: parseInt(billerId),
             name: templateName,
             fileName: uploadedInfo.fileName,
             documentId: uploadedInfo.documentId
