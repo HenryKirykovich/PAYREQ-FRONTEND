@@ -82,7 +82,7 @@ const PropertyMeConnection = ({connections, billerId, onReload, intl}) => {
                                     )}
                                     <p>
                                         <strong><FormattedMessage id="connections.connectionDate"/></strong>{" "}
-                                        {connection.connectedDate}
+                                        {connection.connectedDate ? intl.formatDate(connection.connectedDate, {day: "2-digit", month: "short", year: "numeric"}) : ""}
                                     </p>
                                     <div className="connection-button-container">
                                         <button

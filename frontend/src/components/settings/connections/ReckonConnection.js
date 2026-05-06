@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import {FormattedMessage, injectIntl} from "react-intl";
 import {Glyphicon} from "react-bootstrap";
 import axios from "axios";
@@ -15,14 +15,31 @@ const ReckonConnection = ({connections, billerId, onReload, intl}) => {
     const [isOpen, setIsOpen] = useState(false);
     const [showModal, setShowModal] = useState(false);
     const [disconnectId, setDisconnectId] = useState(null);
+    // State for new connection form
     const [reckonCountry, setReckonCountry] = useState("Australia");
     const [companyFile, setCompanyFile] = useState("");
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
+    // State for editing existing connection (avoids direct mutation)
+    const [editCountry, setEditCountry] = useState("Australia");
+    const [editFile, setEditFile] = useState("");
+    const [editUser, setEditUser] = useState("");
+    const [editPassword, setEditPassword] = useState("");
 
     const reckonConnections = connections.reckonConnection || [];
     const hasConnection = reckonConnections.length > 0;
     const needsAttention = hasConnection && reckonConnections[0].needsAttention;
+
+    // Initialize edit state from existing connection when panel opens
+    useEffect(() => {
+        if (isOpen && hasConnection && reckonConnections.length > 0) {
+            const conn = reckonConnections[0];
+            setEditCountry(conn.country || "Australia");
+            setEditFile(conn.company || "");
+            setEditUser(conn.name || "");
+            setEditPassword("");
+        }
+    }, [isOpen]); // eslint-disable-line react-hooks/exhaustive-deps
 
     const connectToReckon = (country, file, user, pass) => {
         axios.get(`/data/settings/reckon/${billerId}/connecttoreckon/1/settings`, {
@@ -88,9 +105,14 @@ const ReckonConnection = ({connections, billerId, onReload, intl}) => {
     };
 
     const renderReckonForm = (connection) => {
-        const currentCountry = connection ? connection.country : reckonCountry;
-        const currentFile = connection ? connection.company : companyFile;
-        const currentUser = connection ? connection.name : username;
+        const currentCountry = connection ? editCountry : reckonCountry;
+        const currentFile = connection ? editFile : companyFile;
+        const currentUser = connection ? editUser : username;
+        const currentPassword = connection ? editPassword : password;
+        const setCurrentCountry = connection ? setEditCountry : setReckonCountry;
+        const setCurrentFile = connection ? setEditFile : setCompanyFile;
+        const setCurrentUser = connection ? setEditUser : setUsername;
+        const setCurrentPassword = connection ? setEditPassword : setPassword;
 
         return (
             <form className="form-login form">
@@ -99,13 +121,7 @@ const ReckonConnection = ({connections, billerId, onReload, intl}) => {
                     <select
                         className="form-control"
                         value={currentCountry}
-                        onChange={(e) => {
-                            if (connection) {
-                                connection.country = e.target.value;
-                            } else {
-                                setReckonCountry(e.target.value);
-                            }
-                        }}>
+                        onChange={(e) => setCurrentCountry(e.target.value)}>
                         {RECKON_COUNTRIES.map((c) => (
                             <option key={c.id} value={c.id}>{c.name}</option>
                         ))}
@@ -122,13 +138,7 @@ const ReckonConnection = ({connections, billerId, onReload, intl}) => {
                         type="text"
                         className="form-control"
                         value={currentFile}
-                        onChange={(e) => {
-                            if (connection) {
-                                connection.company = e.target.value;
-                            } else {
-                                setCompanyFile(e.target.value);
-                            }
-                        }}/>
+                        onChange={(e) => setCurrentFile(e.target.value)}/>
                 </div>
                 <div className="form-group">
                     <label><FormattedMessage id="connections.reckon.companyFileUsername"/></label>
@@ -136,21 +146,15 @@ const ReckonConnection = ({connections, billerId, onReload, intl}) => {
                         type="text"
                         className="form-control"
                         value={currentUser}
-                        onChange={(e) => {
-                            if (connection) {
-                                connection.name = e.target.value;
-                            } else {
-                                setUsername(e.target.value);
-                            }
-                        }}/>
+                        onChange={(e) => setCurrentUser(e.target.value)}/>
                 </div>
                 <div className="form-group">
                     <label><FormattedMessage id="connections.reckon.companyFilePassword"/></label>
                     <input
                         type="password"
                         className="form-control"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}/>
+                        value={currentPassword}
+                        onChange={(e) => setCurrentPassword(e.target.value)}/>
                 </div>
             </form>
         );
@@ -191,7 +195,7 @@ const ReckonConnection = ({connections, billerId, onReload, intl}) => {
                                     )}
                                     <p>
                                         <strong><FormattedMessage id="connections.connectionDate"/></strong>{" "}
-                                        {connection.connectedDate}
+                                        {connection.connectedDate ? intl.formatDate(connection.connectedDate, {day: "2-digit", month: "short", year: "numeric"}) : ""}
                                     </p>
                                     {connection.needsAttention && (
                                         <React.Fragment>
@@ -199,7 +203,7 @@ const ReckonConnection = ({connections, billerId, onReload, intl}) => {
                                                 style={{display: "block", margin: "0 auto", cursor: "pointer"}}
                                                 src={reckonConnectImg}
                                                 alt="reckon-connect-button"
-                                                onClick={() => connectToReckon(connection.country, connection.company, connection.name, password)}/>
+                                                onClick={() => connectToReckon(editCountry, editFile, editUser, editPassword)}/>
                                             <div className="hr-text-settings">
                                                 <span><FormattedMessage id="connections.or"/></span>
                                             </div>
@@ -212,7 +216,7 @@ const ReckonConnection = ({connections, billerId, onReload, intl}) => {
                                                 type="button"
                                                 style={{display: "block", margin: "0 auto"}}
                                                 className="btn btn-default"
-                                                onClick={() => updateReckonConnection(connection.id, connection.country, connection.company, connection.name, password)}>
+                                                onClick={() => updateReckonConnection(connection.id, editCountry, editFile, editUser, editPassword)}>
                                                 <FormattedMessage id="connections.reckon.updateMessage"/>
                                             </button>
                                         </div>

@@ -340,7 +340,7 @@
   "settings.tab.title.contactDetails": "Détails du contact",
   "settings.tab.title.forwardingRules": "Règles de transfert",
   "settings.tab.title.apiDetails": "Payreq API",
-  "settings.tab.title.bulkDownloadPreference": "Préférences de téléchargement groupé",
+  "settings.tab.title.bulkDownloadPreference": "Préférence de téléchargement groupé",
   "settings.tab.title.connections": "Connexions",
 
   "settings.users.instructions": "Cette page vous permet de gérer les connexions utilisateur ayant accès à ce compte.",

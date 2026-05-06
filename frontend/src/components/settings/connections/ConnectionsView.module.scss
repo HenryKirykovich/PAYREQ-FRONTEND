@@ -1,8 +1,9 @@
 .sectionHeading {
   margin-top: 20px;
   margin-bottom: 15px;
-  font-size: 2.7rem;
-  font-family: 'ClashGrotesk-Medium', Arial, sans-serif;
+  font-size: 1.6rem;
+  font-weight: normal;
+  font-family: Arial, sans-serif;
   color: var(--color-primary-navy);
 }
 
@@ -12,12 +13,18 @@
 
 .connectionsContainer :global(.panel-body) {
   font-size: 1.6rem;
+  font-weight: normal;
 }
 
 .connectionsContainer :global(.panel-body p),
 .connectionsContainer :global(.panel-body strong),
 .connectionsContainer :global(.panel-body .btn) {
   font-size: 1.6rem;
+  font-weight: normal;
+}
+
+.connectionsContainer :global(.panel-body strong) {
+  font-weight: bold;
 }
 
 .panelPlaceholder {
