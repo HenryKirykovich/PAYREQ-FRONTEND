@@ -8,9 +8,20 @@ import {convertEmberRouteToReact, isConvertedToReact} from "../../utils/ember-to
 
 const isRootLevel = action => action.link;
 
+// Routes that have been migrated to React and should use history.push
+const reactRoutes = new Set(["biller.registrationsinit", "biller.registrations"]);
+
 const buildBillerHref = (emberLink, billerId) => {
     const path = emberLink.replace("biller.", "").replace(/\./g, "/");
     return `/customer/biller/${billerId}/${path}`
+};
+
+const buildReactBillerHref = (emberLink, billerId) => {
+    if (emberLink === "biller.registrationsinit" || emberLink === "biller.registrations") {
+        return `/portal/customer/biller/${billerId}/registrations/billers`;
+    }
+    const path = emberLink.replace("biller.", "").replace(/\./g, "/");
+    return `/portal/customer/biller/${billerId}/${path}`;
 };
 
 const buildHref = (link, billerId, isReactLink) => {
@@ -59,7 +70,6 @@ const PayreqNavItem = ({intl, action, billerId, history, onSelect}) => {
     const [{biller}] = useAppState();
     const navText = label === "registrations" && isMyPayer(biller) ? intl.formatMessage({id: "navbar.connections"}) : intl.formatMessage({id: "navbar." + label});
     const navIconComponent = <Glyphicon aria-hidden="true" glyph={iconClass}/>;
-    const isReact = isReactLink || isConvertedToReact(emberLink);
     
     if (isRootLevel(action)) {
         // All routes now use React routing

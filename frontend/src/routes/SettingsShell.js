@@ -22,7 +22,6 @@ import AdhocPaymentForm from "../components/settings/payments/AdhocPaymentForm";
 import AdhocPaymentConfirmation from "../components/settings/payments/AdhocPaymentConfirmation";
 import AdhocPaymentResult from "../components/settings/payments/AdhocPaymentResult";
 import ApiDetails from "../components/settings/biller/ApiDetails";
-import ConsentsSettings from "../components/settings/biller/ConsentsSettings";
 import BulkDownloadPreferences from "../components/BulkDownloadPreferences";
 import BulkDownloadPreferencesEdit from "../components/BulkDownloadPreferences/BulkDownloadPreferencesEdit";
 import BulkDownloadPreferencesSaved from "../components/BulkDownloadPreferences/BulkDownloadPreferencesSaved";
@@ -40,6 +39,7 @@ import AccountingSettings from "../components/settings/accounting/AccountingSett
 import AccountingCatalog from "../components/Accounting/AccountingCatalog";
 import AccountingCheckout from "../components/Accounting/AccountingCheckout";
 import ConnectionsSettings from "../components/settings/connections/ConnectionsSettings";
+import ConsentsSettings from "../components/settings/consents/ConsentsSettings";
 import PaymentsSettings from "../components/settings/payments/PaymentsSettings";
 
 const hasAgent = ({billerChannelPartnerSystem}) =>
@@ -206,7 +206,7 @@ const SettingsShell = ({match, location}) => {
 
                     {/* Connections */}
                     <Route path={`${match.url}/connections`}>
-                        <ConnectionsSettings billerId={biller.id}/>
+                        <ConnectionsSettings billerId={biller.id} billerSettings={billerSettings}/>
                     </Route>
 
                     {/* Consents */}
