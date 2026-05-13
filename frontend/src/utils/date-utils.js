@@ -74,6 +74,15 @@ export const getPayreqDateAsFormatted = (dateStr) => {
     return `${d.toLocaleDateString(lang, dayMonthFormat)} ${d.toLocaleDateString(lang, yearFormat)} ${d.toLocaleTimeString(lang, hourFormat)}`;
 };
 
+export const getPayreqDateAsUTCFormatted = (dateStr) => {
+    const d = new Date(dateStr);
+    const lang = defaultEnglish(getLang());
+    const dayMonth = d.toLocaleDateString(lang, {month: "short", day: "2-digit", timeZone: "UTC"});
+    const year = d.toLocaleDateString(lang, {year: "numeric", timeZone: "UTC"});
+    const time = d.toLocaleTimeString(lang, {hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: false, timeZone: "UTC"});
+    return `${dayMonth} ${year} ${time}`;
+};
+
 /*
  * Get the amount of time from now for a date
  * (c) 2021 Chris Ferdinandi, MIT License, https://gomakethings.com
