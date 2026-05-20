@@ -1956,6 +1956,12 @@
   "settings.accountingPlan.paymentError": "An error occurred while processing the payment. Please try again later.",
   "settings.accountingPlan.gatewayError": "Failed to load payment gateway details",
   "settings.accountingPlan.billerUnavailable": "Unable to process payment. Biller information is not available.",
+  "settings.accountingPlan.selectPlansToPurchase": "Select plans to purchase",
+  "settings.accountingPlan.checkout": "Checkout",
+  "settings.accountingPlan.accountingPlanGroups.pay-stub": "Paystub credits",
+  "settings.accountingPlan.accountingPlanGroups.non-pay-stub": "Non-Paystub credits",
+  "settings.accountingPlan.accountingPlanGroups.oversize-credit": "Oversize credits",
+  "settings.accountingPlan.accountingPlanGroups.combo": "Bundles/combo",
 
   "settings.connections.headingSme": "Connection Settings",
   "settings.connections.connected": "Connected",
