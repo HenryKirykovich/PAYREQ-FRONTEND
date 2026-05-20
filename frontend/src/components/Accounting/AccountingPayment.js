@@ -23,6 +23,35 @@ const formatNumber = (value) => {
 const sumTaxes = (taxes) =>
     (taxes || []).reduce((acc, tax) => acc + (Number(tax && tax.amount) || 0), 0);
 
+// Mirrors qs.stringify(obj, {arrayFormat: "brackets"}). Added inline because
+// the `qs` package is not installed (and `URLSearchParams` does not handle the
+// nested array-of-objects shape we POST). If `qs` is added to package.json,
+// replace this helper with `qs.stringify(body, {arrayFormat: "brackets"})`.
+const formEncode = (obj, prefix) => {
+    const pairs = [];
+    Object.keys(obj).forEach((key) => {
+        const value = obj[key];
+        if (value === null || value === undefined) return;
+        const fullKey = prefix ? `${prefix}[${key}]` : key;
+        if (Array.isArray(value)) {
+            value.forEach((item) => {
+                if (item !== null && typeof item === "object") {
+                    const nested = formEncode(item, `${fullKey}[]`);
+                    if (nested) pairs.push(nested);
+                } else {
+                    pairs.push(`${encodeURIComponent(`${fullKey}[]`)}=${encodeURIComponent(item)}`);
+                }
+            });
+        } else if (typeof value === "object") {
+            const nested = formEncode(value, fullKey);
+            if (nested) pairs.push(nested);
+        } else {
+            pairs.push(`${encodeURIComponent(fullKey)}=${encodeURIComponent(value)}`);
+        }
+    });
+    return pairs.join("&");
+};
+
 const AccountingPayment = ({billerId, intl}) => {
     const history = useHistory();
     const location = useLocation();
@@ -33,6 +62,7 @@ const AccountingPayment = ({billerId, intl}) => {
     const [gatewayDetails, setGatewayDetails] = useState(null);
     const [error, setError] = useState(null);
     const iframeRef = useRef(null);
+    const isProcessingRef = useRef(false);
 
     const total = checkoutData ? Number(checkoutData.total) || 0 : 0;
     const subTotal = checkoutData ? Number(checkoutData.subTotal) || 0 : 0;
@@ -65,17 +95,20 @@ const AccountingPayment = ({billerId, intl}) => {
                 setError(
                     err && err.response && err.response.data && err.response.data.message
                         ? err.response.data.message
-                        : "Failed to load payment gateway details"
+                        : intl.formatMessage({id: "settings.accountingPlan.gatewayError"})
                 );
                 setIsLoading(false);
             });
         return () => {
             cancelled = true;
         };
-    }, [billerId, checkoutData]);
+    }, [billerId, checkoutData, intl]);
 
     const processPayment = useCallback(
         (paymentToken) => {
+            if (isProcessingRef.current) return;
+            isProcessingRef.current = true;
+
             const customerId = biller ? biller.customerId : undefined;
             const appliedTaxes = taxes.map((tax) => ({
                 id: parseInt(tax.id, 10),
@@ -87,49 +120,64 @@ const AccountingPayment = ({billerId, intl}) => {
                 total: "" + plan.total,
             }));
 
+            const body = formEncode({
+                billerId: parseInt(billerId, 10),
+                customerId,
+                paymentToken,
+                total,
+                subTotal,
+                taxAmount,
+                taxes: appliedTaxes,
+                accountingPlans,
+            });
+
             axios
-                .post("/data/settings/process-payment-transaction", {
-                    billerId: parseInt(billerId, 10),
-                    customerId,
-                    paymentToken,
-                    total,
-                    subTotal,
-                    taxAmount,
-                    taxes: appliedTaxes,
-                    accountingPlans,
+                .post("/data/settings/process-payment-transaction", body, {
+                    headers: {"Content-Type": "application/x-www-form-urlencoded"},
                 })
                 .then(({data}) => {
                     if (data && data.success) {
                         setError(null);
+                        isProcessingRef.current = false;
                         // eslint-disable-next-line no-alert
-                        alert("Payment processed successfully.");
+                        alert(intl.formatMessage({id: "settings.accountingPlan.paymentSuccess"}));
                         history.push(`/portal/customer/biller/${billerId}/settings/accounting`);
                     } else {
                         const message =
                             (data && data.message) ||
-                            "An error occurred while processing the payment. Please try again later.";
+                            intl.formatMessage({id: "settings.accountingPlan.paymentError"});
                         setError(message);
                         if (iframeRef.current) {
                             iframeRef.current.src = iframeRef.current.src;
                         }
+                        isProcessingRef.current = false;
                     }
                 })
                 .catch((err) => {
                     const message =
                         (err && err.response && err.response.data && err.response.data.message) ||
-                        "An error occurred while processing the payment. Please try again later.";
+                        intl.formatMessage({id: "settings.accountingPlan.paymentError"});
                     setError(message);
                     if (iframeRef.current) {
                         iframeRef.current.src = iframeRef.current.src;
                     }
+                    isProcessingRef.current = false;
                 });
         },
-        [biller, billerId, history, selectedAccountingPlans, subTotal, taxAmount, taxes, total]
+        [biller, billerId, history, intl, selectedAccountingPlans, subTotal, taxAmount, taxes, total]
     );
 
     useEffect(() => {
         if (!gatewayDetails) return undefined;
         const handleMessage = (messageEvent) => {
+            if (gatewayDetails && gatewayDetails.widgetUrl) {
+                try {
+                    const expectedOrigin = new URL(gatewayDetails.widgetUrl).origin;
+                    if (messageEvent.origin !== expectedOrigin) return;
+                } catch (e) {
+                    // skip origin check if URL parse fails
+                }
+            }
             try {
                 const eventData =
                     typeof messageEvent.data === "string"
@@ -158,6 +206,14 @@ const AccountingPayment = ({billerId, intl}) => {
         return <Loading/>;
     }
 
+    if (!biller || !biller.customerId) {
+        return (
+            <div className="alert alert-danger">
+                Unable to process payment. Biller information is not available.
+            </div>
+        );
+    }
+
     const iFrameSrc = gatewayDetails ? buildIFrameSrc(gatewayDetails) : "";
     const backButtonLabel = intl.formatMessage({id: "settings.accountingPlan.backButton"});
     const totalPayableLabel = intl.formatMessage({id: "settings.accountingPlan.totalPayable"});
@@ -168,7 +224,10 @@ const AccountingPayment = ({billerId, intl}) => {
             <div className="col-md-12">
                 <div className="btn-toolbar btn-toolbar-bottom-margin">
                     <Link
-                        to={`/portal/customer/biller/${billerId}/settings/accounting/catalog/checkout`}
+                        to={{
+                            pathname: `/portal/customer/biller/${billerId}/settings/accounting/catalog/checkout`,
+                            state: checkoutData,
+                        }}
                         className="btn btn-default"
                     >
                         <span className="glyphicon glyphicon-arrow-left"/> {backButtonLabel}

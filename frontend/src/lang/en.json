@@ -1952,6 +1952,9 @@
   "settings.accountingPlan.backButton": "Back",
   "settings.accountingPlan.totalPayable": "Total payable",
   "settings.accountingPlan.subTotal": "Sub total",
+  "settings.accountingPlan.paymentSuccess": "Payment processed successfully.",
+  "settings.accountingPlan.paymentError": "An error occurred while processing the payment. Please try again later.",
+  "settings.accountingPlan.gatewayError": "Failed to load payment gateway details",
 
   "settings.connections.headingSme": "Connection Settings",
   "settings.connections.connected": "Connected",
