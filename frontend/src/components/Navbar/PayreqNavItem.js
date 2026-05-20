@@ -10,7 +10,7 @@ const isRootLevel = action => action.link;
 
 const buildBillerHref = (emberLink, billerId) => {
     const path = emberLink.replace("biller.", "").replace(/\./g, "/");
-    return `/customer/biller/${billerId}/${path}`
+    return `/customer#/biller/${billerId}/${path}`
 };
 
 const buildHref = (link, billerId, isReactLink) => {
@@ -42,7 +42,13 @@ const DropdownNav = ({intl, billerId, action, history}) => {
                     const href = buildHref(subMenu.link, billerId, subMenu.isReactLink);
                     // All routes now use React routing
                     return (
-                        <MenuItem key={subMenu.link} onClick={() => history.push(href)}>
+                        <MenuItem key={subMenu.link} onClick={() => {
+                            if (href.includes('#')) {
+                                window.location.href = href;
+                            } else {
+                                history.push(href);
+                            }
+                        }}>
                             <Glyphicon glyph={subMenu.iconClass}/>
                             {intl.formatMessage({id: "navbar." + subMenu.label})}
                         </MenuItem>
@@ -63,7 +69,13 @@ const PayreqNavItem = ({intl, action, billerId, history, onSelect}) => {
     
     if (isRootLevel(action)) {
         // All routes now use React routing
-        return <NavItem onSelect={onSelect} onClick={() => history.push(href)}>{navIconComponent}{navText}</NavItem>
+        return <NavItem onSelect={onSelect} onClick={() => {
+            if (href.includes('#')) {
+                window.location.href = href;
+            } else {
+                history.push(href);
+            }
+        }}>{navIconComponent}{navText}</NavItem>
     }
     return <DropdownNav action={action} billerId={billerId} intl={intl} history={history}/>;
 };

@@ -6,12 +6,9 @@
 
 export const emberToReactRouteMap = {
     // Bills
-    "biller.billsinit": "/customer/biller/{billerId}/billsinit",
-    "biller.bills": "/customer/biller/{billerId}/bills",
     "biller.bill": "/customer/biller/{billerId}/bill/{billId}",
     
     // Contacts
-    "biller.contacts": "/customer/biller/{billerId}/contacts",
     "biller.contact": "/customer/biller/{billerId}/contacts/{id}",
     
     // Reports
@@ -46,8 +43,6 @@ export const emberToReactRouteMap = {
     "biller.settings.bulkDownloadPreference": "/customer/biller/{billerId}/settings/bulkDownloadPreference/view",
     
     // Registrations (already React)
-    "biller.registrationsinit": "/customer/biller/{billerId}/registrationsinit",
-    "biller.registrations": "/customer/biller/{billerId}/registrations",
     "biller.registration": "/customer/biller/{billerId}/registrations/billers/{registrationsForBillerId}/{registrationId}",
     "biller.import": "/customer/biller/{billerId}/registrations/import",
     "biller.import-from-text": "/customer/biller/{billerId}/registrations/import-from-text",
