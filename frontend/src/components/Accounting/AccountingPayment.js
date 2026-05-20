@@ -4,6 +4,7 @@ import {injectIntl} from "react-intl";
 import {Link, Redirect, useHistory, useLocation} from "react-router-dom";
 import Loading from "../Loading";
 import {useAppState} from "../../state";
+import {SET_ALERT} from "../../state/reducers/alertReducer";
 
 const PAYDOCK_IFRAME_QUERY =
     "background_color=%23ffffff" +
@@ -12,22 +13,22 @@ const PAYDOCK_IFRAME_QUERY =
     "&button_color=%23357ebd" +
     "&supported_card_types=mastercard,visa";
 
-const buildIFrameSrc = ({widgetUrl, publicKey, configurationToken}) =>
+export const buildIFrameSrc = ({widgetUrl, publicKey, configurationToken}) =>
     `${widgetUrl}?public_key=${publicKey}&configuration_token=${configurationToken}&${PAYDOCK_IFRAME_QUERY}`;
 
-const formatNumber = (value) => {
+export const formatNumber = (value) => {
     const numeric = Number(value);
     return Number.isFinite(numeric) ? numeric.toFixed(2) : "0.00";
 };
 
-const sumTaxes = (taxes) =>
+export const sumTaxes = (taxes) =>
     (taxes || []).reduce((acc, tax) => acc + (Number(tax && tax.amount) || 0), 0);
 
 // Mirrors qs.stringify(obj, {arrayFormat: "brackets"}). Added inline because
 // the `qs` package is not installed (and `URLSearchParams` does not handle the
 // nested array-of-objects shape we POST). If `qs` is added to package.json,
 // replace this helper with `qs.stringify(body, {arrayFormat: "brackets"})`.
-const formEncode = (obj, prefix) => {
+export const formEncode = (obj, prefix) => {
     const pairs = [];
     Object.keys(obj).forEach((key) => {
         const value = obj[key];
@@ -55,7 +56,7 @@ const formEncode = (obj, prefix) => {
 const AccountingPayment = ({billerId, intl}) => {
     const history = useHistory();
     const location = useLocation();
-    const [{biller}] = useAppState();
+    const [{biller}, dispatch] = useAppState();
     const checkoutData = location.state || null;
 
     const [isLoading, setIsLoading] = useState(true);
@@ -63,6 +64,13 @@ const AccountingPayment = ({billerId, intl}) => {
     const [error, setError] = useState(null);
     const iframeRef = useRef(null);
     const isProcessingRef = useRef(false);
+    const isMountedRef = useRef(true);
+
+    useEffect(() => {
+        return () => {
+            isMountedRef.current = false;
+        };
+    }, []);
 
     const total = checkoutData ? Number(checkoutData.total) || 0 : 0;
     const subTotal = checkoutData ? Number(checkoutData.subTotal) || 0 : 0;
@@ -136,11 +144,14 @@ const AccountingPayment = ({billerId, intl}) => {
                     headers: {"Content-Type": "application/x-www-form-urlencoded"},
                 })
                 .then(({data}) => {
+                    if (!isMountedRef.current) return;
                     if (data && data.success) {
                         setError(null);
                         isProcessingRef.current = false;
-                        // eslint-disable-next-line no-alert
-                        alert(intl.formatMessage({id: "settings.accountingPlan.paymentSuccess"}));
+                        dispatch({
+                            type: SET_ALERT,
+                            alert: {level: "success", text: "settings.accountingPlan.paymentSuccess"},
+                        });
                         history.push(`/portal/customer/biller/${billerId}/settings/accounting`);
                     } else {
                         const message =
@@ -154,6 +165,7 @@ const AccountingPayment = ({billerId, intl}) => {
                     }
                 })
                 .catch((err) => {
+                    if (!isMountedRef.current) return;
                     const message =
                         (err && err.response && err.response.data && err.response.data.message) ||
                         intl.formatMessage({id: "settings.accountingPlan.paymentError"});
@@ -164,7 +176,7 @@ const AccountingPayment = ({billerId, intl}) => {
                     isProcessingRef.current = false;
                 });
         },
-        [biller, billerId, history, intl, selectedAccountingPlans, subTotal, taxAmount, taxes, total]
+        [biller, billerId, dispatch, history, intl, selectedAccountingPlans, subTotal, taxAmount, taxes, total]
     );
 
     useEffect(() => {
