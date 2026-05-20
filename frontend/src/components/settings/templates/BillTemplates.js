@@ -3,46 +3,50 @@ import axios from "axios";
 import {injectIntl} from "react-intl";
 import {Button} from "react-bootstrap";
 import Loading from "../../Loading";
-import {getDateAsUTCFormatted} from "../../../utils/date-utils";
+import {getPayreqDateAsUTCFormatted} from "../../../utils/date-utils";
 import {BillTemplateUploadModal} from "../../modals";
+import {useAppState} from "../../../state";
+import {SET_ALERT} from "../../../state/reducers/alertReducer";
+
+const DOWNLOAD_BASE_URL = "/download/billTemplate/download?";
 
 const BillTemplates = ({billerId, intl}) => {
+    const [, dispatch] = useAppState();
     const [templates, setTemplates] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [loadError, setLoadError] = useState(false);
     const [showUploadModal, setShowUploadModal] = useState(false);
+
+    const fetchTemplates = () => {
+        return axios.get("/data/billTemplates", {params: {billerId}})
+            .then(({data}) => {
+                setTemplates(data.billTemplates || []);
+                setLoadError(false);
+            });
+    };
 
     useEffect(() => {
         if (billerId) {
-            axios.get("/data/bill-templates", {params: {billerId}})
-                .then(({data}) => {
-                    setTemplates(data.templates || []);
-                    setIsLoading(false);
-                })
-                .catch(error => {
-                    console.error("Error fetching templates:", error);
-                    setIsLoading(false);
-                });
+            fetchTemplates()
+                .catch(() => setLoadError(true))
+                .finally(() => setIsLoading(false));
         }
     }, [billerId]);
 
-    const handleUpload = () => {
-        setShowUploadModal(true);
-    };
-
-    const handleUploadComplete = (data) => {
-        // Refresh the templates list
-        axios.get("/data/bill-templates", {params: {billerId}})
-            .then(({data}) => {
-                setTemplates(data.templates || []);
-            })
-            .catch(error => {
-                console.error("Error refreshing templates:", error);
-            });
-        alert("Template uploaded successfully!");
+    const handleUploadComplete = () => {
+        fetchTemplates().catch(() => {});
+        dispatch({type: SET_ALERT, alert: {level: "success", text: "settings.templates.successUpload"}});
     };
 
     const handleDownload = (templateId) => {
-        window.open(`/data/bill-templates/${templateId}/download?billerId=${billerId}`, "_blank");
+        axios.get("/data/billTemplates/download", {params: {billerId, id: templateId}})
+            .then(({data}) => {
+                window.location.assign(DOWNLOAD_BASE_URL + "downloadFileId" + data.downloadFileId);
+                dispatch({type: SET_ALERT, alert: {level: "success", text: "settings.templates.downloadSuccess"}});
+            })
+            .catch(() => {
+                dispatch({type: SET_ALERT, alert: {level: "danger", text: "settings.templates.downloadFail"}});
+            });
     };
 
     if (isLoading) {
@@ -53,12 +57,18 @@ const BillTemplates = ({billerId, intl}) => {
         <div>
             <div className="row actions-row">
                 <div className="actions btn-group col-sm-4">
-                    <Button onClick={handleUpload}>
-                        <span className="glyphicon glyphicon-upload"></span> 
+                    <Button onClick={() => setShowUploadModal(true)}>
+                        <span className="glyphicon glyphicon-upload"></span>
                         {" "}{intl.formatMessage({id: "settings.templates.uploadButton"})}
                     </Button>
                 </div>
             </div>
+
+            {loadError && (
+                <div className="alert alert-danger">
+                    {intl.formatMessage({id: "settings.templates.genericFail"})}
+                </div>
+            )}
 
             <div className="row">
                 <div className="col-md-12">
@@ -87,12 +97,14 @@ const BillTemplates = ({billerId, intl}) => {
                                                 <tr key={template.id}>
                                                     <td>{template.name}</td>
                                                     <td>{template.fileName}</td>
-                                                    <td>{getDateAsUTCFormatted(template.createdOn)}</td>
+                                                    <td>{getPayreqDateAsUTCFormatted(template.createdOn)}</td>
                                                     <td>{template.createdBy}</td>
                                                     <td>
-                                                        <a 
+                                                        <a
                                                             href="#"
-                                                            className="btn btn-xs" 
+                                                            target="_blank"
+                                                            rel="noreferrer"
+                                                            className="btn btn-xs"
                                                             onClick={(e) => {
                                                                 e.preventDefault();
                                                                 handleDownload(template.id);

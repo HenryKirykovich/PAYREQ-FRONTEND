@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import axios from "axios";
 import {injectIntl} from "react-intl";
 import {Button} from "react-bootstrap";
-import {TextInput} from "../../common";
+import {TextInput} from "../../common"; // eslint-disable-line no-unused-vars
 import Loading from "../../Loading";
 import {getDateAsUTCFormatted} from "../../../utils/date-utils";
 
@@ -22,7 +22,7 @@ const ConsentsSettings = ({billerId, biller, intl}) => {
         if (billerId) {
             fetchConsents();
         }
-    }, [billerId]);
+    }, [billerId]); // eslint-disable-line react-hooks/exhaustive-deps
 
     const fetchConsents = (search = "") => {
         setIsLoading(true);
@@ -175,7 +175,7 @@ const ConsentsSettings = ({billerId, biller, intl}) => {
                                     {resendErrorMessage}
                                 </div>
                             )}
-                            <form className="form-horizontal" role="form" onSubmit={handleSearch}>
+                            <form className="form-horizontal" onSubmit={handleSearch}>
                                 <div className="form-group">
                                     <div className="input-group padding-left-right">
                                         <input

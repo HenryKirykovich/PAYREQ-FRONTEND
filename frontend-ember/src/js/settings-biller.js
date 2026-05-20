@@ -80,7 +80,8 @@ define(['text!templates/settings-biller.html',
 
             if(model.systemId === "incoming-invoice") {
                 //this.set("name", "users");
-                this.transitionTo("biller.settings.connections", this.modelFor("biller"));
+                window.location.href = "/portal/customer/biller/" + this.modelFor("biller").id + "/settings/connections/view";
+                return;
             }
         },
 
