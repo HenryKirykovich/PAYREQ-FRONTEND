@@ -8,9 +8,12 @@ import {SET_ALERT} from "../../state/reducers/alertReducer";
 
 const PAYDOCK_IFRAME_QUERY =
     "background_color=%23ffffff" +
+    "&background_color=%23ffffff" +
     "&fields_validation=true" +
     "&title=Pay%20for%20accounting%20plan" +
+    "&background_color=%23ffffff" +
     "&button_color=%23357ebd" +
+    "&fields_validation=true" +
     "&supported_card_types=mastercard,visa";
 
 export const buildIFrameSrc = ({widgetUrl, publicKey, configurationToken}) =>
@@ -23,6 +26,13 @@ export const formatNumber = (value) => {
 
 export const sumTaxes = (taxes) =>
     (taxes || []).reduce((acc, tax) => acc + (Number(tax && tax.amount) || 0), 0);
+
+const settingsPath = (billerId, suffix = "") => {
+    const prefix = window.location.pathname.startsWith("/portal/customer")
+        ? "/portal/customer"
+        : "/customer";
+    return `${prefix}/biller/${billerId}/settings/accounting${suffix}`;
+};
 
 // Mirrors qs.stringify(obj, {arrayFormat: "brackets"}). Added inline because
 // the `qs` package is not installed (and `URLSearchParams` does not handle the
@@ -62,6 +72,7 @@ const AccountingPayment = ({billerId, intl}) => {
     const [isLoading, setIsLoading] = useState(true);
     const [gatewayDetails, setGatewayDetails] = useState(null);
     const [error, setError] = useState(null);
+    const [iframeReloadKey, setIframeReloadKey] = useState(0);
     const iframeRef = useRef(null);
     const isProcessingRef = useRef(false);
     const isMountedRef = useRef(true);
@@ -152,15 +163,13 @@ const AccountingPayment = ({billerId, intl}) => {
                             type: SET_ALERT,
                             alert: {level: "success", text: "settings.accountingPlan.paymentSuccess"},
                         });
-                        history.push(`/portal/customer/biller/${billerId}/settings/accounting`);
+                        history.push(settingsPath(billerId));
                     } else {
                         const message =
                             (data && data.message) ||
                             intl.formatMessage({id: "settings.accountingPlan.paymentError"});
                         setError(message);
-                        if (iframeRef.current) {
-                            iframeRef.current.src = iframeRef.current.src;
-                        }
+                        setIframeReloadKey((key) => key + 1);
                         isProcessingRef.current = false;
                     }
                 })
@@ -170,9 +179,7 @@ const AccountingPayment = ({billerId, intl}) => {
                         (err && err.response && err.response.data && err.response.data.message) ||
                         intl.formatMessage({id: "settings.accountingPlan.paymentError"});
                     setError(message);
-                    if (iframeRef.current) {
-                        iframeRef.current.src = iframeRef.current.src;
-                    }
+                    setIframeReloadKey((key) => key + 1);
                     isProcessingRef.current = false;
                 });
         },
@@ -209,7 +216,7 @@ const AccountingPayment = ({billerId, intl}) => {
     if (!checkoutData) {
         return (
             <Redirect
-                to={`/portal/customer/biller/${billerId}/settings/accounting/catalog`}
+                to={settingsPath(billerId, "/catalog")}
             />
         );
     }
@@ -237,7 +244,7 @@ const AccountingPayment = ({billerId, intl}) => {
                 <div className="btn-toolbar btn-toolbar-bottom-margin">
                     <Link
                         to={{
-                            pathname: `/portal/customer/biller/${billerId}/settings/accounting/catalog/checkout`,
+                            pathname: settingsPath(billerId, "/catalog/checkout"),
                             state: checkoutData,
                         }}
                         className="btn btn-default"
@@ -269,6 +276,7 @@ const AccountingPayment = ({billerId, intl}) => {
                 <div className="form-group">
                     <iframe
                         ref={iframeRef}
+                        key={iframeReloadKey}
                         title="PayDock Payment"
                         width="100%"
                         style={{height: "100vh", border: 0}}

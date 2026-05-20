@@ -151,6 +151,7 @@ const bulkDownloadRoutesList = (match) => [
 const SettingsShell = ({match, location}) => {
     const [{biller}] = useAppState();
     const activeTab = location.pathname.split(match.path)[1].split("/")[1];
+    const hideSettingsTabs = activeTab === "accounting";
     const [billerSettings, setBillerSettings] = useState();
     useEffect(() => getBillerSettings(biller.id, setBillerSettings), [biller.id, setBillerSettings]);
 
@@ -159,7 +160,9 @@ const SettingsShell = ({match, location}) => {
     return (
         <React.Fragment>
             <div style={{paddingTop: "10px"}} className="container">
-                <SettingsTabs billerId={biller.id} activeTabName={activeTab} billerSettings={billerSettings}/>
+                {!hideSettingsTabs && (
+                    <SettingsTabs billerId={biller.id} activeTabName={activeTab} billerSettings={billerSettings}/>
+                )}
                 <Switch>
                     {/* Biller Settings */}
                     <Route path={`${match.url}/biller/channel/:channelId`} exact>
@@ -209,13 +212,13 @@ const SettingsShell = ({match, location}) => {
                     <Route path={`${match.url}/accounting/catalog/checkout/payment`} exact>
                         <AccountingPayment billerId={biller.id}/>
                     </Route>
+                    <Route path={`${match.url}/accounting/catalog/checkout`} exact>
+                        <AccountingCheckout billerId={biller.id}/>
+                    </Route>
                     <Route path={`${match.url}/accounting/catalog`} exact>
                         <AccountingCatalog billerId={biller.id}/>
                     </Route>
-                    <Route path={`${match.url}/accounting/checkout/:productId`} exact>
-                        <AccountingCheckout billerId={biller.id}/>
-                    </Route>
-                    <Route path={`${match.url}/accounting`}>
+                    <Route path={`${match.url}/accounting`} exact>
                         <AccountingSettings billerId={biller.id}/>
                     </Route>
 

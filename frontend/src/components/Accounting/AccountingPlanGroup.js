@@ -1,35 +1,33 @@
 import React from "react";
 
-const formatPriceDisplay = (plan) => {
-    if (plan == null) return "";
-    if (plan.priceDisplay != null && plan.priceDisplay !== "") return plan.priceDisplay;
-    const price = Number(plan.price);
-    return Number.isFinite(price) ? price.toFixed(2) : "";
+const categoryName = (accountingPlanCategory) => {
+    if (accountingPlanCategory && typeof accountingPlanCategory === "object") {
+        return accountingPlanCategory.name || accountingPlanCategory.id;
+    }
+    return accountingPlanCategory;
 };
 
 const AccountingPlanGroup = ({
-    category,
-    plans,
+    accountingPlanCategory,
+    displayName,
+    accountingPlans,
     currencyCode,
     currencySymbol,
-    selectedPlanIds,
-    onPlanClick,
-    displayName,
+    isOpen,
+    onToggle,
+    accountingPlanClicked,
 }) => {
-    const elementId = `accounting-plan-category-${category}`;
-    const isSelected = (plan) =>
-        Array.isArray(selectedPlanIds) &&
-        selectedPlanIds.some((id) => String(id) === String(plan.id));
+    const categoryElementId = categoryName(accountingPlanCategory);
+    const href = `#${categoryElementId}`;
 
-    const handleHeadingClick = (event) => {
+    const handleToggle = (event) => {
         event.preventDefault();
+        onToggle();
     };
 
-    const handlePlanClick = (event, plan) => {
+    const handleAccountingPlanClicked = (event, accountingPlan) => {
         event.preventDefault();
-        if (typeof onPlanClick === "function") {
-            onPlanClick(plan);
-        }
+        accountingPlanClicked(accountingPlan);
     };
 
     return (
@@ -38,47 +36,40 @@ const AccountingPlanGroup = ({
                 className="panel-heading collapse-sub-heading"
                 data-toggle="collapse"
                 data-parent="#accounting-plan-group"
-                data-target={`#${elementId}`}
-                href={`#${elementId}`}
-                onClick={handleHeadingClick}
+                data-target={href}
+                href={href}
+                onClick={handleToggle}
             >
-                <h5 className="panel-title">{displayName}</h5>
+                <h5 className="panel-title">
+                    {displayName}
+                </h5>
             </a>
-            <div id={elementId} className="panel-collapse collapse">
+            <div id={categoryElementId} className={`panel-collapse collapse${isOpen ? " in" : ""}`}>
                 <table className="table table-condensed table-hover">
                     <tbody>
-                        {plans.map((plan) => {
-                            const selected = isSelected(plan);
-                            const checkClass = selected
-                                ? "glyphicon glyphicon-ok text-success glyphicon-right-margin"
-                                : "glyphicon glyphicon-ok text-success glyphicon-right-margin hide-element";
-                            return (
-                                <tr key={plan.id}>
-                                    <td style={{textAlign: "right", width: "30px"}}>
-                                        <span className={checkClass}/>
-                                    </td>
-                                    <td>
-                                        <a
-                                            href="#"
-                                            className="list-group-item list-group-item-action remove-border"
-                                            onClick={(event) => handlePlanClick(event, plan)}
-                                        >
-                                            {plan.name}{" "}
-                                            {plan.description ? (
-                                                <small>
-                                                    <em>({plan.description})</em>
-                                                </small>
-                                            ) : null}
-                                        </a>
-                                    </td>
-                                    <td>
-                                        {currencySymbol}
-                                        {formatPriceDisplay(plan)}
-                                    </td>
-                                    <td>{currencyCode}</td>
-                                </tr>
-                            );
-                        })}
+                        {accountingPlans.map((accountingPlan) => (
+                            <tr key={accountingPlan.id}>
+                                <td style={{textAlign: "right", width: "30px"}}>
+                                    {accountingPlan.selected ? (
+                                        <span className="glyphicon glyphicon-ok text-success glyphicon-right-margin"/>
+                                    ) : (
+                                        <span className="glyphicon glyphicon-ok text-success glyphicon-right-margin hide-element"/>
+                                    )}
+                                </td>
+                                <td>
+                                    {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
+                                    <a
+                                        onClick={(event) => handleAccountingPlanClicked(event, accountingPlan)}
+                                        className="list-group-item list-group-item-action remove-border"
+                                        href="#"
+                                    >
+                                        {accountingPlan.name} <small>({accountingPlan.description})</small>
+                                    </a>
+                                </td>
+                                <td>{currencySymbol}{accountingPlan.priceDisplay}</td>
+                                <td>{currencyCode}</td>
+                            </tr>
+                        ))}
                     </tbody>
                 </table>
             </div>

@@ -12,9 +12,12 @@ describe("AccountingPayment helpers", () => {
             ).toBe(
                 "https://widget.paydock.com/widget?public_key=public-key&configuration_token=config-token" +
                     "&background_color=%23ffffff" +
+                    "&background_color=%23ffffff" +
                     "&fields_validation=true" +
                     "&title=Pay%20for%20accounting%20plan" +
+                    "&background_color=%23ffffff" +
                     "&button_color=%23357ebd" +
+                    "&fields_validation=true" +
                     "&supported_card_types=mastercard,visa"
             );
         });
@@ -23,9 +26,12 @@ describe("AccountingPayment helpers", () => {
             expect(buildIFrameSrc({})).toBe(
                 "undefined?public_key=undefined&configuration_token=undefined" +
                     "&background_color=%23ffffff" +
+                    "&background_color=%23ffffff" +
                     "&fields_validation=true" +
                     "&title=Pay%20for%20accounting%20plan" +
+                    "&background_color=%23ffffff" +
                     "&button_color=%23357ebd" +
+                    "&fields_validation=true" +
                     "&supported_card_types=mastercard,visa"
             );
         });
