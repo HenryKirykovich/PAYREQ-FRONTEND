@@ -56,7 +56,7 @@ const AccountingPayment = ({billerId, intl}) => {
     const history = useHistory();
     const location = useLocation();
     const [{biller}] = useAppState();
-    const checkoutData = location && location.state ? location.state : null;
+    const checkoutData = location.state || null;
 
     const [isLoading, setIsLoading] = useState(true);
     const [gatewayDetails, setGatewayDetails] = useState(null);
@@ -209,7 +209,7 @@ const AccountingPayment = ({billerId, intl}) => {
     if (!biller || !biller.customerId) {
         return (
             <div className="alert alert-danger">
-                Unable to process payment. Biller information is not available.
+                {intl.formatMessage({id: "settings.accountingPlan.billerUnavailable"})}
             </div>
         );
     }
@@ -249,7 +249,7 @@ const AccountingPayment = ({billerId, intl}) => {
                 </p>
 
                 {error && (
-                    <p className="text-center">
+                    <p className="text-center" role="alert">
                         <span className="text-danger">{error}</span>
                     </p>
                 )}
@@ -259,9 +259,7 @@ const AccountingPayment = ({billerId, intl}) => {
                         ref={iframeRef}
                         title="PayDock Payment"
                         width="100%"
-                        style={{height: "100vh"}}
-                        frameBorder="0"
-                        id="paydoc"
+                        style={{height: "100vh", border: 0}}
                         src={iFrameSrc}
                     />
                 </div>

@@ -165,6 +165,7 @@
   "settings.accountingPlan.paymentSuccess": "Paiement traité avec succès.",
   "settings.accountingPlan.paymentError": "Une erreur s'est produite lors du traitement du paiement. Veuillez réessayer plus tard.",
   "settings.accountingPlan.gatewayError": "Échec du chargement des détails de la passerelle de paiement",
+  "settings.accountingPlan.billerUnavailable": "Impossible de traiter le paiement. Les informations du facturier ne sont pas disponibles.",
   "settings.bulkDownloadPreferences.pageHeading": "Préférence de téléchargement en masse",
   "settings.bulkDownloadPreferences.intro": "Le téléchargement de factures en masse est simple dans Payreq. Faites-nous savoir comment vous souhaitez que vos factures soient emballées et nous vous enverrons un courriel lorsqu'elles seront arrivées et prêtes à être téléchargées.",
   "settings.bulkDownloadPreferences.howItWorks.heading": "Comment cela fonctionne-t-il exactement ?",

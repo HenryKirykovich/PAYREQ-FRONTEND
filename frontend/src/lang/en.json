@@ -1955,6 +1955,7 @@
   "settings.accountingPlan.paymentSuccess": "Payment processed successfully.",
   "settings.accountingPlan.paymentError": "An error occurred while processing the payment. Please try again later.",
   "settings.accountingPlan.gatewayError": "Failed to load payment gateway details",
+  "settings.accountingPlan.billerUnavailable": "Unable to process payment. Biller information is not available.",
 
   "settings.connections.headingSme": "Connection Settings",
   "settings.connections.connected": "Connected",
