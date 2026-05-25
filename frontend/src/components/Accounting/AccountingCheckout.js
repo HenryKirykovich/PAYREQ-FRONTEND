@@ -1,101 +1,249 @@
-import React, {useEffect, useState} from "react";
-import axios from "axios";
+import React, {useMemo, useState} from "react";
 import {injectIntl} from "react-intl";
-import {useHistory, useParams} from "react-router-dom";
-import {PageHeading, Button, Alert} from "../common";
-import Loading from "../Loading";
+import {Link, Redirect, useLocation} from "react-router-dom";
+import {useAppState} from "../../state";
+import {getBillerCurrencyCode, getBillerCurrencySymbol} from "../../utils/currency-utils";
 
-const AccountingCheckout = ({billerId, intl}) => {
-    const history = useHistory();
-    const {productId} = useParams();
-    const [isLoading, setIsLoading] = useState(true);
-    const [product, setProduct] = useState(null);
-    const [isPurchasing, setIsPurchasing] = useState(false);
-    const [errorMessage, setErrorMessage] = useState(null);
+const formatNumber = (value) => {
+    const numeric = Number(value);
+    return Number.isFinite(numeric) ? numeric.toFixed(2) : "0.00";
+};
 
-    useEffect(() => {
-        if (productId) {
-            fetchProduct();
-        }
-    }, [productId]);
+const settingsPath = (billerId, suffix = "") => {
+    const prefix = window.location.pathname.startsWith("/portal/customer")
+        ? "/portal/customer"
+        : "/customer";
+    return `${prefix}/biller/${billerId}/settings/accounting${suffix}`;
+};
 
-    const fetchProduct = () => {
-        setIsLoading(true);
-        axios.get(`/data/accounting/catalog/${productId}`)
-            .then(({data}) => {
-                setProduct(data);
-                setIsLoading(false);
-            })
-            .catch(error => {
-                console.error("Error fetching product:", error);
-                setErrorMessage("Failed to load product details");
-                setIsLoading(false);
-            });
+const planTotal = (plan) => {
+    const quantity = Number(plan.quantity) || 1;
+    const price = Number(plan.price) || 0;
+    return +((price * quantity).toFixed(2));
+};
+
+const withDisplays = (plan) => {
+    const total = planTotal(plan);
+    const price = Number(plan.price);
+    return {
+        ...plan,
+        quantity: Number(plan.quantity) || 1,
+        priceDisplay:
+            plan.priceDisplay !== undefined && plan.priceDisplay !== null
+                ? plan.priceDisplay
+                : Number.isFinite(price)
+                    ? price.toFixed(2)
+                    : "0.00",
+        total,
+        totalDisplay: formatNumber(total),
     };
+};
 
-    const handleCompletePurchase = () => {
-        setIsPurchasing(true);
-        setErrorMessage(null);
+const taxAmount = (tax, subTotal) =>
+    +(((Number(tax.percentage) || 0) / 100) * subTotal).toFixed(2);
 
-        axios.post(`/data/accounting/purchase`, {
-            billerId,
-            productId
-        })
-            .then(() => {
-                history.push(`/portal/customer/biller/${billerId}/settings/accounting`);
-            })
-            .catch(error => {
-                setErrorMessage(error.response?.data?.message || "Purchase failed");
-                setIsPurchasing(false);
-            });
-    };
+const taxMatchesBiller = (tax, biller) => {
+    const taxStateId = tax.stateId === undefined ? null : tax.stateId;
+    const taxCountryId = tax.countryId === undefined ? null : tax.countryId;
+    const billerStateId = biller && biller.stateId !== undefined ? biller.stateId : null;
+    const billerCountryId = biller && biller.countryId !== undefined ? biller.countryId : null;
 
-    if (isLoading) {
-        return <Loading/>;
-    }
-
-    if (!product) {
-        return <Alert variant="danger">Product not found</Alert>;
+    if (billerStateId !== null && taxStateId !== null && String(taxStateId) === String(billerStateId)) {
+        return true;
     }
 
     return (
-        <div>
-            <PageHeading>Checkout</PageHeading>
+        billerCountryId !== null &&
+        taxCountryId !== null &&
+        String(taxCountryId) === String(billerCountryId) &&
+        (taxStateId === null || taxStateId === "")
+    );
+};
 
-            {errorMessage && <Alert variant="danger">{errorMessage}</Alert>}
+const AccountingCheckout = ({billerId, intl}) => {
+    const location = useLocation();
+    const [{biller}] = useAppState();
+    const checkoutData = location.state || null;
+    const [selectedAccountingPlans, setSelectedAccountingPlans] = useState(() =>
+        checkoutData && Array.isArray(checkoutData.selectedAccountingPlans)
+            ? checkoutData.selectedAccountingPlans.map(withDisplays)
+            : []
+    );
 
-            <div className="panel panel-default">
-                <div className="panel-heading">
-                    <h4 className="panel-title">Purchase Summary</h4>
+    const currencyCode = getBillerCurrencyCode(biller);
+    const currencySymbol = getBillerCurrencySymbol(biller);
+    const allTaxes = checkoutData && Array.isArray(checkoutData.taxes) ? checkoutData.taxes : [];
+
+    const subTotal = useMemo(
+        () =>
+            +selectedAccountingPlans
+                .reduce((sum, accountingPlan) => sum + planTotal(accountingPlan), 0)
+                .toFixed(2),
+        [selectedAccountingPlans]
+    );
+
+    const taxes = useMemo(
+        () =>
+            allTaxes
+                .filter((tax) => taxMatchesBiller(tax, biller))
+                .sort((a, b) => (Number(a.sequenceNo) || 0) - (Number(b.sequenceNo) || 0))
+                .map((tax) => {
+                    const amount = taxAmount(tax, subTotal);
+                    return {
+                        ...tax,
+                        amount,
+                        amountDisplay: formatNumber(amount),
+                    };
+                }),
+        [allTaxes, biller, subTotal]
+    );
+
+    const taxTotal = +taxes.reduce((sum, tax) => sum + (Number(tax.amount) || 0), 0).toFixed(2);
+    const total = +((subTotal + taxTotal).toFixed(2));
+    const hasSelectedAccountingPlans = selectedAccountingPlans.length > 0;
+    const catalogPath = settingsPath(billerId, "/catalog");
+    const paymentPath = settingsPath(billerId, "/catalog/checkout/payment");
+    const checkoutState = {
+        selectedAccountingPlans: selectedAccountingPlans.map(withDisplays),
+        selectedAccountingPlanIds: selectedAccountingPlans.map((plan) => plan.id),
+        currencyCode,
+        currencySymbol,
+        taxes,
+        subTotal,
+        total,
+    };
+
+    const setQuantity = (accountingPlan, value) => {
+        const quantity = Math.max(1, Number(value) || 1);
+        setSelectedAccountingPlans((plans) =>
+            plans.map((plan) =>
+                String(plan.id) === String(accountingPlan.id)
+                    ? withDisplays({...plan, quantity})
+                    : plan
+            )
+        );
+    };
+
+    const removeAccountingPlanFromCheckout = (event, accountingPlan) => {
+        event.preventDefault();
+        setSelectedAccountingPlans((plans) =>
+            plans.filter((plan) => String(plan.id) !== String(accountingPlan.id))
+        );
+    };
+
+    if (!checkoutData) {
+        return <Redirect to={catalogPath}/>;
+    }
+
+    return (
+        <div className="row">
+            <div className="col-md-12">
+                <div className="btn-toolbar btn-toolbar-bottom-margin">
+                    <Link
+                        to={{
+                            pathname: catalogPath,
+                            state: checkoutState,
+                        }}
+                        className="btn btn-default"
+                    >
+                        <span className="glyphicon glyphicon-arrow-left"/>{" "}
+                        {intl.formatMessage({id: "settings.accountingPlan.backButton"})}
+                    </Link>
                 </div>
-                <div className="panel-body">
-                    <div className="row">
-                        <div className="col-md-6">
-                            <h4>{product.name}</h4>
-                            <p>{product.description}</p>
-                            <p><strong>Credits:</strong> {product.credits}</p>
-                            <p><strong>Price:</strong> ${product.price}</p>
-                        </div>
+
+                <div className="panel panel-default">
+                    <div className="panel-heading">
+                        {intl.formatMessage({id: "settings.accountingPlan.purchaseAccountingPlans"})}
                     </div>
 
-                    <hr/>
+                    <table className="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>{intl.formatMessage({id: "settings.accountingPlan.accountingPlan"})}</th>
+                                <th>
+                                    {intl.formatMessage({id: "settings.accountingPlan.unitCost"})} ({currencyCode})
+                                </th>
+                                <th className="accounting-plan-uints-col">
+                                    {intl.formatMessage({id: "settings.accountingPlan.quantity"})}
+                                </th>
+                                <th className="text-right">
+                                    {intl.formatMessage({id: "settings.accountingPlan.total"})}
+                                </th>
+                            </tr>
+                        </thead>
 
-                    <div className="text-right">
-                        <Button
-                            variant="default"
-                            onClick={() => history.goBack()}
-                            className="mr-2"
+                        <tbody>
+                            {selectedAccountingPlans.map((accountingPlan) => {
+                                const displayPlan = withDisplays(accountingPlan);
+                                return (
+                                    <tr key={accountingPlan.id}>
+                                        <td>
+                                            {accountingPlan.name} <small>({accountingPlan.description})</small>
+                                        </td>
+                                        <td>{currencySymbol}{displayPlan.priceDisplay}</td>
+                                        <td>
+                                            <input
+                                                type="number"
+                                                step="1"
+                                                min="1"
+                                                className="accounting-plan-uints-col"
+                                                value={displayPlan.quantity}
+                                                onChange={(event) => setQuantity(accountingPlan, event.target.value)}
+                                            />
+                                            {" "}
+                                            {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
+                                            <a
+                                                onClick={(event) => removeAccountingPlanFromCheckout(event, accountingPlan)}
+                                                href="#"
+                                            >
+                                                <span className="glyphicon glyphicon-remove text-danger"/>
+                                            </a>
+                                        </td>
+                                        <td className="text-right">{displayPlan.totalDisplay}</td>
+                                    </tr>
+                                );
+                            })}
+                            <tr>
+                                <td className="text-right" colSpan="3">Sub total ({currencyCode})</td>
+                                <td className="text-right">{formatNumber(subTotal)}</td>
+                            </tr>
+                            {taxes.map((tax) => (
+                                <tr key={tax.id}>
+                                    <td className="text-right" colSpan="3">
+                                        {tax.name} ({tax.percentage}%)
+                                    </td>
+                                    <td className="text-right">{tax.amountDisplay}</td>
+                                </tr>
+                            ))}
+                            <tr>
+                                <td className="text-right" colSpan="3">
+                                    <strong>Total ({currencyCode})</strong>
+                                </td>
+                                <td className="text-right">
+                                    <strong>{currencySymbol}{formatNumber(total)}</strong>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div className="btn-toolbar pull-right" style={{marginBottom: "5px"}}>
+                    {hasSelectedAccountingPlans ? (
+                        <Link
+                            to={{
+                                pathname: paymentPath,
+                                state: checkoutState,
+                            }}
+                            className="btn btn-primary"
                         >
-                            Cancel
-                        </Button>
-                        <Button
-                            variant="success"
-                            onClick={handleCompletePurchase}
-                            disabled={isPurchasing}
-                        >
-                            {isPurchasing ? "Processing..." : "Complete Purchase"}
-                        </Button>
-                    </div>
+                            <span className="glyphicon glyphicon-credit-card glyphicon-right-margin"/>
+                            {intl.formatMessage({id: "settings.accountingPlan.proceedToPay"})}
+                        </Link>
+                    ) : (
+                        <Link to={paymentPath} className="btn btn-primary disabled">
+                            <span className="glyphicon glyphicon-credit-card glyphicon-right-margin"/>
+                            {intl.formatMessage({id: "settings.accountingPlan.proceedToPay"})}
+                        </Link>
+                    )}
                 </div>
             </div>
         </div>

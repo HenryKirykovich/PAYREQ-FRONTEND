@@ -6,11 +6,9 @@
 
 export const emberToReactRouteMap = {
     // Bills
-    "biller.bills": "/customer/biller/{billerId}/bills",
     "biller.bill": "/customer/biller/{billerId}/bill/{billId}",
     
     // Contacts
-    "biller.contacts": "/customer/biller/{billerId}/contacts",
     "biller.contact": "/customer/biller/{billerId}/contacts/{id}",
     
     // Reports
@@ -18,8 +16,8 @@ export const emberToReactRouteMap = {
     "biller.report": "/customer/biller/{billerId}/reports/report/{reportId}",
     "biller.reportbillingsummary": "/customer/biller/{billerId}/reports/billingsummary/{reportId}",
     "biller.reportbillingdetail": "/customer/biller/{billerId}/reports/billingdetail/{reportId}",
-    "biller.reportsbi.mail.overview": "/customer/biller/{billerId}/reports/bi/mail-overview",
-    "biller.reportsbi.email.activity": "/customer/biller/{billerId}/reports/bi/email-activity",
+    "biller.reportsbi.mail.overview": "/customer/biller/{billerId}/reportsbi/mail/overview",
+    "biller.reportsbi.email.activity": "/customer/biller/{billerId}/reportsbi/email/activity",
     
     // Settings
     "biller.settings": "/customer/biller/{billerId}/settings",
@@ -33,6 +31,9 @@ export const emberToReactRouteMap = {
     "biller.settings.users.create": "/customer/biller/{billerId}/settings/users/create",
     "biller.settings.billTemplates": "/customer/biller/{billerId}/settings/billTemplates",
     "biller.settings.accounting": "/customer/biller/{billerId}/settings/accounting",
+    "biller.settings.accounting.catalog": "/customer/biller/{billerId}/settings/accounting/catalog",
+    "biller.settings.accounting.catalog.checkout": "/customer/biller/{billerId}/settings/accounting/catalog/checkout",
+    "biller.settings.accounting.catalog.checkout.payment": "/customer/biller/{billerId}/settings/accounting/catalog/checkout/payment",
     "biller.settings.payments": "/customer/biller/{billerId}/settings/payments",
     "biller.settings.connections": "/customer/biller/{billerId}/settings/connections",
     "biller.settings.consents": "/customer/biller/{billerId}/settings/consents",
@@ -42,8 +43,6 @@ export const emberToReactRouteMap = {
     "biller.settings.bulkDownloadPreference": "/customer/biller/{billerId}/settings/bulkDownloadPreference/view",
     
     // Registrations (already React)
-    "biller.registrationsinit": "/customer/biller/{billerId}/registrations/billers",
-    "biller.registrations": "/customer/biller/{billerId}/registrations/billers",
     "biller.registration": "/customer/biller/{billerId}/registrations/billers/{registrationsForBillerId}/{registrationId}",
     "biller.import": "/customer/biller/{billerId}/registrations/import",
     "biller.import-from-text": "/customer/biller/{billerId}/registrations/import-from-text",

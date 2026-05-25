@@ -59,6 +59,12 @@ const ReportsShell = ({match}) => {
             <Route path={`${match.url}/bi/email-activity`} exact>
                 <EmailActivityReport billerId={biller.id}/>
             </Route>
+            <Route path={`${match.url}/mail/overview`} exact>
+                <MailOverviewReport billerId={biller.id}/>
+            </Route>
+            <Route path={`${match.url}/email/activity`} exact>
+                <EmailActivityReport billerId={biller.id}/>
+            </Route>
             <Route component={PageNotFound}/>
         </Switch>
     );
