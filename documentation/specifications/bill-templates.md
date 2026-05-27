@@ -1,359 +1,359 @@
-# Bill Templates Screen Specification
+# Bill Templates Screen — Ember-to-React Migration Specification
 
-## Overview
-
-The Bill Templates screen allows users to upload and manage shared document templates for a biller. Templates can be uploaded, named, and downloaded.
-
-## Source Files
-
-### Ember Source Files
-- **Controller/Route**: `frontend-ember/src/js/settings-bill-templates.js`
-- **Template**: `frontend-ember/src/js/templates/settings-bill-templates.html`
-- **Modal Template**: `frontend-ember/src/js/templates/bill-template-upload-modal.html`
-- **i18n Strings**: `frontend-ember/src/js/nls/root/settings.js`
-
-### Existing React Implementation
-- **Component**: `frontend/src/components/settings/templates/BillTemplates.js`
-- **Modal**: `frontend/src/components/modals/BillTemplateUploadModal.js`
+**Route:** `biller.settings.billTemplates`  
+**URL:** `/customer/biller/:id/settings/billTemplates`  
+**Page Title (tab):** "Shared Documents"
 
 ---
 
-## UI Elements
+## 1. Source Files
 
-### Element: Upload Button
-- **Type**: button
-- **Display condition**: Always visible
-- **Content/Label**: `strings.capitalised.uploadBillTemplateButton` ("Upload document")
-- **CSS classes**: `btn btn-default`
-- **Icon**: `glyphicon glyphicon-upload`
-- **Action**: Opens upload modal
+### Ember (source of truth)
 
-### Element: Templates Table
-- **Type**: table
-- **Display condition**: Always visible
-- **CSS classes**: `table table-striped`
-- **Columns**:
-  | Column | i18n Key | Description |
-  |--------|----------|-------------|
-  | Name | `settingsStrings.all.templates.name` | Template display name |
-  | File name | `settingsStrings.all.templates.filename` | Original uploaded filename |
-  | Created on | `settingsStrings.all.templates.createdOn` | Date with full time via `{{view-date}}` |
-  | Created by | `settingsStrings.all.templates.createdBy` | User who uploaded |
-  | Action | `settingsStrings.all.templates.action` | Download button |
+| File | Purpose |
+|------|---------|
+| `frontend-ember/src/js/settings-bill-templates.js` | Model, Route, Controller, Mixin |
+| `frontend-ember/src/js/templates/settings-bill-templates.html` | Main page template |
+| `frontend-ember/src/js/templates/bill-template-upload-modal.html` | Upload modal template |
+| `frontend-ember/src/js/templates/components/file-upload.html` | File-upload component template |
+| `frontend-ember/src/js/file-upload-component.js` | File-upload component logic |
+| `frontend-ember/src/js/settings.js` | Base route/controller classes; tab registration |
+| `frontend-ember/src/js/nls/root/settings.js` | English i18n strings |
+| `frontend-ember/src/js/application.js` (line 117) | Router: `this.route("billTemplates")` |
 
-### Element: Empty State
-- **Type**: table row
-- **Display condition**: When `templates.length === 0`
-- **Content**: `settingsStrings.all.templates.noTemplatesFound` ("No shared documents found for this mailer.")
-- **Colspan**: 5
+### React (existing partial implementation)
 
-### Element: Download Button (per row)
-- **Type**: link/button
-- **Display condition**: For each template row
-- **CSS classes**: `btn btn-xs`
-- **Icon**: `glyphicon glyphicon-file`
-- **Action**: `downloadBillTemplate biller.id template.id`
-
-### Element: Upload Modal
-- **Type**: modal dialog
-- **Display condition**: When `showUploadModal` is true
-- **Title**: `strings.capitalised.uploadMailTemplateTitle` ("Upload new shared document")
-- **Components**:
-  - Template Name input field
-  - File upload component
-  - Cancel button
-  - Upload/Confirm button (primary, disabled until valid)
-
-### Element: Template Name Input (in modal)
-- **Type**: text input
-- **Display condition**: Always (in modal)
-- **Label**: `strings.uploadMailTemplateNameLabel` ("Name")
-- **CSS classes**: `form-control`
-- **Validation**: Required (disables submit if blank)
-
-### Element: File Upload (in modal)
-- **Type**: file-upload component
-- **Display condition**: Always (in modal)
-- **Properties**:
-  - `url`: `/data/billTemplates/{billerId}/upload`
-  - `response`: bound to `uploadedInfo`
-  - `uploading`: bound to `uploading` state
-  - `fileName`: bound to `fileName` state
+| File | Status |
+|------|--------|
+| `frontend/src/components/settings/templates/BillTemplates.js` | Partial — gaps documented in §7 |
+| `frontend/src/components/modals/BillTemplateUploadModal.js` | Partial — gaps documented in §7 |
+| `frontend/src/routes/SettingsShell.js` (lines 37, 50, 203–204) | Wired and routing correctly |
+| `frontend/src/lang/en.json` (lines 1907–1913) | Partial — missing keys listed in §6 |
 
 ---
 
-## Interactions
+## 2. Data Model
 
-### Action: uploadBillTemplate
-- **Trigger**: Click on upload button
-- **Element**: Upload button in actions row
-- **Condition**: Always available
-- **Handler**: `uploadBillTemplate` action in mixin
-- **Behavior**: Opens `bill-template-upload-modal` modal
-- **Side effects**: Sets modal visibility to true
+### `App.BillTemplate` (Ember DS.Model)
 
-### Action: createBillTemplateAction
-- **Trigger**: Click confirm button in modal
-- **Element**: Modal confirm button
-- **Condition**: `uploadedInfo !== null && templateName is not blank`
-- **Handler**: `createBillTemplateAction` → `createBillTemplate`
-- **Behavior**:
-  1. Sends POST to create template
-  2. On success: refreshes template list, shows success message
-  3. On error: shows localized error message
-- **Side effects**: Clears modal state, closes modal
-
-### Action: downloadBillTemplate
-- **Trigger**: Click on download icon in table row
-- **Element**: Download link/button
-- **Condition**: Always available for each row
-- **Handler**: `downloadBillTemplate(billerId, templateId)`
-- **Behavior**:
-  1. GET `/data/billTemplates/download?billerId={billerId}&id={templateId}`
-  2. On success: redirects to download URL with `downloadFileId`
-  3. Shows success message
-- **Side effects**: Opens file download
-
-### Action: closeModal / cancel
-- **Trigger**: Click cancel button or modal close
-- **Element**: Cancel button, modal X button
-- **Condition**: When modal is open
-- **Handler**: `closeModal` action
-- **Behavior**: Closes modal, clears form state
-- **Side effects**: Resets `templateName`, `uploadedInfo`, `uploading`, `fileName`
+| Field | Type | Description |
+|-------|------|-------------|
+| `id` | String | Template identifier |
+| `name` | String | User-assigned display name |
+| `fileName` | String | Original uploaded file name |
+| `documentId` | String | Server-side document reference ID |
+| `createdBy` | String | Email/name of user who uploaded |
+| `createdOn` | Date | Upload timestamp |
 
 ---
 
-## API Calls
+## 3. State
 
-### Endpoint: GET /data/bill-templates
-- **When called**: On component mount (via route model hook)
-- **Request data**: `{ billerId: string }`
-- **Success handling**: Populates templates array in model
-- **Error handling**: Console error, sets loading false
-- **Loading state**: `isLoading` state variable
-- **Response usage**: Rendered in templates table
+### Controller (`App.BillerSettingsBillTemplatesController`)
 
-### Endpoint: POST /data/billTemplates/{billerId}/upload
-- **When called**: When user selects a file in upload modal
-- **Request data**: `FormData` with `files[]` multipart
-- **Success handling**: Sets `uploadedInfo` with response (includes `fileName`, `documentId`)
-- **Error handling**: Sets error in `uploadedInfo`
-- **Loading state**: `uploading` boolean, progress percentage
-- **Response usage**: Stored for subsequent create call
+| Property | Type | Initial | Description |
+|----------|------|---------|-------------|
+| `uploadedInfo` | Object\|null | `null` | Server response after file upload step |
+| `templateName` | String\|null | `null` | Value of the name input in the upload modal |
+| `uploading` | Boolean | `false` | True while the file is being uploaded |
+| `fileName` | String | `""` | Name of the selected file |
+| `downloadUrl` | String | `"/download/billTemplate/download?"` | Base URL for file downloads |
 
-### Endpoint: POST /data/billTemplates/create
-- **When called**: When user clicks confirm in upload modal
-- **Request data**:
-  ```json
-  {
-    "billerId": "string",
-    "name": "string (template name)",
-    "fileName": "string (from upload response)",
-    "documentId": "string (from upload response)"
-  }
-  ```
-- **Success handling**:
-  - If `results.success`: refresh templates, show success message
-  - Else: show localized error from `templateErrors`
-- **Error handling**: Shows `genericTemplateFail` message
-- **Loading state**: Implicit (button disabled during upload)
-- **Response usage**: Triggers list refresh
+### Computed Properties
 
-### Endpoint: GET /data/billTemplates/download
-- **When called**: When user clicks download button
-- **Request data**: `{ billerId: string, id: string }`
-- **Success handling**: Redirects to `downloadUrl + "downloadFileId" + results.downloadFileId`
-- **Error handling**: Shows generic error message
-- **Loading state**: None
-- **Response usage**: Used for redirect URL construction
+| Property | Logic |
+|----------|-------|
+| `billTemplateUploadUrl` | `/data/billTemplates/{biller.id}/upload` |
+| `isPrimaryDisabled` | `uploadedInfo == null OR templateName.isBlank()` — disables the Upload confirm button |
+| `strings` | Delegated from `billerSettings.strings` (channel-partner-aware i18n map) |
 
 ---
 
-## State
+## 4. UI Elements and Layout
 
-### Property: templates (model)
-- **Type**: array of BillTemplate objects
-- **Initial value**: `[]`
-- **Source**: API response from model hook
-- **Usage**: Rendered in table via `{{#each model}}`
+### 4.1 Main Page (`settings-bill-templates.html`)
 
-### Property: biller
-- **Type**: object
-- **Initial value**: null
-- **Source**: Route model (`this.modelFor("biller")`)
-- **Usage**: Used for billerId in API calls
+```
+┌─ .row.actions-row ────────────────────────────────────────────────┐
+│  [↑ Upload document]   ← btn-default, glyphicon-upload            │
+└───────────────────────────────────────────────────────────────────┘
 
-### Property: uploadedInfo
-- **Type**: object | null
-- **Initial value**: `null`
-- **Source**: Response from file upload API
-- **Usage**: Contains `fileName`, `documentId` for create call; enables confirm button
+┌─ .table.table-striped ────────────────────────────────────────────┐
+│  Name │ File name │ Created on │ Created by │ Action              │
+│ ──────────────────────────────────────────────────────────────── │
+│  {name} │ {fileName} │ {createdOn full datetime} │ {createdBy} │ [📄] │
+│  ... (one row per template)                                       │
+│                                                                   │
+│  [empty state] No shared documents found for this mailer.         │
+│  (colspan=5, shown when model is empty)                           │
+└───────────────────────────────────────────────────────────────────┘
+```
 
-### Property: templateName
-- **Type**: string
-- **Initial value**: `null`
-- **Source**: User input in modal
-- **Usage**: Sent to create API, validates confirm button
+**Upload button:**
+- Class: `btn btn-default`
+- Icon: `glyphicon glyphicon-upload`
+- Label: `strings.capitalised.uploadBillTemplateButton` → **"Upload document"**
+- Action: `uploadBillTemplate` → opens upload modal
 
-### Property: uploading
-- **Type**: boolean
-- **Initial value**: `false`
-- **Source**: Set during file upload
-- **Usage**: Shows upload progress, disables inputs
+**Table columns (in order):**
 
-### Property: fileName
-- **Type**: string
-- **Initial value**: `""`
-- **Source**: Set from uploaded file
-- **Usage**: Displayed to user in modal
+| Column key | i18n key | Display |
+|------------|----------|---------|
+| Name | `templates.name` | `template.name` |
+| File name | `templates.filename` | `template.fileName` |
+| Created on | `templates.createdOn` | `template.createdOn` formatted with full time |
+| Created by | `templates.createdBy` | `template.createdBy` |
+| Action | `templates.action` | Download icon button |
 
-### Property: isLoading
-- **Type**: boolean
-- **Initial value**: `true`
-- **Source**: Set based on API call status
-- **Usage**: Shows Loading component
+**Date display:** Ember uses a `view-date` component with `withFullTime=true`. In React, use `getDateAsUTCFormatted` from `date-utils` (already referenced in `BillTemplates.js`).
 
-### Property: showUploadModal
-- **Type**: boolean
-- **Initial value**: `false`
-- **Source**: Set by upload button click
-- **Usage**: Controls modal visibility
+**Download button:**
+- Class: `btn btn-xs`
+- Icon: `glyphicon glyphicon-file`
+- `href=""` / `target="_blank"` in Ember (React should use `onClick` with `e.preventDefault()`)
+- Action: `downloadBillTemplate(biller.id, template.id)`
 
-### Computed Property: billTemplateUploadUrl
-- **Type**: string
-- **Dependencies**: `biller`
-- **Formula**: `/data/billTemplates/{biller.id}/upload`
-- **Usage**: URL for file upload component
+### 4.2 Upload Modal (`bill-template-upload-modal.html`)
 
-### Computed Property: isPrimaryDisabled
-- **Type**: boolean
-- **Dependencies**: `uploadedInfo`, `templateName`
-- **Formula**: `uploadedInfo === null || String.isBlank(templateName)`
-- **Usage**: Disables modal confirm button
+Modal title: `uploadMailTemplateTitle` → **"Upload new shared document"**
 
-### Computed Property: downloadUrl
-- **Type**: string
-- **Value**: `/download/billTemplate/download?`
-- **Usage**: Base URL for file downloads
+**Buttons:**
+
+| Button | Label key | Label | Style | Action |
+|--------|-----------|-------|-------|--------|
+| Cancel | `uploadMailTemplateCancel` | "Cancel" | secondary | close modal, clear state |
+| Upload | `uploadMailTemplateConfirm` | "Upload" | `btn-primary` | `createBillTemplateAction` |
+
+Upload button is **disabled** when `isPrimaryDisabled` is true (file not uploaded yet OR name is blank).
+
+**Body fields:**
+
+1. **Name field**
+   - Label: `uploadMailTemplateNameLabel` → **"Name"**
+   - Input: `type="text"`, `id="templateName"`, placeholder = same label
+   - Bound to `templateName`
+   - Layout: label `col-md-3 control-label`, input `col-md-9`
+
+2. **File upload field**
+   - Component: `file-upload` (Ember) / `<input type="file">` (React)
+   - Accepted extensions: `.jpeg,.jpg,.gif,.png,.bmp,.heic,.pdf,.csv,.xlsx,.xls,.xml,.html,.json,.tar,.txt,.zip,.7z`
+   - Shows upload progress percentage
+   - On error from server: displays message from `templateErrors[result.message]`
+   - When uploading: hides the file input, shows the file name as text
+   - Bound to: `response=uploadedInfo`, `url=billTemplateUploadUrl`, `uploading=uploading`, `fileName=fileName`
 
 ---
 
-## Data Model
+## 5. User Interactions and Action Handlers
 
-### BillTemplate Model
-```javascript
-{
-  id: string,
-  name: string,           // User-provided template name
-  fileName: string,       // Original uploaded filename
-  documentId: string,     // Reference to stored document
-  createdBy: string,      // Username who uploaded
-  createdOn: Date         // Upload timestamp
-}
+### Flow 1: Upload a new template
+
+```
+User clicks "Upload document"
+  → action: uploadBillTemplate()
+  → opens modal bill-template-upload-modal
+
+User types a name in the Name field
+  → templateName updates
+  → isPrimaryDisabled re-evaluates
+
+User selects a file
+  → file-upload component POSTs file to /data/billTemplates/{billerId}/upload
+  → on success: uploadedInfo = server response { fileName, documentId }
+  → uploading = false
+  → Upload button becomes enabled (if templateName also filled)
+
+User clicks "Upload" (confirm)
+  → action: createBillTemplateAction()
+  → guard: uploadedInfo != null AND templateName != blank
+  → calls createBillTemplate(uploadedInfo, templateName)  [bubbles to route]
+  → clears state: templateName = null, uploadedInfo = null
+
+Route.createBillTemplate:
+  → POST /data/billTemplates/create
+  → on success (results.success === true):
+      - refresh route (re-fetch template list)
+      - show success message: successfulTemplateUpload
+  → on error with results.message:
+      - show error: templateErrors[results.message]
+  → on error without message:
+      - show error: genericTemplateError
+  → on catch-all failure:
+      - show error: genericTemplateFail
+```
+
+### Flow 2: Download a template
+
+```
+User clicks the download icon [📄] on a row
+  → action: downloadBillTemplate(biller.id, template.id)
+
+Route.downloadBillTemplate:
+  → GET /data/billTemplates/download?billerId={billerId}&id={id}
+  → on success:
+      - window.location.assign(downloadUrl + "downloadFileId" + results.downloadFileId)
+      - downloadUrl = "/download/billTemplate/download?"
+      - final URL: /download/billTemplate/download?downloadFileId{results.downloadFileId}
+      - show success message: "Successful downloaded email template."
+  → on failure:
+      - show error: "An error occurred downloading an email template. Please try again later."
+```
+
+### Modal: Cancel / Close
+
+```
+User clicks "Cancel" or closes modal
+  → action: cancel → closeModal
+  → state cleared: templateName = null, uploadedInfo = null, uploading = false, fileName = ""
 ```
 
 ---
 
-## Navigation
+## 6. API Calls
 
-### Route: biller.settings.billTemplates
-- **Path**: `/biller/{billerId}/settings/bill-templates` (inferred)
-- **Trigger**: Tab navigation in settings
-- **Parameters**: `billerId` from parent route
-- **Parent**: `biller.settings` route
+### Fetch template list (on route model load)
 
----
+| Attribute | Value |
+|-----------|-------|
+| Method | `GET` |
+| Endpoint | `/data/billTemplates` |
+| Query params | `billerId={billerId}` |
+| Response | Array of BillTemplate objects |
 
-## Validation
+> Note: The React `BillTemplates.js` currently calls `/data/bill-templates` (wrong). Ember uses `/data/billTemplates`.
 
-### Field: templateName (in modal)
-- **Type**: text
-- **Required**: Yes
-- **Format**: Non-blank string
-- **Custom rules**: `String.isBlank()` check
-- **Error messages**: N/A (button simply disabled)
+### Upload file (two-step: first upload file, then create record)
 
-### Field: file (in modal)
-- **Type**: file
-- **Required**: Yes (implicitly - must upload before create)
-- **Format**: Validated server-side
-- **Error messages**:
-  - `templateErrors.invalid.filetype`: "unsupported file type"
-  - `templateErrors.invalid.filetype.csv`: CSV format required
-  - `templateErrors.invalid.filetype.html`: HTML format required
-  - `templateErrors.invalid.filetype.pdf`: PDF format required
+**Step 1 — Upload file**
 
----
+| Attribute | Value |
+|-----------|-------|
+| Method | `POST` |
+| Endpoint | `/data/billTemplates/{billerId}/upload` |
+| Body | `multipart/form-data` with `files[]`, CSRF token, version |
+| Response | `{ id, fileName, documentId, message?, success? }` |
 
-## i18n Strings
+**Step 2 — Create bill template record**
 
-| Key | Default (EN) | Usage |
-|-----|--------------|-------|
-| `settings.templates.name` | "Name" | Table header |
-| `settings.templates.filename` | "File name" | Table header |
-| `settings.templates.createdOn` | "Created on" | Table header |
-| `settings.templates.createdBy` | "Created by" | Table header |
-| `settings.templates.action` | "Action" | Table header |
-| `settings.templates.noTemplatesFound` | "No shared documents found for this mailer." | Empty state |
-| `settings.templates.uploadButton` | "Upload document" | Upload button text |
-| `uploadMailTemplateTitle` | "Upload new shared document" | Modal title |
-| `uploadMailTemplateNameLabel` | "Name" | Modal input label |
-| `uploadMailTemplateCancel` | "Cancel" | Modal cancel button |
-| `uploadMailTemplateConfirm` | "Upload" | Modal confirm button |
-| `successfulTemplateUpload` | "We will let you know shortly..." | Success message |
-| `genericTemplateError` | "Unable to create mail template..." | Generic error |
-| `genericTemplateFail` | "An error occurred while uploading..." | Upload failure |
-| `templateErrors.invalid.filetype` | "unsupported file type" | File type error |
-| `templateErrors.invalid.filetype.csv` | "Please upload a CSV file..." | CSV error |
-| `templateErrors.invalid.filetype.html` | "Please upload a HTML file." | HTML error |
-| `templateErrors.invalid.filetype.pdf` | "Please upload a PDF file." | PDF error |
+| Attribute | Value |
+|-----------|-------|
+| Method | `POST` |
+| Endpoint | `/data/billTemplates/create` |
+| Body | `{ billerId, name, fileName, documentId }` |
+| Response | `{ success: Boolean, message?: String }` |
+
+> Note: `documentId` comes from the Step 1 response. React's `BillTemplateUploadModal` currently sends `fileDataId` (wrong field name) — must be `documentId`.
+
+### Download template
+
+| Attribute | Value |
+|-----------|-------|
+| Method | `GET` |
+| Endpoint | `/data/billTemplates/download` |
+| Query params | `billerId={billerId}&id={templateId}` |
+| Response | `{ downloadFileId: String }` |
+| Final redirect | `window.location.assign("/download/billTemplate/download?downloadFileId" + downloadFileId)` |
+
+> Note: React's `BillTemplates.js` currently calls `/data/bill-templates/{templateId}/download` (wrong). Ember uses the two-param GET above.
 
 ---
 
-## React Codebase Patterns
+## 7. i18n Strings
 
-Based on analysis of existing React components in `frontend/src/components/`:
+### Ember NLS keys → React i18n keys mapping
 
-### i18n Approach
-- **Pattern**: `injectIntl` HOC with `intl.formatMessage({id: "key"})`
-- **Example**: All settings components use this pattern
-- **Keys**: Use dot notation like `settings.templates.name`
+| Ember key (nls/root/settings.js) | Ember value | Recommended React key | en.json status |
+|----------------------------------|-------------|----------------------|----------------|
+| `all.billTemplates` | "Shared Documents" | `settings.tab.title.billTemplates` | ✅ exists (line 337) |
+| `all.uploadBillTemplateButton` | "Upload document" | `settings.templates.uploadButton` | ⚠️ wrong value ("Upload Bill Template") |
+| `all.templates.name` | "Name" | `settings.templates.name` | ✅ exists |
+| `all.templates.filename` | "File name" | `settings.templates.filename` | ✅ exists |
+| `all.templates.createdOn` | "Created on" | `settings.templates.createdOn` | ✅ exists |
+| `all.templates.createdBy` | "Created by" | `settings.templates.createdBy` | ✅ exists |
+| `all.templates.action` | "Action" | `settings.templates.action` | ✅ exists |
+| `all.templates.noTemplatesFound` | "No shared documents found for this mailer." | `settings.templates.noTemplatesFound` | ⚠️ wrong value ("No bill templates found") |
+| `all.uploadMailTemplateTitle` | "Upload new shared document" | `settings.templates.uploadModal.title` | ❌ missing |
+| `all.uploadMailTemplateNameLabel` | "Name" | `settings.templates.uploadModal.nameLabel` | ❌ missing |
+| `all.uploadMailTemplateCancel` | "Cancel" | `settings.templates.uploadModal.cancel` | ❌ missing |
+| `all.uploadMailTemplateConfirm` | "Upload" | `settings.templates.uploadModal.confirm` | ❌ missing |
+| `all.successfulTemplateUpload` | "We will let you know shortly when you can begin sending the document type to your employees. If you have any queries, contact us at support@payreq.com" | `settings.templates.successUpload` | ❌ missing |
+| `all.templateErrors.invalid.filetype` | "The selected file can not be uploaded as it has an unsupported file type. Please upload a file with a valid file type." | `settings.templates.errors.invalidFiletype` | ❌ missing |
+| `all.templateErrors.invalid.filetype.csv` | "...Please upload a CSV file..." | `settings.templates.errors.invalidFiletypeCsv` | ❌ missing |
+| `all.templateErrors.invalid.filetype.html` | "...Please upload a HTML file." | `settings.templates.errors.invalidFiletypeHtml` | ❌ missing |
+| `all.templateErrors.invalid.filetype.pdf` | "...Please upload a PDF file." | `settings.templates.errors.invalidFiletypePdf` | ❌ missing |
+| `all.genericTemplateError` | "Unable to create mail template. Please contact Payreq Support." | `settings.templates.genericError` | ❌ missing |
+| `all.genericTemplateFail` | "An error occurred while uploading mail template for this mailer. Please try again later." | `settings.templates.genericFail` | ❌ missing |
 
-### State Management
-- **Pattern**: React hooks (`useState`, `useEffect`)
-- **Loading**: `isLoading` state with `<Loading/>` component
-- **API calls**: `axios` with `.then()/.catch()` pattern
+---
 
-### Component Structure
-```javascript
-import React, {useEffect, useState} from "react";
-import axios from "axios";
-import {injectIntl} from "react-intl";
-import {Button} from "react-bootstrap";
-import Loading from "../../Loading";
+## 8. Navigation / Tab Registration
 
+The `billTemplates` tab appears in the **Biller Settings** tab bar (not in MyBills/incoming-invoice settings). It is tab index 2.
+
+**Tab bar order (Biller settings):**
+
+| idx | `name` | Tab label |
+|-----|--------|-----------|
+| 0 | `biller` | (Mailer Settings) |
+| 1 | `accountPermissions` / `users` | Account Permissions |
+| 2 | `billTemplates` | **Shared Documents** |
+| 4 | `accounting` | Accounting plans |
+| 5 | `payments` | Payments |
+| 6 | `consents` | Authorisations (conditional: only if `mybillsagent` channel exists) |
+| 7 | `contactDetails` | Contact Details (href link) |
+| 8 | `apiDetails` | Payreq API (href link) |
+
+**React SettingsShell wiring (already done):**
+- Tab registered at line 50: `{linkTo: "...billTemplates", name: "billTemplates"}`
+- Route rendered at lines 203–204: `<Route path="${match.url}/billTemplates"><BillTemplates billerId={biller.id}/></Route>`
+
+---
+
+## 9. Gaps in Current React Implementation
+
+### `BillTemplates.js`
+
+| Gap | Ember behaviour | Current React | Fix required |
+|-----|----------------|---------------|-------------|
+| List fetch endpoint | `GET /data/billTemplates?billerId=` | `GET /data/bill-templates?billerId=` | Change to `/data/billTemplates` |
+| Download endpoint | `GET /data/billTemplates/download?billerId=&id=` then redirect | `window.open(/data/bill-templates/{id}/download?billerId=)` | Call download endpoint, use `downloadFileId` from response |
+| Error state | Shows error banner | Silent `console.error` on load failure | Add error state and display |
+| Success notification | Route banner/toast system (`showSuccessMessage`) | `alert()` | Use project's `BannerAlert` / dispatch mechanism |
+| Upload button label i18n key | `uploadBillTemplateButton` = "Upload document" | `settings.templates.uploadButton` = "Upload Bill Template" | Correct value in en.json |
+| Empty state text | "No shared documents found for this mailer." | "No bill templates found" | Correct value in en.json |
+
+### `BillTemplateUploadModal.js`
+
+| Gap | Ember behaviour | Current React | Fix required |
+|-----|----------------|---------------|-------------|
+| Modal title | i18n "Upload new shared document" | Hardcoded "Upload Bill Template" | Use i18n key `settings.templates.uploadModal.title` |
+| Name field label | i18n "Name" | Hardcoded "Template Name" | Use i18n key `settings.templates.uploadModal.nameLabel` |
+| Cancel button label | i18n "Cancel" | Hardcoded "Cancel" | Use i18n key `settings.templates.uploadModal.cancel` |
+| Confirm button label | i18n "Upload" | Hardcoded "Create" | Use i18n key `settings.templates.uploadModal.confirm` |
+| Create POST body field | `documentId` (from upload response) | `fileDataId: uploadedInfo.id` | Change field name to `documentId` |
+| File type restriction | `accept=".jpeg,.jpg,.gif,.png,.bmp,.heic,.pdf,.csv,.xlsx,.xls,.xml,.html,.json,.tar,.txt,.zip,.7z"` | No `accept` attribute | Add `accept` to `<input type="file">` |
+| Server error mapping | Maps `result.message` → `templateErrors[message]` | Sets generic string on any error | Map response error codes to correct i18n keys |
+
+---
+
+## 10. Established React Patterns (from Settings components)
+
+All settings components follow this pattern:
+
+```js
 const ComponentName = ({billerId, intl}) => {
     const [data, setData] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
         if (billerId) {
-            axios.get("/api/endpoint", {params: {billerId}})
-                .then(({data}) => {
-                    setData(data);
-                    setIsLoading(false);
-                })
-                .catch(error => {
-                    console.error("Error:", error);
-                    setIsLoading(false);
-                });
+            axios.get("/data/endpoint", {params: {billerId}})
+                .then(({data}) => { setData(data.items); setIsLoading(false); })
+                .catch(error => { console.error(error); setIsLoading(false); });
         }
     }, [billerId]);
 
-    if (isLoading) {
-        return <Loading/>;
-    }
+    if (isLoading) return <Loading/>;
 
     return (/* JSX */);
 };
@@ -361,58 +361,11 @@ const ComponentName = ({billerId, intl}) => {
 export default injectIntl(ComponentName);
 ```
 
-### Modal Pattern
-- **Import**: `import {Modal, Button} from "react-bootstrap";`
-- **Props**: `show`, `onClose`, `onComplete`, `billerId`
-- **State**: Internal state for form fields
-- **Structure**:
-  - `<Modal.Header closeButton>`
-  - `<Modal.Body>` with form
-  - `<Modal.Footer>` with Cancel/Confirm buttons
-
-### File Upload Pattern
-- **Common component**: `frontend/src/components/common/form/FileUpload`
-- **Direct usage**: `<input type="file">` with axios multipart POST
-- **Progress**: `onUploadProgress` callback with percentage calculation
-- **Headers**: `'Content-Type': 'multipart/form-data'`
-
-### Date Formatting
-- **Utility**: `getDateAsUTCFormatted` from `../../../utils/date-utils`
-- **Usage**: `{getDateAsUTCFormatted(template.createdOn)}`
-
-### Table Pattern
-- **CSS classes**: `table table-striped`
-- **Empty state**: Conditional row with `colSpan`
-- **Iteration**: `{items.map(item => <tr key={item.id}>...)}`
-
-### Button Icons
-- **Pattern**: Bootstrap glyphicons
-- **Usage**: `<span className="glyphicon glyphicon-upload"></span>`
-
-### Error Handling
-- **Console**: `console.error("Error message:", error)`
-- **User feedback**: `alert()` for simple messages (should migrate to toast)
-- **Inline errors**: `<Alert bsStyle="danger">` in modals
-
-### Confirmation Dialogs
-- **Pattern**: `window.confirm()` for destructive actions
-- **Example**: See `ConnectionsSettings.js` for disconnect confirmation
-
----
-
-## Migration Notes
-
-### Current React Implementation Status
-The React implementation exists but has some differences from Ember:
-
-1. **API Endpoints**: React uses `/data/bill-templates` (hyphenated) vs Ember's `/data/billTemplates` (camelCase)
-2. **Download Approach**: React opens URL directly vs Ember's two-step GET then redirect
-3. **Error Messages**: React modal has hardcoded English strings vs Ember's localized `templateErrors`
-4. **Success Handling**: React uses `alert()` vs Ember's proper success message display
-
-### Recommended Improvements
-1. Add proper i18n keys to `BillTemplateUploadModal.js`
-2. Implement consistent error handling with localized messages
-3. Consider using common `FileUpload` component instead of raw `<input type="file">`
-4. Add toast notifications instead of `alert()` calls
-5. Verify API endpoint consistency between frontend and backend
+**Key conventions:**
+- `injectIntl` HOC for i18n, accessed via `intl.formatMessage({id: "key"})`
+- `axios` for all API calls (not `fetch`)
+- `react-bootstrap` for `Button`, `Modal`, `Alert`, `FormControl`
+- `<Loading/>` component shown while fetching
+- Modals live in `frontend/src/components/modals/` and are exported via `modals/index.js`
+- Date formatting: `getDateAsUTCFormatted(date)` from `../../../utils/date-utils`
+- `billerId` passed as prop (not read from route params inside the component)

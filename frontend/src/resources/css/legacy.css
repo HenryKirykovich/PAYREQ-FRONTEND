@@ -10,7 +10,31 @@ html {
 body {
 	/*padding-top: 51px; !* 51px to make the container go all the way to the bottom of the topbar *!*/
 	font-family: 'ClashGrotesk-Regular', Arial, sans-serif;
+	font-size: 1.6rem;
 	overflow-y: scroll;
+}
+
+/* Overwrite Bootstrap font sizes to match Ember */
+.form-control {
+	font-size: 1.6rem;
+	height: 3.4rem;
+	min-height: 34px;
+}
+
+.btn {
+	font-size: 1.6rem;
+	height: 3.4rem;
+	min-height: 34px;
+}
+
+h4 {
+	font-size: 1.8rem;
+	font-family: 'ClashGrotesk-Medium', Arial, sans-serif;
+}
+
+h5 {
+	font-size: 1.4rem;
+	font-family: 'ClashGrotesk-Medium', Arial, sans-serif;
 }
 
 @media (max-width: 900px) {
@@ -154,11 +178,101 @@ h2.page-heading {
 }
 
 .panel-title {
-	font-size: 1.75em;
+	font-size: 1.8rem;
 	color: var(--color-primary-navy);
 	font-family: 'ClashGrotesk-Medium', Arial, sans-serif;
 }
 
+.really-big {
+font-weight: bold;
+font-size: 3.75em;
+}
+
+.center-aligned {
+text-align: center;
+}
+
+.accounting-plan-uints-col,
+.accounting-plan-price-col,
+.accounting-plan-total-col {
+width: 32px !important;
+}
+
+.glyphicon-right-margin {
+margin-right: 5px;
+}
+
+.btn-toolbar-bottom-margin {
+margin-bottom: 5px;
+}
+
+.collapse-sub-heading {
+display: block;
+cursor: pointer;
+color: #777 !important;
+background-color: #f5f5f5 !important;
+}
+
+.remove-border {
+border: none !important;
+}
+
+.hide-element {
+visibility: hidden;
+}
+
+.panel-title.search-panel-title {
+font-size: 1.8rem;
+line-height: 1.1;
+}
+
 .text-muted {
 	color: #595959;
+}
+
+/* Remove inner panel borders inside tab panes */
+.tab-pane > .panel-default {
+	border: none;
+	box-shadow: none;
+}
+
+/* Users / Account Permissions page */
+#user-list-div {
+	padding: 0;
+}
+
+#user-tab-content {
+	padding: 0 15px;
+}
+
+.page-header-tab-title {
+	margin-top: 20px;
+}
+
+.glyphicon-user-list {
+	margin-right: 5px;
+	color: var(--color-primary-navy);
+}
+
+.panel-footer-user-list {
+	height: 4rem;
+	padding: 10px 10px;
+}
+
+.panel-footer-user-list a {
+	color: var(--color-primary-navy);
+}
+
+@media (min-width: 992px) {
+	#user-info-div {
+		margin-left: 20px;
+	}
+
+	.user-list-item {
+		width: 225px;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		display: block;
+	}
 }

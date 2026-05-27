@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useRouteMatch } from "react-router-dom";
 
 import { Card, LargeText, PageHeading, PrimaryButton, RegularText } from "../../common";
 import MobileAppUI from "../../MobileAppUI";
@@ -41,6 +41,8 @@ export default function BillersView({
     billers,
     payerId,
 }) {
+    const match = useRouteMatch();
+    const createPath = match.url.replace(/\/billers$/, '/create');
     return (
         <React.Fragment>
             <PageHeading text="registrations.billers.pageHeading" />
@@ -50,7 +52,7 @@ export default function BillersView({
                         ? <WelcomeCardView billerId={payerId} />
                         : (
                             <div className={styles.buttonContainer}>
-                                <PrimaryButton linkTo="./create" label="registrations.billers.addBiller.button" icon="plus" />
+                                <PrimaryButton linkTo={createPath} label="registrations.billers.addBiller.button" icon="plus" />
                             </div>
                         )
                 }

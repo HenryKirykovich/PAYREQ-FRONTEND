@@ -30,7 +30,7 @@ const SpannerMenu = ({intl, biller, user}) => {
             </li>
             {meta && meta.total > 1 &&
                 <li role="presentation">
-                    <a onClick={() => history.push("/portal/customer/profile/accounts")}>{intl.formatMessage({id: "spannerMenu.switchAccount"})}</a>
+                    <button style={{background: "none", border: "none", padding: "3px 20px", cursor: "pointer"}} onClick={() => history.push("/portal/customer/profile/accounts")}>{intl.formatMessage({id: "spannerMenu.switchAccount"})}</button>
                 </li>}
             {id && <MenuItem eventKey="1" onClick={() => history.push(`/customer/biller/${id}/personal/settings`)}>{intl.formatMessage({id: "spannerMenu.userSettings"})}</MenuItem>}
             {isBiller(biller) &&

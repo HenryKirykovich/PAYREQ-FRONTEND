@@ -1,0 +1,54 @@
+@import "../common/variables.scss";
+
+.subNavbar {
+  background-color: $accent-color-two;
+  padding: 8px 15px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-bottom: 1px solid darken($accent-color-two, 10%);
+}
+
+.backButton {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: 1px solid $primary-color;
+  border-radius: 4px;
+  padding: 4px 12px;
+  color: $primary-color;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+
+  &:hover {
+    background-color: darken($accent-color-two, 5%);
+  }
+}
+
+.breadcrumbs {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  color: $light-grey;
+}
+
+.breadcrumbLink {
+  color: $secondary-color;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.breadcrumbSeparator {
+  color: $hint-text-color;
+}
+
+.breadcrumbCurrent {
+  color: $body-text-color;
+  font-weight: 500;
+}
