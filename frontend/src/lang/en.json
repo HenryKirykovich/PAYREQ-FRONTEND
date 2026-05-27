@@ -2221,5 +2221,8 @@
   "error.createAcct.backButton": "Back to Login",
   "error.qbo.heading": "QuickBooks Error",
   "error.qbo.text": "There was an error connecting to QuickBooks.",
-  "error.qbo.backButton": "Back to Login"
+  "error.qbo.backButton": "Back to Login",
+  "errors.connection.title": "{channel} Connection Issue",
+  "errors.connection.text": "Unfortunately there was an issue while trying to connect to your {channel} account. Please try again later or contact Payreq Support.",
+  "errors.connection.buttonLabel": "Back to Connections"
 }

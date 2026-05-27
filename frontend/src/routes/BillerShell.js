@@ -83,6 +83,8 @@ const BillerShell = ({match}) => {
                             <Route path={`${match.url}/job/:jobId`} component={JobView}/>
                             <Route path={`${match.url}/jobs`} component={DownloadHistoryShell}/>
                             <Route path={`${match.url}/personal`} component={PersonalSettingsShell}/>
+                            <Route path={`${match.url}/errors/:channel`}
+                                   render={(props) => <ChannelError channel={props.match.params.channel} billerId={biller.id}/>}/>
                             <Route path={`${match.url}/error`} component={AuthorisedErrorShell}/>
                             <Route path={`${match.url}/errors/:channel`} component={ChannelError}/>
                             <Route path={`${match.url}/mail`} component={MailShell}/>
