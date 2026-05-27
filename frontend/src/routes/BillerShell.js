@@ -86,6 +86,7 @@ const BillerShell = ({match}) => {
                             <Route path={`${match.url}/errors/:channel`}
                                    render={(props) => <ChannelError channel={props.match.params.channel} billerId={biller.id}/>}/>
                             <Route path={`${match.url}/error`} component={AuthorisedErrorShell}/>
+                            <Route path={`${match.url}/errors/:channel`} component={ChannelError}/>
                             <Route path={`${match.url}/mail`} component={MailShell}/>
                             <Route component={PageNotFound}/>
                         </Switch>

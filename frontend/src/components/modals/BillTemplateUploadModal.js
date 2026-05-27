@@ -1,13 +1,24 @@
 import React, {useState} from "react";
 import {Modal, Button, FormControl, Alert} from "react-bootstrap";
+import {injectIntl} from "react-intl";
 import axios from "axios";
 
-const BillTemplateUploadModal = ({show, onClose, onUploadComplete, billerId}) => {
+const UPLOAD_ERROR_KEYS = {
+    "invalid.filetype": "settings.templates.errors.invalidFiletype",
+    "invalid.filetype.csv": "settings.templates.errors.invalidFiletypeCsv",
+    "invalid.filetype.html": "settings.templates.errors.invalidFiletypeHtml",
+    "invalid.filetype.pdf": "settings.templates.errors.invalidFiletypePdf",
+};
+
+const ACCEPTED_FILE_TYPES = ".jpeg,.jpg,.gif,.png,.bmp,.heic,.pdf,.csv,.xlsx,.xls,.xml,.html,.json,.tar,.txt,.zip,.7z";
+
+const BillTemplateUploadModal = ({show, onClose, onUploadComplete, billerId, intl}) => {
     const [templateName, setTemplateName] = useState("");
     const [uploadedInfo, setUploadedInfo] = useState(null);
     const [isUploading, setIsUploading] = useState(false);
     const [uploadProgress, setUploadProgress] = useState(0);
     const [fileName, setFileName] = useState("");
+    const [error, setError] = useState(null);
 
     const uploadUrl = `/data/billTemplates/${billerId}/upload`;
 
@@ -17,28 +28,29 @@ const BillTemplateUploadModal = ({show, onClose, onUploadComplete, billerId}) =>
         setIsUploading(true);
         setUploadedInfo(null);
         setUploadProgress(0);
+        setError(null);
         setFileName(e.target.files[0].name);
 
         const formData = new FormData();
         formData.append("files[]", e.target.files[0]);
 
-        const config = {
-            headers: {'Content-Type': 'multipart/form-data'},
+        axios.post(uploadUrl, formData, {
+            headers: {"Content-Type": "multipart/form-data"},
             onUploadProgress: (progressEvent) => {
-                const percentComplete = Math.round((progressEvent.loaded * 95) / progressEvent.total);
-                setUploadProgress(percentComplete);
+                setUploadProgress(Math.round((progressEvent.loaded * 95) / progressEvent.total));
             }
-        };
-
-        axios.post(uploadUrl, formData, config)
+        })
             .then(({data}) => {
                 setUploadProgress(100);
-                setUploadedInfo(data);
+                if (data.message) {
+                    setError(UPLOAD_ERROR_KEYS[data.message] || "settings.templates.genericFail");
+                } else {
+                    setUploadedInfo(data.response);
+                }
                 setIsUploading(false);
             })
-            .catch(error => {
-                console.error("Error uploading file:", error);
-                setUploadedInfo({error: "An error occurred while uploading the file."});
+            .catch(() => {
+                setError("settings.templates.genericFail");
                 setIsUploading(false);
             });
     };
@@ -47,28 +59,25 @@ const BillTemplateUploadModal = ({show, onClose, onUploadComplete, billerId}) =>
         if (!uploadedInfo || !templateName.trim()) return;
 
         axios.post("/data/billTemplates/create", {
-            billerId,
+            billerId: parseInt(billerId),
             name: templateName,
             fileName: uploadedInfo.fileName,
-            fileDataId: uploadedInfo.id
+            documentId: uploadedInfo.documentId
         })
             .then(({data}) => {
                 if (data.success) {
                     onUploadComplete(data);
                     handleClose();
                 } else {
-                    setUploadedInfo({
-                        ...uploadedInfo,
-                        error: data.error || "Failed to create bill template"
-                    });
+                    setError(
+                        data.message
+                            ? (UPLOAD_ERROR_KEYS[data.message] || "settings.templates.genericError")
+                            : "settings.templates.genericError"
+                    );
                 }
             })
-            .catch(error => {
-                console.error("Error creating template:", error);
-                setUploadedInfo({
-                    ...uploadedInfo,
-                    error: "An error occurred while creating the template."
-                });
+            .catch(() => {
+                setError("settings.templates.genericFail");
             });
     };
 
@@ -78,19 +87,22 @@ const BillTemplateUploadModal = ({show, onClose, onUploadComplete, billerId}) =>
         setIsUploading(false);
         setUploadProgress(0);
         setFileName("");
+        setError(null);
         onClose();
     };
 
     return (
         <Modal show={show} onHide={handleClose}>
             <Modal.Header closeButton>
-                <Modal.Title>Upload Bill Template</Modal.Title>
+                <Modal.Title>
+                    {intl.formatMessage({id: "settings.templates.uploadModal.title"})}
+                </Modal.Title>
             </Modal.Header>
             <Modal.Body>
                 <div className="row">
                     <div className="form-group col-md-12">
                         <label className="col-md-3 control-label">
-                            Template Name
+                            {intl.formatMessage({id: "settings.templates.uploadModal.nameLabel"})}
                         </label>
                         <div className="col-md-9">
                             <FormControl
@@ -98,44 +110,52 @@ const BillTemplateUploadModal = ({show, onClose, onUploadComplete, billerId}) =>
                                 value={templateName}
                                 onChange={(e) => setTemplateName(e.target.value)}
                                 id="templateName"
-                                placeholder="Enter template name"
+                                placeholder={intl.formatMessage({id: "settings.templates.uploadModal.nameLabel"})}
                             />
                         </div>
                     </div>
                     <div className="form-group col-md-12" style={{marginBottom: 0}}>
-                        <input
-                            type="file"
-                            onChange={handleFileSelect}
-                            disabled={isUploading}
-                        />
-                        {fileName && <div style={{marginTop: '5px', fontSize: '12px'}}>{fileName}</div>}
-                        {isUploading && (
-                            <div style={{marginTop: '10px'}}>
-                                <progress value={uploadProgress} max="100" style={{width: '100%'}}/>
+                        {isUploading ? (
+                            <>
+                                <p>{fileName}</p>
+                                <progress value={uploadProgress} max="100" style={{width: "100%"}}/>
                                 <span> {uploadProgress}%</span>
-                            </div>
+                            </>
+                        ) : (
+                            <>
+                                <input
+                                    id="fileUpload"
+                                    type="file"
+                                    accept={ACCEPTED_FILE_TYPES}
+                                    onChange={handleFileSelect}
+                                />
+                                {fileName && (
+                                    <div style={{marginTop: "5px", fontSize: "12px"}}>{fileName}</div>
+                                )}
+                            </>
                         )}
                     </div>
                 </div>
-
-                {uploadedInfo?.error && (
-                    <Alert bsStyle="danger">
-                        {uploadedInfo.error}
+                {error && (
+                    <Alert bsStyle="danger" style={{marginTop: "10px"}}>
+                        {intl.formatMessage({id: error})}
                     </Alert>
                 )}
             </Modal.Body>
             <Modal.Footer>
-                <Button onClick={handleClose}>Cancel</Button>
+                <Button onClick={handleClose}>
+                    {intl.formatMessage({id: "settings.templates.uploadModal.cancel"})}
+                </Button>
                 <Button
                     bsStyle="primary"
                     onClick={handleCreate}
-                    disabled={!uploadedInfo || !templateName.trim() || !!uploadedInfo?.error || isUploading}
+                    disabled={!uploadedInfo || !templateName.trim() || isUploading}
                 >
-                    Create
+                    {intl.formatMessage({id: "settings.templates.uploadModal.confirm"})}
                 </Button>
             </Modal.Footer>
         </Modal>
     );
 };
 
-export default BillTemplateUploadModal;
+export default injectIntl(BillTemplateUploadModal);

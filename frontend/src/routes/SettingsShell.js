@@ -18,7 +18,7 @@ import ForwardingRulesSettings from "../components/settings/biller/ForwardingRul
 import ForwardingRulesCreateForm from "../components/settings/biller/ForwardingRulesCreateForm";
 import ForwardingRulesEditForm from "../components/settings/biller/ForwardingRulesEditForm";
 import ForwardingRulesDeleteForm from "../components/settings/biller/ForwardingRulesDeleteForm";
-import AdhocPaymentForm from "../components/settings/payments/AdhocPaymentForm"
+import AdhocPaymentForm from "../components/settings/payments/AdhocPaymentForm";
 import AdhocPaymentConfirmation from "../components/settings/payments/AdhocPaymentConfirmation";
 import AdhocPaymentResult from "../components/settings/payments/AdhocPaymentResult";
 import ApiDetails from "../components/settings/biller/ApiDetails";
@@ -38,11 +38,13 @@ import BillTemplates from "../components/settings/templates/BillTemplates";
 import AccountingSettings from "../components/settings/accounting/AccountingSettings";
 import AccountingCatalog from "../components/Accounting/AccountingCatalog";
 import AccountingCheckout from "../components/Accounting/AccountingCheckout";
+import AccountingPayment from "../components/Accounting/AccountingPayment";
 import ConnectionsSettings from "../components/settings/connections/ConnectionsSettings";
 import ConsentsSettings from "../components/settings/consents/ConsentsSettings";
 import PaymentsSettings from "../components/settings/payments/PaymentsSettings";
 
-const hasAgent = ({billerChannelPartnerSystem}) => billerChannelPartnerSystem.find(channel => channel.channelPartnerSystemId === "mybillsagent");
+const hasAgent = ({billerChannelPartnerSystem}) =>
+    billerChannelPartnerSystem.find(channel => channel.channelPartnerSystemId === "mybillsagent");
 
 const getBillerSettingsTabs = (billerId, billerSettings) => [
     {linkTo: "/portal/customer/biller/" + billerId + "/settings/biller", name: "biller"},
@@ -50,7 +52,7 @@ const getBillerSettingsTabs = (billerId, billerSettings) => [
     {linkTo: "/portal/customer/biller/" + billerId + "/settings/billTemplates", name: "billTemplates"},
     {linkTo: "/portal/customer/biller/" + billerId + "/settings/accounting", name: "accounting"},
     {linkTo: "/portal/customer/biller/" + billerId + "/settings/payments", name: "payments"},
-    {linkTo: "/portal/customer/biller/" + billerId + "/settings/consents", name: "consents", hidden: !hasAgent(billerSettings)},
+    {linkTo: "/portal/customer/biller/" + billerId + "/settings/consents/view", name: "consents", hidden: !hasAgent(billerSettings)},
     {linkTo: "/portal/customer/biller/" + billerId + "/settings/contactDetails/view", name: "contactDetails"},
     {linkTo: "/portal/customer/biller/" + billerId + "/settings/apiDetails/view", name: "apiDetails"}
 ];
@@ -58,8 +60,8 @@ const getBillerSettingsTabs = (billerId, billerSettings) => [
 const getMyBillsSettingsTabs = (billerId, billerSettings) => [
     {linkTo: "/portal/customer/biller/" + billerId + "/settings/connections", name: "connections"},
     {linkTo: "/portal/customer/biller/" + billerId + "/settings/users", name: "users"},
-    {linkTo: "/portal/customer/biller/" + billerId + "/settings/consents", name: "consents"},
-    {linkTo: "/portal/customer/biller/" + billerId + "/settings/forwardingRules/view", name: "forwardingRules"},
+    {linkTo: "/portal/customer/biller/" + billerId + "/settings/consents", name: "consents", hidden: !billerSettings.isCompany},
+    {linkTo: "/portal/customer/biller/" + billerId + "/settings/forwardingRules/view", name: "forwardingRules", hidden: !billerSettings.isCompany},
     {linkTo: "/portal/customer/biller/" + billerId + "/settings/apiDetails/view", name: "apiDetails", hidden: !billerSettings.showApi},
     {linkTo: "/portal/customer/biller/" + billerId + "/settings/bulkDownloadPreference/view", name: "bulkDownloadPreference", hidden: !billerSettings.isCompany},
 ];
@@ -68,7 +70,7 @@ const _SettingsTabs = ({billerId, intl, activeTabName, billerSettings}) => (
     <div className="row margin-bottom-sm">
         <ul className="nav nav-pills">
             {isBiller(billerSettings) &&
-            getBillerSettingsTabs(billerId, billerSettings).map(({linkTo, name, isEmber, hidden}) => {
+                getBillerSettingsTabs(billerId, billerSettings).map(({linkTo, name, isEmber, hidden}) => {
                     if (hidden) return null;
                     const className = activeTabName === name ? "active" : "";
                     const linkText = intl.formatMessage({id: `settings.tab.title.${name}`});
@@ -78,11 +80,11 @@ const _SettingsTabs = ({billerId, intl, activeTabName, billerSettings}) => (
                             {isEmber && <a href={buildEmberHref(linkTo, billerId)} className={className}>{linkText}</a>}
                         </li>
                     );
-                }
-            )}
+                })
+            }
 
             {isPayer(billerSettings) &&
-            getMyBillsSettingsTabs(billerId, billerSettings).map(({linkTo, name, isEmber, hidden}) => {
+                getMyBillsSettingsTabs(billerId, billerSettings).map(({linkTo, name, isEmber, hidden}) => {
                     if (hidden) return null;
                     const className = activeTabName === name ? "active" : "";
                     const linkText = intl.formatMessage({id: `settings.tab.title.${name}`});
@@ -92,8 +94,8 @@ const _SettingsTabs = ({billerId, intl, activeTabName, billerSettings}) => (
                             {isEmber && <a href={buildEmberHref(linkTo, billerId)} className={className}>{linkText}</a>}
                         </li>
                     );
-                }
-            )}
+                })
+            }
         </ul>
     </div>
 );
@@ -101,12 +103,12 @@ const _SettingsTabs = ({billerId, intl, activeTabName, billerSettings}) => (
 const SettingsTabs = injectIntl(_SettingsTabs);
 
 const getBillerSettings = (billerId, setBillerSettings) => {
-    axios.get("/data/settings/biller", {params: {billerId: billerId}})
+    axios.get("/data/settings/biller", {params: {billerId}})
         .then(({data: {billerSettings}}) => setBillerSettings(billerSettings));
 };
 
 const PaymentSettingRoutes = ({match: {url}, location, biller}) => (
-    <React.Fragment>
+    <>
         <Route path={`${url}/payments/view`}>
             <PaymentSettings billerId={biller.id}/>
         </Route>
@@ -122,43 +124,32 @@ const PaymentSettingRoutes = ({match: {url}, location, biller}) => (
         <Route path={`${url}/payments/payment-result`}>
             <AdhocPaymentResult location={location}/>
         </Route>
-    </React.Fragment>
+    </>
 );
 
 const bulkDownloadRoutesList = (match) => [
-    {
-        path: `${match.url}/bulkDownloadPreference/view`,
-        Component: BulkDownloadPreferences
-    },
-    {
-        path: `${match.url}/bulkDownloadPreference/edit`,
-        Component: BulkDownloadPreferencesEdit
-    },
-
-    {
-        path: `${match.url}/bulkDownloadPreference/saved`,
-        Component: BulkDownloadPreferencesSaved
-    },
-
-    {
-        path: `${match.url}/bulkDownloadPreference/deleted`,
-        Component: BulkDownloadPreferencesDeleted
-    }
-
-]
+    {path: `${match.url}/bulkDownloadPreference/view`, Component: BulkDownloadPreferences},
+    {path: `${match.url}/bulkDownloadPreference/edit`, Component: BulkDownloadPreferencesEdit},
+    {path: `${match.url}/bulkDownloadPreference/saved`, Component: BulkDownloadPreferencesSaved},
+    {path: `${match.url}/bulkDownloadPreference/deleted`, Component: BulkDownloadPreferencesDeleted}
+];
 
 const SettingsShell = ({match, location}) => {
     const [{biller}] = useAppState();
     const activeTab = location.pathname.split(match.path)[1].split("/")[1];
+    const hideSettingsTabs = activeTab === "accounting";
     const [billerSettings, setBillerSettings] = useState();
-    useEffect(() => getBillerSettings(biller.id, setBillerSettings), [biller.id, setBillerSettings]);
+
+    useEffect(() => getBillerSettings(biller.id, setBillerSettings), [biller.id]);
 
     if (!billerSettings) return <Loading/>;
 
     return (
         <React.Fragment>
             <div style={{paddingTop: "10px"}} className="container">
-                <SettingsTabs billerId={biller.id} activeTabName={activeTab} billerSettings={billerSettings}/>
+                {!hideSettingsTabs && (
+                    <SettingsTabs billerId={biller.id} activeTabName={activeTab} billerSettings={billerSettings}/>
+                )}
                 <Switch>
                     {/* Biller Settings */}
                     <Route path={`${match.url}/biller/channel/:channelId`} exact>
@@ -183,12 +174,14 @@ const SettingsShell = ({match, location}) => {
                             <CreateUser billerId={biller.id}/>
                         </UsersManagement>
                     </Route>
-                    <Route path={`${match.url}/users/:userId`}
-                           render={(props) => (
-                               <UsersManagement billerId={biller.id}>
-                                   <UserDetail userId={props.match.params.userId} billerId={biller.id}/>
-                               </UsersManagement>
-                           )}/>
+                    <Route
+                        path={`${match.url}/users/:userId`}
+                        render={(props) => (
+                            <UsersManagement billerId={biller.id}>
+                                <UserDetail userId={props.match.params.userId} billerId={biller.id}/>
+                            </UsersManagement>
+                        )}
+                    />
                     <Route path={`${match.url}/users`}>
                         <UsersManagement billerId={biller.id}>
                             <div className="panel panel-default">
@@ -205,19 +198,22 @@ const SettingsShell = ({match, location}) => {
                     </Route>
 
                     {/* Accounting */}
+                    <Route path={`${match.url}/accounting/catalog/checkout/payment`} exact>
+                        <AccountingPayment billerId={biller.id}/>
+                    </Route>
+                    <Route path={`${match.url}/accounting/catalog/checkout`} exact>
+                        <AccountingCheckout billerId={biller.id}/>
+                    </Route>
                     <Route path={`${match.url}/accounting/catalog`} exact>
                         <AccountingCatalog billerId={biller.id}/>
                     </Route>
-                    <Route path={`${match.url}/accounting/checkout/:productId`} exact>
-                        <AccountingCheckout billerId={biller.id}/>
-                    </Route>
-                    <Route path={`${match.url}/accounting`}>
+                    <Route path={`${match.url}/accounting`} exact>
                         <AccountingSettings billerId={biller.id}/>
                     </Route>
 
                     {/* Connections */}
                     <Route path={`${match.url}/connections`}>
-                        <ConnectionsSettings billerId={biller.id}/>
+                        <ConnectionsSettings billerId={biller.id} billerSettings={billerSettings}/>
                     </Route>
 
                     {/* Consents */}
@@ -248,10 +244,14 @@ const SettingsShell = ({match, location}) => {
                     <Route path={`${match.url}/forwardingRules/create`}>
                         <ForwardingRulesCreateForm billerId={biller.id}/>
                     </Route>
-                    <Route path={`${match.url}/forwardingRules/:id/edit`}
-                           render={(props) => <ForwardingRulesEditForm billerId={biller.id} id={props.match.params.id}/>}/>
-                    <Route path={`${match.url}/forwardingRules/:id/delete`}
-                           render={(props) => <ForwardingRulesDeleteForm billerId={biller.id} id={props.match.params.id}/>}/>
+                    <Route
+                        path={`${match.url}/forwardingRules/:id/edit`}
+                        render={(props) => <ForwardingRulesEditForm billerId={biller.id} id={props.match.params.id}/>}
+                    />
+                    <Route
+                        path={`${match.url}/forwardingRules/:id/delete`}
+                        render={(props) => <ForwardingRulesDeleteForm billerId={biller.id} id={props.match.params.id}/>}
+                    />
 
                     {/* API Details */}
                     <Route path={`${match.url}/apiDetails/view`}>
@@ -260,9 +260,9 @@ const SettingsShell = ({match, location}) => {
 
                     {/* Bulk Download Preferences */}
                     {bulkDownloadRoutesList(match).map(({Component, path}) => (
-                      <Route key={`bulk-download-${path}`} path={path}>
-                        <Component biller={biller}/>
-                      </Route>
+                        <Route key={`bulk-download-${path}`} path={path}>
+                            <Component biller={biller}/>
+                        </Route>
                     ))}
 
                     {/* Payment Settings */}
@@ -270,7 +270,6 @@ const SettingsShell = ({match, location}) => {
 
                     <Route component={PageNotFound}/>
                 </Switch>
-
             </div>
         </React.Fragment>
     );
