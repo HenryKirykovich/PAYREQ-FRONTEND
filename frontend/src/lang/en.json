@@ -2004,7 +2004,21 @@
   "settings.users.permissions.billerSettings": "Mailer settings permission",
   "settings.users.permissions.noAccess": "No access",
 
-  "settings.templates.uploadButton": "Upload document",
+"settings.notifications.title": "Your Notifications Settings",
+  "settings.notifications.intro": "Notification emails can be sent to your registered email address when specific events occur in the Payreq system. Each notification can be sent at a particular frequency.",
+  "settings.notifications.method": "Method",
+  "settings.notifications.frequency": "Frequency",
+  "settings.notifications.update": "Update",
+  "settings.notifications.frequency.immediate": "Immediately",
+  "settings.notifications.frequency.immediateDescription": "The notification will be sent as soon as the event happens.",
+  "settings.notifications.frequency.frequent": "Hourly",
+  "settings.notifications.frequency.frequentDescription": "All notifications for the event that occur within the hour will be sent as a single notification on the hour.",
+  "settings.notifications.frequency.infrequent": "Daily",
+  "settings.notifications.frequency.infrequentDescription": "All notifications for the event that occur during the day will be sent as a single notification at the end of the day.",
+  "settings.notifications.updateSuccess": "Notification preferences updated successfully",
+  "settings.notifications.updateFailed": "Failed to update notification preferences",
+
+  "settings.templates.uploadButton": "Upload document"
   "settings.templates.name": "Name",
   "settings.templates.filename": "File name",
   "settings.templates.createdOn": "Created on",
