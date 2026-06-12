@@ -1,3 +1,70 @@
+# Payreq Frontend — Capstone Project
+
+> **Bellevue College — Capstone I & II (Spring 2026)**
+> Team: Henry Kirykovich, Gunhee Kim, Eyob Worku, Diep Huynh, Brandon Galli
+> Sponsor: Andrew Stein (Payreq Pty Ltd)
+> Advisor: Stephane LABRUYERE
+
+---
+
+## About This Project
+
+This repository is the result of a **Capstone I & II software engineering project** at Bellevue College, completed in collaboration with our industry sponsor **Payreq Pty Ltd** (Australia).
+
+### Project Goal
+
+Payreq is a B2B billing and payments platform used by property managers, accountants, and enterprises across Australia. The existing frontend was built in **EmberJS** — an aging framework that is costly to maintain and difficult to extend. The sponsor's requirement was to **migrate the entire customer-facing frontend from EmberJS to React**, screen by screen, while maintaining full feature parity, i18n support (English/French), and visual consistency.
+
+### What Was Built
+
+- **66 screens** identified for migration from Ember to React
+- **~43 screens fully migrated** as of project completion (~65% complete)
+- Full routing architecture using React Router v5 with flat route structure
+- i18n support via `react-intl` (English AU + French)
+- Docker-based local development environment (React + Ember + Traefik proxy)
+- CI/CD pipeline via Bitbucket Pipelines
+- Per-screen pull requests with code review on every change
+- Complete migration documentation and specification tracking
+
+### Key Screens Migrated (Henry Kirykovich)
+
+- **Connections Settings** — Xero, MYOB, Reckon Accounts Hosted, PropertyMe integrations
+- **Account Permissions** — user management and permission settings
+- **Import MyBills Registrations** — bulk import flow
+
+### Development Approach
+
+> **This project was developed entirely with AI-assisted coding using GitHub Copilot (Claude Sonnet) as a pair programmer.**
+
+All implementation, code review analysis, bug investigation, PR creation, pipeline monitoring, and merge conflict resolution was performed with AI assistance. This demonstrates a modern engineering workflow where AI tools accelerate development while the developer maintains full ownership and understanding of the codebase.
+
+### Sponsor Requirements Met
+
+- ✅ React migration with Ember fallback via Traefik routing
+- ✅ Visual parity with existing Ember UI (accordion layouts, Bootstrap 3 components)
+- ✅ Internationalization (en-AU / fr) maintained across all migrated screens
+- ✅ Modular per-provider architecture for Connections (Xero, MYOB, Reckon, PropertyMe)
+- ✅ CI/CD pipeline with automated build and test on every PR
+- ✅ Full code review process on Bitbucket with documented merge history
+
+---
+
+## Technical Stack
+
+| Layer | Technology |
+|---|---|
+| Frontend Framework | React 16.12, React Router v5 |
+| Legacy Frontend | EmberJS (being replaced) |
+| Styling | Bootstrap 3, CSS Modules |
+| i18n | react-intl |
+| Forms | Formik |
+| HTTP | axios |
+| Proxy | Traefik |
+| CI/CD | Bitbucket Pipelines |
+| Container | Docker Compose |
+
+---
+
 # Payreq Frontend
 
 Frontend development repository for Payreq. This repository contains the React and Ember frontends, configured to work with the test.payreq.com backend.
